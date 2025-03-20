@@ -44,8 +44,8 @@
 @font-face
 {
 	font-family: 'Beyond';
-	src: url('../fonts/beyond_the_mountains.otf')  format('truetype'),
-		 url('../fonts/beyond_the_mountains.ttf')  format('opentype');
+	src: url('../../assets/fonts/beyond_the_mountains.otf')  format('truetype'),
+		 url('../../assets/fonts/beyond_the_mountains.ttf')  format('opentype');
 }
 
 /*********************************
@@ -1087,7 +1087,7 @@ section
     appearance:none;
 	-webkit-box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
 	-webkit-user-select: none;
-	background-image: url(../images/dropdown.png);
+	background-image: url('../../assets/images/dropdown.png');
 	background-position: center right;
 	background-repeat: no-repeat;
 	border: solid 1px #FFFFFF;
@@ -2153,4 +2153,43 @@ section
 .footer_nav_item a:hover
 {
 	color: #FFFFFF;
+}
+/* Style for login/register modals */
+.modal-content {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background: #fa9e1b; /* Travelix Orange */
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.modal-body {
+    padding: 30px;
+    background: #f8f9fa;
+}
+
+.modal .form-control {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.modal .btn-primary {
+    background: #fa9e1b;
+    border: none;
+    padding: 10px;
+}
+
+.modal .btn-primary:hover {
+    background: #ff7f00;
+}
+
+.btn-close {
+    color: white;
+    opacity: 1;
 }
