@@ -798,7 +798,7 @@ section
 	-ms-transform: translate(-50%, -50%);
 	-o-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
-	z-index: 11;
+	z-index: 2;
 }
 .home_slider_content h1
 {
@@ -1299,6 +1299,7 @@ section
 	padding-top: 125px;
 	padding-bottom: 116px;
 	background: linear-gradient(to right, #fa9e1b, #8d4fff);
+	display: block;
 }
 .cta_background
 {
@@ -1319,7 +1320,7 @@ section
 
 .cta_slider_container
 {
-
+	display: block;
 }
 .cta_item
 {
@@ -1539,6 +1540,7 @@ section
 	padding-top: 105px;
 	padding-bottom: 105px;
 	background: #FFFFFF;
+	display: block !important; /* Ensure they display properly */
 }
 .test_border
 {
