@@ -1,0 +1,15 @@
+{
+    "name": "dzelitin/saray-go",
+    "autoload": {
+        "psr-4": {
+            "Dzelitin\\SarayGo\\": "/backend/rest"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dželila",
+            "email": "dzelila.tinjak@stu.ibu.edu.ba"
+        }
+    ],
+    "require": {}
+}
