@@ -2,7 +2,7 @@
     "name": "dzelitin/saray-go",
     "autoload": {
         "psr-4": {
-            "Dzelitin\\SarayGo\\": "/backend/rest"
+            "Dzelitin\\SarayGo\\": "rest/"
         }
     },
     "authors": [

@@ -16,7 +16,7 @@ class ComposerStaticInit28d3ef1d5a7fef5bc0831e923c485fe9
     public static $prefixDirsPsr4 = array (
         'Dzelitin\\SarayGo\\' => 
         array (
-            0 => '/backend/rest',
+            0 => __DIR__ . '/../..' . '/rest',
         ),
     );
 
