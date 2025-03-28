@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Redirect all requests to routes.php except for actual files/folders
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/(.*)$ /backend/rest/routes.php [QSA,L]

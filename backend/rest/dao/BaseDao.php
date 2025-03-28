@@ -37,6 +37,16 @@ class BaseDao {
        return $stmt->fetch();
     }
 
+    public function getByCategory($category) {
+        if (!in_array($this->table, ['activities', 'recommendations'])) {
+            throw new Exception("getByCategory method is only allowed for the 'activities' or 'recommendations' tables.");
+        }
+        $stmt = $this->connection->prepare("SELECT * FROM {$this->table} WHERE category = :category");
+        $stmt->bindValue(':category', $category, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }    
+
    public function insert($data) {
        $columns = implode(", ", array_keys($data));
        $placeholders = ":" . implode(", :", array_keys($data));
