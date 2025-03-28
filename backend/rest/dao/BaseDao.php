@@ -27,6 +27,16 @@ class BaseDao {
        return $stmt->fetch();
    }
 
+   public function getByEmail($email) {
+      if ($this->table !== 'users') {
+         throw new Exception("getByEmail method is only allowed for the 'users' table.");
+       }
+       $stmt = $this->connection->prepare("SELECT * FROM users WHERE email = :email");
+       $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+       $stmt->execute();
+       return $stmt->fetch();
+    }
+
    public function insert($data) {
        $columns = implode(", ", array_keys($data));
        $placeholders = ":" . implode(", :", array_keys($data));
