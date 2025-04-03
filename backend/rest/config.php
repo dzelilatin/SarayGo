@@ -3,7 +3,7 @@ class Database {
    private static $host = '127.0.0.1';  // Use 127.0.0.1 instead of localhost
    private static $dbName = 'SarayGo';
    private static $username = 'root';
-   private static $password = '';  // Adjust this if you use a password for root
+   private static $password = 'root';  // Adjust this if you use a password for root
    private static $connection = null;
 
    public static function connect() {
