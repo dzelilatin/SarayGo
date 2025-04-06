@@ -1,13 +1,13 @@
 <?php
 // Include necessary files
-require_once __DIR__ . '/RecommendationDao.php';  // Assuming your DAO is RecommendationDao.php
+require_once __DIR__ . '/RecommendationDao.php';  
 
 // Create RecommendationDao instance
 $recommendationDao = new RecommendationDao();
 
 // Sample user ID and mood ID for testing
 $user_id = 3;  // Replace with an actual user ID
-$mood_id = 2;  // Replace with an actual mood ID from your moods table
+$mood_id = 2;  // Replace with an actual mood ID from moods table
 
 // 1. Test creating a recommendation based on mood
 echo "\nTesting createRecommendation Method\n";
