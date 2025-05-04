@@ -24,3 +24,6 @@ composer.lock
 
 # Cache files
 *.cache
+
+# Node modules
+/node_modules/
