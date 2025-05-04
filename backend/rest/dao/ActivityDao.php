@@ -85,6 +85,35 @@ class ActivityDao extends BaseDao {
         return $this->conn->lastInsertId();
     }
 
+    // Search activities by name or description
+    public function searchActivities($query, $categoryId = null, $difficulty = null) {
+        $sql = "SELECT * FROM activities WHERE 
+                (activity_name LIKE :query OR description LIKE :query)";
+        
+        if ($categoryId) {
+            $sql .= " AND category_id = :category_id";
+        }
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':query', '%' . $query . '%');
+        
+        if ($categoryId) {
+            $stmt->bindValue(':category_id', $categoryId, \PDO::PARAM_INT);
+        }
+        
+        $stmt->execute();
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return array_map([$this, 'formatActivity'], $results);
+    }
+
+    public function getActivitiesByLocation($location) {
+        $stmt = $this->conn->prepare("SELECT * FROM activities WHERE location LIKE :location");
+        $stmt->bindValue(':location', '%' . $location . '%');
+        $stmt->execute();
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return array_map([$this, 'formatActivity'], $results);
+    }
+
     private function formatActivity($activity) {
         return [
             'id' => $activity['id'],

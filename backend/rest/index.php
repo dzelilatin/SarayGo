@@ -25,7 +25,7 @@ Flight::set('flight.handle_errors', true);
 Flight::set('flight.log_errors', true);
 
 // Set the base URL for Flight
-$baseUrl = ''; // Empty base URL to handle full paths
+$baseUrl = '/SarayGo/backend'; // Set base URL to match the application path
 error_log("Setting Flight base URL to: " . $baseUrl);
 Flight::set('flight.base_url', $baseUrl);
 

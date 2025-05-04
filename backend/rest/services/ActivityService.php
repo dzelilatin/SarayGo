@@ -88,14 +88,22 @@ class ActivityService extends BaseService {
         return $this->dao->getPopularActivities($limit);
     }
 
-    public function searchActivities($query, $categoryId = null, $difficulty = null) {
+    public function searchActivities($query, $categoryId = null) {
         if (empty($query)) {
-            throw new Exception("Search query cannot be empty");
+            throw new \Exception("Search query cannot be empty", 400);
         }
-        if ($difficulty && !in_array(strtolower($difficulty), $this->validDifficulties)) {
-            throw new Exception("Invalid difficulty level");
+        $results = $this->dao->searchActivities($query, $categoryId);
+        if (empty($results)) {
+            throw new \Exception("No activities found", 404);
         }
-        return $this->dao->searchActivities($query, $categoryId, $difficulty);
+        return $results;
+    }
+
+    public function getByLocation($location) {
+        if (empty($location)) {
+            throw new \Exception("Location parameter cannot be empty", 400);
+        }
+        return $this->dao->getActivitiesByLocation($location);
     }
 
     private function validateActivityData($data) {
