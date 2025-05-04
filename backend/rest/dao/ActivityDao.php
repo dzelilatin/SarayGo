@@ -86,10 +86,6 @@ class ActivityDao extends BaseDao {
     }
 
     private function formatActivity($activity) {
-        if (!$activity) {
-            return null;
-        }
-        
         return [
             'id' => $activity['id'],
             'activity_name' => $activity['activity_name'],

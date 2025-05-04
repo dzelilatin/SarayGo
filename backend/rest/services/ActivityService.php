@@ -32,9 +32,7 @@ class ActivityService extends BaseService {
         );
         
         if ($result) {
-            // Get the last inserted ID
             $lastId = $this->dao->getLastInsertId();
-            // Return the created activity
             return $this->getById($lastId);
         }
         
@@ -42,6 +40,12 @@ class ActivityService extends BaseService {
     }
 
     public function update($id, $data) {
+        // First check if the activity exists
+        $existingActivity = $this->getById($id);
+        if (!$existingActivity) {
+            throw new \Exception("Activity not found", 404);
+        }
+
         $this->validateActivityData($data);
         $result = $this->dao->updateActivity(
             $id,
@@ -56,7 +60,7 @@ class ActivityService extends BaseService {
             return $this->getById($id);
         }
         
-        return false;
+        throw new \Exception("Failed to update activity", 500);
     }
 
     public function delete($id) {
@@ -123,13 +127,6 @@ class ActivityService extends BaseService {
         // Mood ID validation
         if (!is_numeric($data['mood_id'])) {
             throw new \Exception("Invalid mood ID");
-        }
-
-        // Location validation (optional)
-        if (isset($data['location']) && !empty($data['location'])) {
-            if (strlen($data['location']) > 255) {
-                throw new \Exception("Location must not exceed 255 characters");
-            }
         }
     }
 }

@@ -82,7 +82,7 @@ Flight::route('POST /SarayGo/backend/activities', function() {
 
 /**
  * @OA\Put(
- *     path="/activities/{id}",
+ *     path="/SarayGo/backend/activities/{id}",
  *     tags={"activities"},
  *     summary="Update activity by ID",
  *     @OA\Parameter(
@@ -94,12 +94,12 @@ Flight::route('POST /SarayGo/backend/activities', function() {
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             @OA\Property(property="name", type="string", example="Hiking"),
+ *             required={"activity_name", "description", "category_id", "mood_id"},
+ *             @OA\Property(property="activity_name", type="string", example="Hiking"),
  *             @OA\Property(property="description", type="string", example="Mountain hiking activity"),
- *             @OA\Property(property="location", type="string", example="Mountains"),
- *             @OA\Property(property="price", type="number", format="float", example=50.00),
- *             @OA\Property(property="duration", type="integer", example=120),
- *             @OA\Property(property="max_participants", type="integer", example=20)
+ *             @OA\Property(property="category_id", type="integer", example=1),
+ *             @OA\Property(property="mood_id", type="integer", example=1),
+ *             @OA\Property(property="location", type="string", example="Mountains")
  *         )
  *     ),
  *     @OA\Response(
@@ -107,19 +107,36 @@ Flight::route('POST /SarayGo/backend/activities', function() {
  *         description="Activity updated successfully"
  *     ),
  *     @OA\Response(
+ *         response=400,
+ *         description="Invalid input"
+ *     ),
+ *     @OA\Response(
  *         response=404,
  *         description="Activity not found"
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Server error"
  *     )
  * )
  */
-Flight::route('PUT /activities/@id', function($id) {
-    $data = Flight::request()->data->getData();
-    Flight::json(Flight::activityService()->update($id, $data));
+Flight::route('PUT /SarayGo/backend/activities/@id', function($id) {
+    try {
+        $data = Flight::request()->data->getData();
+        $result = Flight::activityService()->update($id, $data);
+        if ($result) {
+            Flight::json($result);
+        } else {
+            Flight::halt(404, 'Activity not found');
+        }
+    } catch (\Exception $e) {
+        Flight::json(['error' => $e->getMessage()], $e->getCode() ?: 500);
+    }
 });
 
 /**
  * @OA\Delete(
- *     path="/activities/{id}",
+ *     path="/SarayGo/backend/activities/{id}",
  *     tags={"activities"},
  *     summary="Delete activity by ID",
  *     @OA\Parameter(
@@ -138,8 +155,13 @@ Flight::route('PUT /activities/@id', function($id) {
  *     )
  * )
  */
-Flight::route('DELETE /activities/@id', function($id) {
-    Flight::json(Flight::activityService()->delete($id));
+Flight::route('DELETE /SarayGo/backend/activities/@id', function($id) {
+    $result = Flight::activityService()->delete($id);
+    if ($result) {
+        Flight::json(['message' => 'Activity deleted successfully']);
+    } else {
+        Flight::halt(404, 'Activity not found');
+    }
 });
 
 /**
