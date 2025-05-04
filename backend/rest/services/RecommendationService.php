@@ -1,14 +1,16 @@
 <?php
-require_once 'BaseService.php';
+namespace Dzelitin\SarayGo\services;
+require_once __DIR__ . '/BaseService.php';
 require_once __DIR__ . '/../dao/RecommendationDao.php';
+use Dzelitin\SarayGo\dao\RecommendationDao;
 
 class RecommendationService extends BaseService {
     private $minDescriptionLength = 10;
     private $maxDescriptionLength = 500;
+    private $maxReasonLength = 500;
 
     public function __construct() {
-        $dao = new RecommendationDao();
-        parent::__construct($dao);
+        parent::__construct(new RecommendationDao());
     }
 
     public function get_by_user($user_id) {
@@ -39,9 +41,21 @@ class RecommendationService extends BaseService {
         return $this->dao->search($query);
     }
 
+    public function createRecommendation($userId, $moodId) {
+        $this->validateIds($userId, $moodId);
+        return $this->dao->createRecommendation($userId, $moodId);
+    }
+
+    public function getByMoodId($moodId) {
+        if (!is_numeric($moodId)) {
+            throw new \Exception("Invalid mood ID");
+        }
+        return $this->dao->getRecommendationsByMoodId($moodId);
+    }
+
     public function create($data) {
         $this->validateRecommendationData($data);
-        return parent::create($data);
+        return $this->dao->createRecommendation($data['user_id'], $data['mood_id']);
     }
 
     public function update($id, $data) {
@@ -51,11 +65,19 @@ class RecommendationService extends BaseService {
 
     private function validateRecommendationData($data) {
         // Required fields validation
-        $requiredFields = ['mood_id', 'activity_id', 'description'];
+        $requiredFields = ['user_id', 'mood_id'];
         foreach ($requiredFields as $field) {
             if (!isset($data[$field]) || empty($data[$field])) {
-                throw new Exception("Missing required field: $field");
+                throw new \Exception("Missing required field: $field");
             }
+        }
+
+        // ID validations
+        $this->validateIds($data['user_id'], $data['mood_id']);
+
+        // Recommendation reason validation (if provided)
+        if (isset($data['recommendation_reason']) && strlen($data['recommendation_reason']) > $this->maxReasonLength) {
+            throw new \Exception("Recommendation reason must not exceed {$this->maxReasonLength} characters");
         }
 
         // Description validation
@@ -64,24 +86,18 @@ class RecommendationService extends BaseService {
             throw new Exception("Description must be between {$this->minDescriptionLength} and {$this->maxDescriptionLength} characters");
         }
 
-        // Mood ID validation
-        if (!is_numeric($data['mood_id'])) {
-            throw new Exception("Invalid mood ID");
-        }
-
-        // Activity ID validation
-        if (!is_numeric($data['activity_id'])) {
-            throw new Exception("Invalid activity ID");
-        }
-
         // Check if mood exists
         if (!$this->dao->moodExists($data['mood_id'])) {
             throw new Exception("Mood does not exist");
         }
+    }
 
-        // Check if activity exists
-        if (!$this->dao->activityExists($data['activity_id'])) {
-            throw new Exception("Activity does not exist");
+    private function validateIds($userId, $moodId) {
+        if (!is_numeric($userId)) {
+            throw new \Exception("Invalid user ID");
+        }
+        if (!is_numeric($moodId)) {
+            throw new \Exception("Invalid mood ID");
         }
     }
 

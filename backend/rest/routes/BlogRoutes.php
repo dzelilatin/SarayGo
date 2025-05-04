@@ -1,50 +1,22 @@
 <?php
 /**
  * @OA\Get(
- *     path="/blog",
+ *     path="/blogs",
  *     tags={"blogs"},
  *     summary="Get all blogs",
- *     @OA\Parameter(
- *         name="category",
- *         in="query",
- *         required=false,
- *         @OA\Schema(type="integer", example=1)
- *     ),
  *     @OA\Response(
  *         response=200,
- *         description="List of all blogs",
- *         @OA\JsonContent(
- *             type="array",
- *             @OA\Items(
- *                 @OA\Property(property="id", type="integer", example=1),
- *                 @OA\Property(property="title", type="string", example="How to Stay Active"),
- *                 @OA\Property(property="content", type="string", example="Blog content here..."),
- *                 @OA\Property(property="author", type="string", example="John Doe"),
- *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-05-03T12:00:00Z")
- *             )
- *         )
+ *         description="List of all blogs"
  *     )
  * )
  */
 Flight::route('GET /blogs', function() {
-    $category_id = Flight::request()->query['category_id'] ?? null;
-    $user_id = Flight::request()->query['user_id'] ?? null;
-    $query = Flight::request()->query['query'] ?? null;
-    
-    if ($query) {
-        Flight::json(Flight::blogService()->search($query));
-    } else if ($category_id) {
-        Flight::json(Flight::blogService()->get_by_category($category_id));
-    } else if ($user_id) {
-        Flight::json(Flight::blogService()->get_by_user($user_id));
-    } else {
-        Flight::json(Flight::blogService()->getAll());
-    }
+    Flight::json(Flight::blogService()->getAll());
 });
 
 /**
  * @OA\Get(
- *     path="/blog/{id}",
+ *     path="/blogs/{id}",
  *     tags={"blogs"},
  *     summary="Get blog by ID",
  *     @OA\Parameter(
@@ -74,17 +46,19 @@ Flight::route('GET /blogs/@id', function($id) {
 
 /**
  * @OA\Post(
- *     path="/blog",
+ *     path="/blogs",
  *     tags={"blogs"},
- *     summary="Create a new blog post",
+ *     summary="Create a new blog",
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"title", "content", "author", "category_id"},
- *             @OA\Property(property="title", type="string", example="How to Stay Active"),
- *             @OA\Property(property="content", type="string", example="Blog content here..."),
- *             @OA\Property(property="author", type="string", example="John Doe"),
- *             @OA\Property(property="category_id", type="integer", example=1)
+ *             required={"title", "content", "author_id"},
+ *             @OA\Property(property="title", type="string", example="My Travel Experience"),
+ *             @OA\Property(property="content", type="string", example="This is my travel experience..."),
+ *             @OA\Property(property="author_id", type="integer", example=1),
+ *             @OA\Property(property="category_id", type="integer", example=1),
+ *             @OA\Property(property="tags", type="array", @OA\Items(type="string"), example=["travel", "adventure"]),
+ *             @OA\Property(property="image_url", type="string", example="https://example.com/image.jpg")
  *         )
  *     ),
  *     @OA\Response(
@@ -99,19 +73,14 @@ Flight::route('GET /blogs/@id', function($id) {
  */
 Flight::route('POST /blogs', function() {
     $data = Flight::request()->data->getData();
-    try {
-        $result = Flight::blogService()->create($data);
-        Flight::json($result, 201);
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::blogService()->create($data), 201);
 });
 
 /**
  * @OA\Put(
- *     path="/blog/{id}",
+ *     path="/blogs/{id}",
  *     tags={"blogs"},
- *     summary="Update a blog post",
+ *     summary="Update blog by ID",
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -121,10 +90,11 @@ Flight::route('POST /blogs', function() {
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             @OA\Property(property="title", type="string", example="How to Stay Active"),
- *             @OA\Property(property="content", type="string", example="Blog content here..."),
- *             @OA\Property(property="author", type="string", example="John Doe"),
- *             @OA\Property(property="category_id", type="integer", example=1)
+ *             @OA\Property(property="title", type="string", example="My Travel Experience"),
+ *             @OA\Property(property="content", type="string", example="This is my travel experience..."),
+ *             @OA\Property(property="category_id", type="integer", example=1),
+ *             @OA\Property(property="tags", type="array", @OA\Items(type="string"), example=["travel", "adventure"]),
+ *             @OA\Property(property="image_url", type="string", example="https://example.com/image.jpg")
  *         )
  *     ),
  *     @OA\Response(
@@ -139,23 +109,14 @@ Flight::route('POST /blogs', function() {
  */
 Flight::route('PUT /blogs/@id', function($id) {
     $data = Flight::request()->data->getData();
-    try {
-        $result = Flight::blogService()->update($id, $data);
-        if ($result) {
-            Flight::json($result);
-        } else {
-            Flight::halt(404, 'Blog not found');
-        }
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::blogService()->update($id, $data));
 });
 
 /**
  * @OA\Delete(
- *     path="/blog/{id}",
+ *     path="/blogs/{id}",
  *     tags={"blogs"},
- *     summary="Delete a blog post",
+ *     summary="Delete blog by ID",
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -163,7 +124,7 @@ Flight::route('PUT /blogs/@id', function($id) {
  *         @OA\Schema(type="integer", example=1)
  *     ),
  *     @OA\Response(
- *         response=204,
+ *         response=200,
  *         description="Blog deleted successfully"
  *     ),
  *     @OA\Response(
@@ -173,40 +134,70 @@ Flight::route('PUT /blogs/@id', function($id) {
  * )
  */
 Flight::route('DELETE /blogs/@id', function($id) {
-    try {
-        $result = Flight::blogService()->delete($id);
-        if ($result) {
-            Flight::halt(204);
-        } else {
-            Flight::halt(404, 'Blog not found');
-        }
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::blogService()->delete($id));
 });
 
-// Get recent blogs
-Flight::route('GET /blogs/recent', function() {
-    $limit = Flight::request()->query['limit'] ?? 10;
-    Flight::json(Flight::blogService()->getRecentBlogs($limit));
+/**
+ * @OA\Get(
+ *     path="/blogs/search",
+ *     tags={"blogs"},
+ *     summary="Search blogs",
+ *     @OA\Parameter(
+ *         name="query",
+ *         in="query",
+ *         required=true,
+ *         @OA\Schema(type="string", example="travel")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of matching blogs"
+ *     )
+ * )
+ */
+Flight::route('GET /blogs/search', function() {
+    $query = Flight::request()->query['query'];
+    Flight::json(Flight::blogService()->search($query));
 });
 
-// Get popular blogs
-Flight::route('GET /blogs/popular', function() {
-    $limit = Flight::request()->query['limit'] ?? 10;
-    Flight::json(Flight::blogService()->getPopularBlogs($limit));
+/**
+ * @OA\Get(
+ *     path="/blogs/category/{category_id}",
+ *     tags={"blogs"},
+ *     summary="Get blogs by category",
+ *     @OA\Parameter(
+ *         name="category_id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of blogs in category"
+ *     )
+ * )
+ */
+Flight::route('GET /blogs/category/@category_id', function($category_id) {
+    Flight::json(Flight::blogService()->getByCategory($category_id));
 });
 
-// Get blogs by tags
-Flight::route('GET /blogs/tags', function() {
-    $tags = Flight::request()->query['tags'] ?? null;
-    $limit = Flight::request()->query['limit'] ?? 10;
-    
-    if (!$tags) {
-        Flight::halt(400, 'Tags parameter is required');
-    }
-    
-    $tags = explode(',', $tags);
-    Flight::json(Flight::blogService()->getBlogsByTags($tags, $limit));
+/**
+ * @OA\Get(
+ *     path="/blogs/author/{author_id}",
+ *     tags={"blogs"},
+ *     summary="Get blogs by author",
+ *     @OA\Parameter(
+ *         name="author_id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of blogs by author"
+ *     )
+ * )
+ */
+Flight::route('GET /blogs/author/@author_id', function($author_id) {
+    Flight::json(Flight::blogService()->getByAuthor($author_id));
 });
 ?> 

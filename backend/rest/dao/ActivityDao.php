@@ -1,5 +1,7 @@
 <?php
-require_once __DIR__ . '/BaseDao.php';
+namespace Dzelitin\SarayGo\Dao;
+
+use Dzelitin\SarayGo\Dao\BaseDao;
 
 class ActivityDao extends BaseDao {
 
@@ -21,23 +23,26 @@ class ActivityDao extends BaseDao {
 
     // Get activity by ID
     public function getActivityById($id) {
-        return $this->getById($id); // Use BaseDao's getById method
+        $result = $this->getById($id);
+        return $this->formatActivity($result);
     }
 
     // Get all activities by category
     public function getActivitiesByCategory($category_id) {
         $stmt = $this->connection->prepare("SELECT * FROM activities WHERE category_id = :category_id");
-        $stmt->bindValue(':category_id', $category_id, PDO::PARAM_INT);
+        $stmt->bindValue(':category_id', $category_id, \PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll();
+        $activities = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return array_map([$this, 'formatActivity'], $activities);
     }
 
     // Get all activities by mood
     public function getActivitiesByMood($mood_id) {
         $stmt = $this->connection->prepare("SELECT * FROM activities WHERE mood_id = :mood_id");
-        $stmt->bindValue(':mood_id', $mood_id, PDO::PARAM_INT);
+        $stmt->bindValue(':mood_id', $mood_id, \PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll();
+        $activities = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return array_map([$this, 'formatActivity'], $activities);
     }
 
     // Update activity information
@@ -55,6 +60,21 @@ class ActivityDao extends BaseDao {
     // Delete an activity by ID
     public function deleteActivity($id) {
         return $this->delete($id); // Use BaseDao's delete method
+    }
+
+    private function formatActivity($activity) {
+        if (!$activity) {
+            return null;
+        }
+        
+        return [
+            'id' => $activity['id'],
+            'activity_name' => $activity['activity_name'],
+            'description' => $activity['description'],
+            'category_id' => $activity['category_id'],
+            'mood_id' => $activity['mood_id'],
+            'location' => $activity['location']
+        ];
     }
 }
 ?>

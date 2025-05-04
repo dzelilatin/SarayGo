@@ -1,45 +1,63 @@
 <?php
-require_once 'BaseService.php';
+namespace Dzelitin\SarayGo\services;
+require_once __DIR__ . '/BaseService.php';
 require_once __DIR__ . '/../dao/CategoryDao.php';
+use Dzelitin\SarayGo\dao\CategoryDao;
 
 class CategoryService extends BaseService {
-    private $minNameLength = 3;
-    private $maxNameLength = 50;
+    private $minNameLength = 2;
+    private $maxNameLength = 100;
     private $minDescriptionLength = 10;
     private $maxDescriptionLength = 500;
+    private $validTypes = ['activity', 'blog', 'recommendation'];
 
     public function __construct() {
-        $dao = new CategoryDao();
-        parent::__construct($dao);
+        parent::__construct(new CategoryDao());
     }
 
     public function get_with_blog_count() {
         return $this->dao->get_with_blog_count();
     }
 
+    public function getByType($type) {
+        if (empty($type)) {
+            throw new Exception("Category type cannot be empty");
+        }
+        if (!in_array(strtolower($type), $this->validTypes)) {
+            throw new Exception("Invalid category type. Must be one of: " . implode(', ', $this->validTypes));
+        }
+        return $this->dao->getByType($type);
+    }
+
     public function create($data) {
         $this->validateCategoryData($data);
-        return parent::create($data);
+        return $this->dao->createCategory($data['category_name']);
     }
 
     public function update($id, $data) {
         $this->validateCategoryData($data);
-        return parent::update($id, $data);
+        return $this->dao->updateCategory($id, $data['category_name']);
+    }
+
+    public function getAllCategories() {
+        return $this->dao->getAllCategories();
     }
 
     private function validateCategoryData($data) {
         // Required fields validation
-        $requiredFields = ['name', 'description'];
-        foreach ($requiredFields as $field) {
-            if (!isset($data[$field]) || empty($data[$field])) {
-                throw new Exception("Missing required field: $field");
-            }
+        if (!isset($data['category_name']) || empty($data['category_name'])) {
+            throw new \Exception("Category name is required");
         }
 
         // Name validation
-        if (strlen($data['name']) < $this->minNameLength || 
-            strlen($data['name']) > $this->maxNameLength) {
-            throw new Exception("Name must be between {$this->minNameLength} and {$this->maxNameLength} characters");
+        if (strlen($data['category_name']) < $this->minNameLength || 
+            strlen($data['category_name']) > $this->maxNameLength) {
+            throw new \Exception("Category name must be between {$this->minNameLength} and {$this->maxNameLength} characters");
+        }
+
+        // Type validation
+        if (!in_array(strtolower($data['type']), $this->validTypes)) {
+            throw new Exception("Invalid category type. Must be one of: " . implode(', ', $this->validTypes));
         }
 
         // Description validation
@@ -49,7 +67,7 @@ class CategoryService extends BaseService {
         }
 
         // Check for duplicate category name
-        if ($this->dao->getByName($data['name'])) {
+        if ($this->dao->getByName($data['category_name'])) {
             throw new Exception("Category name already exists");
         }
     }

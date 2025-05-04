@@ -4,46 +4,14 @@
  *     path="/reviews",
  *     tags={"reviews"},
  *     summary="Get all reviews",
- *     @OA\Parameter(
- *         name="activity_id",
- *         in="query",
- *         required=false,
- *         @OA\Schema(type="integer", example=1)
- *     ),
  *     @OA\Response(
  *         response=200,
- *         description="List of all reviews",
- *         @OA\JsonContent(
- *             type="array",
- *             @OA\Items(
- *                 @OA\Property(property="id", type="integer", example=1),
- *                 @OA\Property(property="activity_id", type="integer", example=1),
- *                 @OA\Property(property="user_id", type="integer", example=1),
- *                 @OA\Property(property="rating", type="integer", minimum=1, maximum=5, example=5),
- *                 @OA\Property(property="comment", type="string", example="Great activity!"),
- *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-05-03T12:00:00Z")
- *             )
- *         )
+ *         description="List of all reviews"
  *     )
  * )
  */
 Flight::route('GET /reviews', function() {
-    $user_id = Flight::request()->query['user_id'] ?? null;
-    $activity_id = Flight::request()->query['activity_id'] ?? null;
-    $recommendation_id = Flight::request()->query['recommendation_id'] ?? null;
-    $query = Flight::request()->query['query'] ?? null;
-    
-    if ($query) {
-        Flight::json(Flight::reviewService()->searchReviews($query));
-    } else if ($user_id) {
-        Flight::json(Flight::reviewService()->get_by_user($user_id));
-    } else if ($activity_id) {
-        Flight::json(Flight::reviewService()->get_by_activity($activity_id));
-    } else if ($recommendation_id) {
-        Flight::json(Flight::reviewService()->get_by_recommendation($recommendation_id));
-    } else {
-        Flight::json(Flight::reviewService()->getAll());
-    }
+    Flight::json(Flight::reviewService()->getAll());
 });
 
 /**
@@ -84,11 +52,13 @@ Flight::route('GET /reviews/@id', function($id) {
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"activity_id", "user_id", "rating", "comment"},
- *             @OA\Property(property="activity_id", type="integer", example=1),
+ *             required={"user_id", "activity_id", "rating", "comment"},
  *             @OA\Property(property="user_id", type="integer", example=1),
+ *             @OA\Property(property="activity_id", type="integer", example=1),
  *             @OA\Property(property="rating", type="integer", minimum=1, maximum=5, example=5),
- *             @OA\Property(property="comment", type="string", example="Great activity!")
+ *             @OA\Property(property="comment", type="string", example="Great experience!"),
+ *             @OA\Property(property="title", type="string", example="Amazing Activity"),
+ *             @OA\Property(property="images", type="array", @OA\Items(type="string"), example=["image1.jpg", "image2.jpg"])
  *         )
  *     ),
  *     @OA\Response(
@@ -103,19 +73,14 @@ Flight::route('GET /reviews/@id', function($id) {
  */
 Flight::route('POST /reviews', function() {
     $data = Flight::request()->data->getData();
-    try {
-        $result = Flight::reviewService()->create($data);
-        Flight::json($result, 201);
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::reviewService()->create($data), 201);
 });
 
 /**
  * @OA\Put(
  *     path="/reviews/{id}",
  *     tags={"reviews"},
- *     summary="Update a review",
+ *     summary="Update review by ID",
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -126,7 +91,9 @@ Flight::route('POST /reviews', function() {
  *         required=true,
  *         @OA\JsonContent(
  *             @OA\Property(property="rating", type="integer", minimum=1, maximum=5, example=5),
- *             @OA\Property(property="comment", type="string", example="Great activity!")
+ *             @OA\Property(property="comment", type="string", example="Great experience!"),
+ *             @OA\Property(property="title", type="string", example="Amazing Activity"),
+ *             @OA\Property(property="images", type="array", @OA\Items(type="string"), example=["image1.jpg", "image2.jpg"])
  *         )
  *     ),
  *     @OA\Response(
@@ -141,23 +108,14 @@ Flight::route('POST /reviews', function() {
  */
 Flight::route('PUT /reviews/@id', function($id) {
     $data = Flight::request()->data->getData();
-    try {
-        $result = Flight::reviewService()->update($id, $data);
-        if ($result) {
-            Flight::json($result);
-        } else {
-            Flight::halt(404, 'Review not found');
-        }
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::reviewService()->update($id, $data));
 });
 
 /**
  * @OA\Delete(
  *     path="/reviews/{id}",
  *     tags={"reviews"},
- *     summary="Delete a review",
+ *     summary="Delete review by ID",
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -165,7 +123,7 @@ Flight::route('PUT /reviews/@id', function($id) {
  *         @OA\Schema(type="integer", example=1)
  *     ),
  *     @OA\Response(
- *         response=204,
+ *         response=200,
  *         description="Review deleted successfully"
  *     ),
  *     @OA\Response(
@@ -175,16 +133,71 @@ Flight::route('PUT /reviews/@id', function($id) {
  * )
  */
 Flight::route('DELETE /reviews/@id', function($id) {
-    try {
-        $result = Flight::reviewService()->delete($id);
-        if ($result) {
-            Flight::halt(204);
-        } else {
-            Flight::halt(404, 'Review not found');
-        }
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::reviewService()->delete($id));
+});
+
+/**
+ * @OA\Get(
+ *     path="/reviews/activity/{activity_id}",
+ *     tags={"reviews"},
+ *     summary="Get reviews by activity",
+ *     @OA\Parameter(
+ *         name="activity_id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of reviews for the activity"
+ *     )
+ * )
+ */
+Flight::route('GET /reviews/activity/@activity_id', function($activity_id) {
+    Flight::json(Flight::reviewService()->getByActivity($activity_id));
+});
+
+/**
+ * @OA\Get(
+ *     path="/reviews/user/{user_id}",
+ *     tags={"reviews"},
+ *     summary="Get reviews by user",
+ *     @OA\Parameter(
+ *         name="user_id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of reviews by the user"
+ *     )
+ * )
+ */
+Flight::route('GET /reviews/user/@user_id', function($user_id) {
+    Flight::json(Flight::reviewService()->getByUser($user_id));
+});
+
+/**
+ * @OA\Get(
+ *     path="/reviews/search",
+ *     tags={"reviews"},
+ *     summary="Search reviews",
+ *     @OA\Parameter(
+ *         name="query",
+ *         in="query",
+ *         required=true,
+ *         @OA\Schema(type="string", example="great")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of matching reviews"
+ *     )
+ * )
+ */
+Flight::route('GET /reviews/search', function() {
+    $query = Flight::request()->query['query'];
+    Flight::json(Flight::reviewService()->search($query));
 });
 
 // Get recent reviews

@@ -6,31 +6,12 @@
  *     summary="Get all contacts",
  *     @OA\Response(
  *         response=200,
- *         description="List of all contacts",
- *         @OA\JsonContent(
- *             type="array",
- *             @OA\Items(
- *                 @OA\Property(property="id", type="integer", example=1),
- *                 @OA\Property(property="name", type="string", example="John Doe"),
- *                 @OA\Property(property="email", type="string", format="email", example="john@example.com"),
- *                 @OA\Property(property="message", type="string", example="I have a question about..."),
- *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-05-03T12:00:00Z")
- *             )
- *         )
+ *         description="List of all contacts"
  *     )
  * )
  */
 Flight::route('GET /contacts', function() {
-    $status = Flight::request()->query['status'] ?? null;
-    $query = Flight::request()->query['query'] ?? null;
-    
-    if ($query) {
-        Flight::json(Flight::contactService()->searchContacts($query));
-    } else if ($status) {
-        Flight::json(Flight::contactService()->get_by_status($status));
-    } else {
-        Flight::json(Flight::contactService()->getAll());
-    }
+    Flight::json(Flight::contactService()->getAll());
 });
 
 /**
@@ -59,7 +40,7 @@ Flight::route('GET /contacts/@id', function($id) {
     if ($contact) {
         Flight::json($contact);
     } else {
-        Flight::halt(404, 'Contact message not found');
+        Flight::halt(404, 'Contact not found');
     }
 });
 
@@ -67,19 +48,21 @@ Flight::route('GET /contacts/@id', function($id) {
  * @OA\Post(
  *     path="/contacts",
  *     tags={"contacts"},
- *     summary="Create a new contact message",
+ *     summary="Create a new contact",
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
  *             required={"name", "email", "message"},
  *             @OA\Property(property="name", type="string", example="John Doe"),
  *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
- *             @OA\Property(property="message", type="string", example="I have a question about...")
+ *             @OA\Property(property="message", type="string", example="I would like to inquire about..."),
+ *             @OA\Property(property="subject", type="string", example="General Inquiry"),
+ *             @OA\Property(property="phone", type="string", example="+1234567890")
  *         )
  *     ),
  *     @OA\Response(
  *         response=201,
- *         description="Contact message created successfully"
+ *         description="Contact created successfully"
  *     ),
  *     @OA\Response(
  *         response=400,
@@ -89,19 +72,14 @@ Flight::route('GET /contacts/@id', function($id) {
  */
 Flight::route('POST /contacts', function() {
     $data = Flight::request()->data->getData();
-    try {
-        $result = Flight::contactService()->create($data);
-        Flight::json($result, 201);
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::contactService()->create($data), 201);
 });
 
 /**
  * @OA\Put(
  *     path="/contacts/{id}",
  *     tags={"contacts"},
- *     summary="Update a contact message",
+ *     summary="Update contact by ID",
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -113,12 +91,15 @@ Flight::route('POST /contacts', function() {
  *         @OA\JsonContent(
  *             @OA\Property(property="name", type="string", example="John Doe"),
  *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
- *             @OA\Property(property="message", type="string", example="I have a question about...")
+ *             @OA\Property(property="message", type="string", example="I would like to inquire about..."),
+ *             @OA\Property(property="subject", type="string", example="General Inquiry"),
+ *             @OA\Property(property="phone", type="string", example="+1234567890"),
+ *             @OA\Property(property="status", type="string", enum={"new", "in_progress", "resolved"}, example="in_progress")
  *         )
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="Contact message updated successfully"
+ *         description="Contact updated successfully"
  *     ),
  *     @OA\Response(
  *         response=404,
@@ -128,23 +109,14 @@ Flight::route('POST /contacts', function() {
  */
 Flight::route('PUT /contacts/@id', function($id) {
     $data = Flight::request()->data->getData();
-    try {
-        $result = Flight::contactService()->update($id, $data);
-        if ($result) {
-            Flight::json($result);
-        } else {
-            Flight::halt(404, 'Contact message not found');
-        }
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::contactService()->update($id, $data));
 });
 
 /**
  * @OA\Delete(
  *     path="/contacts/{id}",
  *     tags={"contacts"},
- *     summary="Delete a contact message",
+ *     summary="Delete contact by ID",
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -152,8 +124,8 @@ Flight::route('PUT /contacts/@id', function($id) {
  *         @OA\Schema(type="integer", example=1)
  *     ),
  *     @OA\Response(
- *         response=204,
- *         description="Contact message deleted successfully"
+ *         response=200,
+ *         description="Contact deleted successfully"
  *     ),
  *     @OA\Response(
  *         response=404,
@@ -162,16 +134,50 @@ Flight::route('PUT /contacts/@id', function($id) {
  * )
  */
 Flight::route('DELETE /contacts/@id', function($id) {
-    try {
-        $result = Flight::contactService()->delete($id);
-        if ($result) {
-            Flight::halt(204);
-        } else {
-            Flight::halt(404, 'Contact message not found');
-        }
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::contactService()->delete($id));
+});
+
+/**
+ * @OA\Get(
+ *     path="/contacts/status/{status}",
+ *     tags={"contacts"},
+ *     summary="Get contacts by status",
+ *     @OA\Parameter(
+ *         name="status",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="string", enum={"new", "in_progress", "resolved"}, example="new")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of contacts with specified status"
+ *     )
+ * )
+ */
+Flight::route('GET /contacts/status/@status', function($status) {
+    Flight::json(Flight::contactService()->getByStatus($status));
+});
+
+/**
+ * @OA\Get(
+ *     path="/contacts/search",
+ *     tags={"contacts"},
+ *     summary="Search contacts",
+ *     @OA\Parameter(
+ *         name="query",
+ *         in="query",
+ *         required=true,
+ *         @OA\Schema(type="string", example="John")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of matching contacts"
+ *     )
+ * )
+ */
+Flight::route('GET /contacts/search', function() {
+    $query = Flight::request()->query['query'];
+    Flight::json(Flight::contactService()->search($query));
 });
 
 // Mark contact as read

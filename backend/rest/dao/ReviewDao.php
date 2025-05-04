@@ -1,5 +1,7 @@
 <?php
+namespace Dzelitin\SarayGo\Dao;
 require_once __DIR__ . '/BaseDao.php';
+use Dzelitin\SarayGo\Dao\BaseDao;
 
 class ReviewDao extends BaseDao {
 

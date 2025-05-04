@@ -6,22 +6,12 @@
  *     summary="Get all moods",
  *     @OA\Response(
  *         response=200,
- *         description="List of all moods",
- *         @OA\JsonContent(
- *             type="array",
- *             @OA\Items(
- *                 @OA\Property(property="id", type="integer", example=1),
- *                 @OA\Property(property="name", type="string", example="Happy"),
- *                 @OA\Property(property="description", type="string", example="Feeling joyful and content"),
- *                 @OA\Property(property="icon", type="string", example="😊")
- *             )
- *         )
+ *         description="List of all moods"
  *     )
  * )
  */
 Flight::route('GET /moods', function() {
-    $result = Flight::moodService()->getAll();
-    Flight::json($result);
+    Flight::json(Flight::moodService()->getAll());
 });
 
 /**
@@ -46,11 +36,12 @@ Flight::route('GET /moods', function() {
  * )
  */
 Flight::route('GET /moods/@id', function($id) {
-    $result = Flight::moodService()->getById($id);
-    if (!$result) {
-        Flight::halt(404, json_encode(['error' => 'Mood not found']));
+    $mood = Flight::moodService()->getById($id);
+    if ($mood) {
+        Flight::json($mood);
+    } else {
+        Flight::halt(404, 'Mood not found');
     }
-    Flight::json($result);
 });
 
 /**
@@ -61,10 +52,11 @@ Flight::route('GET /moods/@id', function($id) {
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"name", "description", "icon"},
+ *             required={"name", "description"},
  *             @OA\Property(property="name", type="string", example="Happy"),
  *             @OA\Property(property="description", type="string", example="Feeling joyful and content"),
- *             @OA\Property(property="icon", type="string", example="😊")
+ *             @OA\Property(property="icon", type="string", example="happy-icon.png"),
+ *             @OA\Property(property="color", type="string", example="#FFD700")
  *         )
  *     ),
  *     @OA\Response(
@@ -79,24 +71,14 @@ Flight::route('GET /moods/@id', function($id) {
  */
 Flight::route('POST /moods', function() {
     $data = Flight::request()->data->getData();
-    
-    // Validate required fields
-    $required = ['name', 'description', 'icon'];
-    foreach ($required as $field) {
-        if (!isset($data[$field]) || empty($data[$field])) {
-            Flight::halt(400, json_encode(['error' => "Missing required field: $field"]));
-        }
-    }
-
-    $result = Flight::moodService()->create($data);
-    Flight::json($result, 201);
+    Flight::json(Flight::moodService()->create($data), 201);
 });
 
 /**
  * @OA\Put(
  *     path="/moods/{id}",
  *     tags={"moods"},
- *     summary="Update a mood",
+ *     summary="Update mood by ID",
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -108,7 +90,8 @@ Flight::route('POST /moods', function() {
  *         @OA\JsonContent(
  *             @OA\Property(property="name", type="string", example="Happy"),
  *             @OA\Property(property="description", type="string", example="Feeling joyful and content"),
- *             @OA\Property(property="icon", type="string", example="😊")
+ *             @OA\Property(property="icon", type="string", example="happy-icon.png"),
+ *             @OA\Property(property="color", type="string", example="#FFD700")
  *         )
  *     ),
  *     @OA\Response(
@@ -123,18 +106,14 @@ Flight::route('POST /moods', function() {
  */
 Flight::route('PUT /moods/@id', function($id) {
     $data = Flight::request()->data->getData();
-    $result = Flight::moodService()->update($id, $data);
-    if (!$result) {
-        Flight::halt(404, json_encode(['error' => 'Mood not found']));
-    }
-    Flight::json($result);
+    Flight::json(Flight::moodService()->update($id, $data));
 });
 
 /**
  * @OA\Delete(
  *     path="/moods/{id}",
  *     tags={"moods"},
- *     summary="Delete a mood",
+ *     summary="Delete mood by ID",
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -142,7 +121,7 @@ Flight::route('PUT /moods/@id', function($id) {
  *         @OA\Schema(type="integer", example=1)
  *     ),
  *     @OA\Response(
- *         response=204,
+ *         response=200,
  *         description="Mood deleted successfully"
  *     ),
  *     @OA\Response(
@@ -152,10 +131,49 @@ Flight::route('PUT /moods/@id', function($id) {
  * )
  */
 Flight::route('DELETE /moods/@id', function($id) {
-    $result = Flight::moodService()->delete($id);
-    if (!$result) {
-        Flight::halt(404, json_encode(['error' => 'Mood not found']));
-    }
-    Flight::json(null, 204);
+    Flight::json(Flight::moodService()->delete($id));
+});
+
+/**
+ * @OA\Get(
+ *     path="/moods/search",
+ *     tags={"moods"},
+ *     summary="Search moods",
+ *     @OA\Parameter(
+ *         name="query",
+ *         in="query",
+ *         required=true,
+ *         @OA\Schema(type="string", example="happy")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of matching moods"
+ *     )
+ * )
+ */
+Flight::route('GET /moods/search', function() {
+    $query = Flight::request()->query['query'];
+    Flight::json(Flight::moodService()->search($query));
+});
+
+/**
+ * @OA\Get(
+ *     path="/moods/activities/{mood_id}",
+ *     tags={"moods"},
+ *     summary="Get activities for a mood",
+ *     @OA\Parameter(
+ *         name="mood_id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of activities matching the mood"
+ *     )
+ * )
+ */
+Flight::route('GET /moods/activities/@mood_id', function($mood_id) {
+    Flight::json(Flight::moodService()->getActivitiesByMood($mood_id));
 });
 ?> 

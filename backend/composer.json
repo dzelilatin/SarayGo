@@ -1,11 +1,15 @@
 {
     "require": {
       "flightphp/core": "^3.15",
-      "zircote/swagger-php": "^3.3"
+      "zircote/swagger-php": "^3.3",
+      "vlucas/phpdotenv": "^5.6"
     },
     "autoload": {
       "psr-4": {
-        "Dzelitin\\SarayGo\\": "rest/"
+        "Dzelitin\\SarayGo\\": "rest/",
+        "Dzelitin\\SarayGo\\Dao\\": "rest/dao/",
+        "Dzelitin\\SarayGo\\Services\\": "rest/services/",
+        "Dzelitin\\SarayGo\\Controllers\\": "rest/controllers/"
       }
     },
     "authors": [
@@ -14,4 +18,4 @@
         "email": "dzelila.tinjak@stu.ibu.edu.ba"
       }
     ]
-  }
+}

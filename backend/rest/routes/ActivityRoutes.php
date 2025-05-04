@@ -1,49 +1,22 @@
 <?php
 /**
  * @OA\Get(
- *     path="/activities",
+ *     path="/SarayGo/backend/activities",
  *     tags={"activities"},
  *     summary="Get all activities",
- *     @OA\Parameter(
- *         name="category",
- *         in="query",
- *         required=false,
- *         @OA\Schema(type="integer", example=1)
- *     ),
  *     @OA\Response(
  *         response=200,
- *         description="List of all activities",
- *         @OA\JsonContent(
- *             type="array",
- *             @OA\Items(
- *                 @OA\Property(property="id", type="integer", example=1),
- *                 @OA\Property(property="title", type="string", example="Morning Yoga"),
- *                 @OA\Property(property="description", type="string", example="Start your day with yoga"),
- *                 @OA\Property(property="category_id", type="integer", example=1),
- *                 @OA\Property(property="difficulty", type="string", example="beginner"),
- *                 @OA\Property(property="duration", type="integer", example=30)
- *             )
- *         )
+ *         description="List of all activities"
  *     )
  * )
  */
-Flight::route('GET /activities', function() {
-    $category_id = Flight::request()->query['category_id'] ?? null;
-    $difficulty = Flight::request()->query['difficulty'] ?? null;
-    $query = Flight::request()->query['query'] ?? null;
-    
-    if ($query) {
-        Flight::json(Flight::activityService()->searchActivities($query, $category_id, $difficulty));
-    } else if ($category_id) {
-        Flight::json(Flight::activityService()->getActivitiesByCategory($category_id));
-    } else {
-        Flight::json(Flight::activityService()->getAll());
-    }
+Flight::route('GET /SarayGo/backend/activities', function() {
+    Flight::json(Flight::activityService()->getAll());
 });
 
 /**
  * @OA\Get(
- *     path="/activities/{id}",
+ *     path="/SarayGo/backend/activities/{id}",
  *     tags={"activities"},
  *     summary="Get activity by ID",
  *     @OA\Parameter(
@@ -62,7 +35,7 @@ Flight::route('GET /activities', function() {
  *     )
  * )
  */
-Flight::route('GET /activities/@id', function($id) {
+Flight::route('GET /SarayGo/backend/activities/@id', function($id) {
     $activity = Flight::activityService()->getById($id);
     if ($activity) {
         Flight::json($activity);
@@ -79,12 +52,13 @@ Flight::route('GET /activities/@id', function($id) {
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"title", "description", "category_id", "difficulty", "duration"},
- *             @OA\Property(property="title", type="string", example="Morning Yoga"),
- *             @OA\Property(property="description", type="string", example="Start your day with yoga"),
- *             @OA\Property(property="category_id", type="integer", example=1),
- *             @OA\Property(property="difficulty", type="string", enum={"beginner", "intermediate", "advanced"}, example="beginner"),
- *             @OA\Property(property="duration", type="integer", minimum=1, example=30)
+ *             required={"name", "description", "location"},
+ *             @OA\Property(property="name", type="string", example="Hiking"),
+ *             @OA\Property(property="description", type="string", example="Mountain hiking activity"),
+ *             @OA\Property(property="location", type="string", example="Mountains"),
+ *             @OA\Property(property="price", type="number", format="float", example=50.00),
+ *             @OA\Property(property="duration", type="integer", example=120),
+ *             @OA\Property(property="max_participants", type="integer", example=20)
  *         )
  *     ),
  *     @OA\Response(
@@ -99,19 +73,14 @@ Flight::route('GET /activities/@id', function($id) {
  */
 Flight::route('POST /activities', function() {
     $data = Flight::request()->data->getData();
-    try {
-        $result = Flight::activityService()->create($data);
-        Flight::json($result, 201);
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::activityService()->create($data), 201);
 });
 
 /**
  * @OA\Put(
  *     path="/activities/{id}",
  *     tags={"activities"},
- *     summary="Update an activity",
+ *     summary="Update activity by ID",
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -121,11 +90,12 @@ Flight::route('POST /activities', function() {
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             @OA\Property(property="title", type="string", example="Morning Yoga"),
- *             @OA\Property(property="description", type="string", example="Start your day with yoga"),
- *             @OA\Property(property="category_id", type="integer", example=1),
- *             @OA\Property(property="difficulty", type="string", enum={"beginner", "intermediate", "advanced"}, example="beginner"),
- *             @OA\Property(property="duration", type="integer", minimum=1, example=30)
+ *             @OA\Property(property="name", type="string", example="Hiking"),
+ *             @OA\Property(property="description", type="string", example="Mountain hiking activity"),
+ *             @OA\Property(property="location", type="string", example="Mountains"),
+ *             @OA\Property(property="price", type="number", format="float", example=50.00),
+ *             @OA\Property(property="duration", type="integer", example=120),
+ *             @OA\Property(property="max_participants", type="integer", example=20)
  *         )
  *     ),
  *     @OA\Response(
@@ -140,23 +110,14 @@ Flight::route('POST /activities', function() {
  */
 Flight::route('PUT /activities/@id', function($id) {
     $data = Flight::request()->data->getData();
-    try {
-        $result = Flight::activityService()->update($id, $data);
-        if ($result) {
-            Flight::json($result);
-        } else {
-            Flight::halt(404, 'Activity not found');
-        }
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::activityService()->update($id, $data));
 });
 
 /**
  * @OA\Delete(
  *     path="/activities/{id}",
  *     tags={"activities"},
- *     summary="Delete an activity",
+ *     summary="Delete activity by ID",
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -164,7 +125,7 @@ Flight::route('PUT /activities/@id', function($id) {
  *         @OA\Schema(type="integer", example=1)
  *     ),
  *     @OA\Response(
- *         response=204,
+ *         response=200,
  *         description="Activity deleted successfully"
  *     ),
  *     @OA\Response(
@@ -174,83 +135,49 @@ Flight::route('PUT /activities/@id', function($id) {
  * )
  */
 Flight::route('DELETE /activities/@id', function($id) {
-    try {
-        $result = Flight::activityService()->delete($id);
-        if ($result) {
-            Flight::halt(204);
-        } else {
-            Flight::halt(404, 'Activity not found');
-        }
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::activityService()->delete($id));
 });
 
 /**
  * @OA\Get(
- *     path="/activities/popular",
+ *     path="/activities/search",
  *     tags={"activities"},
- *     summary="Get popular activities",
+ *     summary="Search activities",
  *     @OA\Parameter(
- *         name="limit",
+ *         name="query",
  *         in="query",
- *         required=false,
- *         @OA\Schema(type="integer", default=10, minimum=1, maximum=100)
+ *         required=true,
+ *         @OA\Schema(type="string", example="hiking")
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="List of popular activities",
- *         @OA\JsonContent(
- *             type="array",
- *             @OA\Items(
- *                 @OA\Property(property="id", type="integer", example=1),
- *                 @OA\Property(property="title", type="string", example="Morning Yoga"),
- *                 @OA\Property(property="popularity_score", type="number", format="float", example=4.5)
- *             )
- *         )
+ *         description="List of matching activities"
  *     )
  * )
  */
-Flight::route('GET /activities/popular', function() {
-    $limit = Flight::request()->query['limit'] ?? 10;
-    Flight::json(Flight::activityService()->getPopularActivities($limit));
+Flight::route('GET /activities/search', function() {
+    $query = Flight::request()->query['query'];
+    Flight::json(Flight::activityService()->search($query));
 });
 
 /**
  * @OA\Get(
- *     path="/activities/mood/{mood_id}",
+ *     path="/activities/location/{location}",
  *     tags={"activities"},
- *     summary="Get activities by mood",
+ *     summary="Get activities by location",
  *     @OA\Parameter(
- *         name="mood_id",
+ *         name="location",
  *         in="path",
  *         required=true,
- *         @OA\Schema(type="integer", example=1)
+ *         @OA\Schema(type="string", example="Mountains")
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="List of activities matching the mood",
- *         @OA\JsonContent(
- *             type="array",
- *             @OA\Items(
- *                 @OA\Property(property="id", type="integer", example=1),
- *                 @OA\Property(property="title", type="string", example="Morning Yoga"),
- *                 @OA\Property(property="mood_match_score", type="number", format="float", example=0.85)
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=400,
- *         description="Invalid mood ID or other error"
+ *         description="List of activities in location"
  *     )
  * )
  */
-Flight::route('GET /activities/mood/@mood_id', function($mood_id) {
-    try {
-        $activities = Flight::activityService()->getActivitiesByMood($mood_id);
-        Flight::json($activities);
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+Flight::route('GET /activities/location/@location', function($location) {
+    Flight::json(Flight::activityService()->getByLocation($location));
 });
 ?> 

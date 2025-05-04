@@ -1,127 +1,42 @@
 <?php
-require_once 'BaseService.php';
+namespace Dzelitin\SarayGo\services;
+require_once __DIR__ . '/BaseService.php';
 require_once __DIR__ . '/../dao/UserDao.php';
+use Dzelitin\SarayGo\dao\UserDao;
 
 class UserService extends BaseService {
     private $minUsernameLength = 3;
-    private $maxUsernameLength = 20;
-    private $minPasswordLength = 8;
+    private $maxUsernameLength = 50;
+    private $minPasswordLength = 6;
     private $maxPasswordLength = 50;
     private $validRoles = ['user', 'admin'];
 
     public function __construct() {
-        $dao = new UserDao();
-        parent::__construct($dao);
+        parent::__construct(new UserDao());
     }
 
-    public function register($data) {
-        $this->validateRegistrationData($data);
-        return $this->dao->register($data);
+    public function getAll() {
+        return $this->dao->getAll();
     }
 
-    public function login($data) {
-        $this->validateLoginData($data);
-        return $this->dao->login($data);
+    public function getById($id) {
+        return $this->dao->getById($id);
     }
 
     public function create($data) {
         $this->validateUserData($data);
-        return parent::create($data);
+        $this->checkDuplicateUser($data);
+        return $this->dao->insert($data);
     }
 
     public function update($id, $data) {
         $this->validateUserData($data);
-        return parent::update($id, $data);
+        $this->checkDuplicateUser($data, $id);
+        return $this->dao->update($id, $data);
     }
 
-    private function validateRegistrationData($data) {
-        // Required fields validation
-        $requiredFields = ['username', 'email', 'password'];
-        foreach ($requiredFields as $field) {
-            if (!isset($data[$field]) || empty($data[$field])) {
-                throw new Exception("Missing required field: $field");
-            }
-        }
-
-        // Username validation
-        if (strlen($data['username']) < $this->minUsernameLength || 
-            strlen($data['username']) > $this->maxUsernameLength) {
-            throw new Exception("Username must be between {$this->minUsernameLength} and {$this->maxUsernameLength} characters");
-        }
-
-        // Email validation
-        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("Invalid email format");
-        }
-
-        // Password validation
-        if (strlen($data['password']) < $this->minPasswordLength || 
-            strlen($data['password']) > $this->maxPasswordLength) {
-            throw new Exception("Password must be between {$this->minPasswordLength} and {$this->maxPasswordLength} characters");
-        }
-
-        // Check if username exists
-        if ($this->dao->usernameExists($data['username'])) {
-            throw new Exception("Username already exists");
-        }
-
-        // Check if email exists
-        if ($this->dao->emailExists($data['email'])) {
-            throw new Exception("Email already exists");
-        }
-    }
-
-    private function validateLoginData($data) {
-        // Required fields validation
-        $requiredFields = ['username', 'password'];
-        foreach ($requiredFields as $field) {
-            if (!isset($data[$field]) || empty($data[$field])) {
-                throw new Exception("Missing required field: $field");
-            }
-        }
-    }
-
-    private function validateUserData($data) {
-        // Required fields validation
-        $requiredFields = ['username', 'email', 'role'];
-        foreach ($requiredFields as $field) {
-            if (!isset($data[$field]) || empty($data[$field])) {
-                throw new Exception("Missing required field: $field");
-            }
-        }
-
-        // Username validation
-        if (strlen($data['username']) < $this->minUsernameLength || 
-            strlen($data['username']) > $this->maxUsernameLength) {
-            throw new Exception("Username must be between {$this->minUsernameLength} and {$this->maxUsernameLength} characters");
-        }
-
-        // Email validation
-        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("Invalid email format");
-        }
-
-        // Role validation
-        if (!in_array($data['role'], $this->validRoles)) {
-            throw new Exception("Invalid role. Must be one of: " . implode(', ', $this->validRoles));
-        }
-
-        // Check if username exists (excluding current user)
-        if (isset($data['id']) && $this->dao->usernameExists($data['username'], $data['id'])) {
-            throw new Exception("Username already exists");
-        }
-
-        // Check if email exists (excluding current user)
-        if (isset($data['id']) && $this->dao->emailExists($data['email'], $data['id'])) {
-            throw new Exception("Email already exists");
-        }
-    }
-
-    public function getByUsername($username) {
-        if (empty($username)) {
-            throw new Exception("Username cannot be empty");
-        }
-        return $this->dao->getByUsername($username);
+    public function delete($id) {
+        return $this->dao->delete($id);
     }
 
     public function getByEmail($email) {
@@ -132,6 +47,38 @@ class UserService extends BaseService {
             throw new Exception("Invalid email format");
         }
         return $this->dao->getByEmail($email);
+    }
+
+    public function getByUsername($username) {
+        if (empty($username)) {
+            throw new Exception("Username cannot be empty");
+        }
+        return $this->dao->getByUsername($username);
+    }
+
+    public function register($data) {
+        $this->validateUserData($data, true);
+        $this->checkDuplicateUser($data);
+        return $this->dao->createUser($data['username'], $data['email'], $data['password']);
+    }
+
+    public function login($email, $password) {
+        if (empty($email) || empty($password)) {
+            throw new \Exception("Email and password are required");
+        }
+
+        $user = $this->dao->getUserByEmail($email);
+        if (!$user) {
+            throw new \Exception("User not found");
+        }
+
+        if (!$this->dao->verifyPassword($user, $password)) {
+            throw new \Exception("Invalid password");
+        }
+
+        // Remove sensitive data before returning
+        unset($user['password']);
+        return $user;
     }
 
     public function changePassword($user_id, $current_password, $new_password) {
@@ -167,6 +114,94 @@ class UserService extends BaseService {
             throw new Exception("Search query cannot be empty");
         }
         return $this->dao->searchUsers($query);
+    }
+
+    public function updateProfile($id, $data) {
+        $this->validateUserData($data, false);
+        $this->checkDuplicateUser($data, $id);
+        return $this->dao->updateUser($id, $data['username'], $data['email'], $data['password'] ?? null);
+    }
+
+    public function getUsersByRole($role) {
+        if (!in_array($role, $this->validRoles)) {
+            throw new \Exception("Invalid role. Must be one of: " . implode(', ', $this->validRoles));
+        }
+        return $this->dao->getUsersByRole($role);
+    }
+
+    public function updateUserRole($id, $role) {
+        if (!in_array($role, $this->validRoles)) {
+            throw new \Exception("Invalid role. Must be one of: " . implode(', ', $this->validRoles));
+        }
+        return $this->dao->updateUserRole($id, $role);
+    }
+
+    public function getUserStatistics() {
+        return $this->dao->getUserStatistics();
+    }
+
+    private function validateUserData($data, $isNewUser = true) {
+        // Username validation
+        if (!isset($data['username']) || empty($data['username'])) {
+            throw new \Exception("Username is required");
+        }
+        if (strlen($data['username']) < $this->minUsernameLength || 
+            strlen($data['username']) > $this->maxUsernameLength) {
+            throw new \Exception("Username must be between {$this->minUsernameLength} and {$this->maxUsernameLength} characters");
+        }
+
+        // Email validation
+        if (!isset($data['email']) || empty($data['email'])) {
+            throw new \Exception("Email is required");
+        }
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            throw new \Exception("Invalid email format");
+        }
+
+        // Password validation (only for new users or if password is being updated)
+        if ($isNewUser || (isset($data['password']) && !empty($data['password']))) {
+            if (!isset($data['password']) || empty($data['password'])) {
+                throw new \Exception("Password is required");
+            }
+            if (strlen($data['password']) < $this->minPasswordLength) {
+                throw new \Exception("Password must be at least {$this->minPasswordLength} characters");
+            }
+        }
+
+        // Role validation (if provided)
+        if (isset($data['role']) && !empty($data['role'])) {
+            if (!in_array($data['role'], $this->validRoles)) {
+                throw new \Exception("Invalid role. Must be one of: " . implode(', ', $this->validRoles));
+            }
+        }
+    }
+
+    private function checkDuplicateUser($data, $excludeId = null) {
+        // Check for duplicate username
+        $existingUser = $this->dao->getUserByUsername($data['username']);
+        if ($existingUser && (!$excludeId || $existingUser['id'] != $excludeId)) {
+            throw new \Exception("Username already exists");
+        }
+
+        // Check for duplicate email
+        $existingUser = $this->dao->getUserByEmail($data['email']);
+        if ($existingUser && (!$excludeId || $existingUser['id'] != $excludeId)) {
+            throw new \Exception("Email already exists");
+        }
+    }
+
+    public function getUserByEmail($email) {
+        if (empty($email)) {
+            throw new \Exception("Email is required");
+        }
+        return $this->dao->getUserByEmail($email);
+    }
+
+    public function getUserByUsername($username) {
+        if (empty($username)) {
+            throw new \Exception("Username is required");
+        }
+        return $this->dao->getUserByUsername($username);
     }
 }
 ?>

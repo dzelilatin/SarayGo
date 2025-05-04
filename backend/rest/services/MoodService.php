@@ -1,17 +1,19 @@
 <?php
-require_once 'BaseService.php';
+namespace Dzelitin\SarayGo\services;
+require_once __DIR__ . '/BaseService.php';
 require_once __DIR__ . '/../dao/MoodDao.php';
+use Dzelitin\SarayGo\dao\MoodDao;
 
 class MoodService extends BaseService {
     private $minNameLength = 2;
-    private $maxNameLength = 50;
+    private $maxNameLength = 100;
     private $minDescriptionLength = 10;
     private $maxDescriptionLength = 500;
     private $validIcons = ['happy', 'sad', 'angry', 'excited', 'calm', 'anxious', 'tired', 'energetic'];
+    private $validTypes = ['positive', 'negative', 'neutral'];
 
     public function __construct() {
-        $dao = new MoodDao();
-        parent::__construct($dao);
+        parent::__construct(new MoodDao());
     }
 
     public function get_by_name($name) {
@@ -21,35 +23,50 @@ class MoodService extends BaseService {
         return $this->dao->get_by_name($name);
     }
 
+    public function getByType($type) {
+        if (empty($type)) {
+            throw new Exception("Mood type cannot be empty");
+        }
+        if (!in_array(strtolower($type), $this->validTypes)) {
+            throw new Exception("Invalid mood type. Must be one of: " . implode(', ', $this->validTypes));
+        }
+        return $this->dao->getByType($type);
+    }
+
     public function create($data) {
         $this->validateMoodData($data);
-        return parent::create($data);
+        return $this->dao->createMood($data['mood_name']);
     }
 
     public function update($id, $data) {
         $this->validateMoodData($data);
-        return parent::update($id, $data);
+        return $this->dao->updateMood($id, $data['mood_name']);
+    }
+
+    public function getAllMoods() {
+        return $this->dao->getAllMoods();
     }
 
     private function validateMoodData($data) {
         // Required fields validation
-        $requiredFields = ['name', 'description', 'icon'];
-        foreach ($requiredFields as $field) {
-            if (!isset($data[$field]) || empty($data[$field])) {
-                throw new Exception("Missing required field: $field");
-            }
+        if (!isset($data['mood_name']) || empty($data['mood_name'])) {
+            throw new \Exception("Mood name is required");
         }
 
         // Name validation
-        if (strlen($data['name']) < $this->minNameLength || 
-            strlen($data['name']) > $this->maxNameLength) {
-            throw new Exception("Name must be between {$this->minNameLength} and {$this->maxNameLength} characters");
+        if (strlen($data['mood_name']) < $this->minNameLength || 
+            strlen($data['mood_name']) > $this->maxNameLength) {
+            throw new \Exception("Mood name must be between {$this->minNameLength} and {$this->maxNameLength} characters");
+        }
+
+        // Type validation
+        if (!in_array(strtolower($data['type']), $this->validTypes)) {
+            throw new Exception("Invalid mood type. Must be one of: " . implode(', ', $this->validTypes));
         }
 
         // Description validation
-        if (strlen($data['description']) < $this->minDescriptionLength || 
-            strlen($data['description']) > $this->maxDescriptionLength) {
-            throw new Exception("Description must be between {$this->minDescriptionLength} and {$this->maxDescriptionLength} characters");
+        if (strlen($data['description']) > 500) {
+            throw new Exception("Description must be less than 500 characters");
         }
 
         // Icon validation
@@ -58,7 +75,7 @@ class MoodService extends BaseService {
         }
 
         // Check for duplicate mood name
-        if ($this->dao->getByName($data['name'])) {
+        if ($this->dao->getByName($data['mood_name'])) {
             throw new Exception("Mood name already exists");
         }
     }

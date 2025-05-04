@@ -6,26 +6,12 @@
  *     summary="Get all categories",
  *     @OA\Response(
  *         response=200,
- *         description="List of all categories",
- *         @OA\JsonContent(
- *             type="array",
- *             @OA\Items(
- *                 @OA\Property(property="id", type="integer", example=1),
- *                 @OA\Property(property="name", type="string", example="Yoga"),
- *                 @OA\Property(property="description", type="string", example="Yoga activities and exercises")
- *             )
- *         )
+ *         description="List of all categories"
  *     )
  * )
  */
 Flight::route('GET /categories', function() {
-    $query = Flight::request()->query['query'] ?? null;
-    
-    if ($query) {
-        Flight::json(Flight::categoryService()->searchCategories($query));
-    } else {
-        Flight::json(Flight::categoryService()->getAll());
-    }
+    Flight::json(Flight::categoryService()->getAll());
 });
 
 /**
@@ -59,36 +45,6 @@ Flight::route('GET /categories/@id', function($id) {
 });
 
 /**
- * @OA\Get(
- *     path="/categories/name/@name",
- *     tags={"categories"},
- *     summary="Get category by name",
- *     @OA\Parameter(
- *         name="name",
- *         in="path",
- *         required=true,
- *         @OA\Schema(type="string", example="Yoga")
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Category details"
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="Category not found"
- *     )
- * )
- */
-Flight::route('GET /categories/name/@name', function($name) {
-    $category = Flight::categoryService()->getByName($name);
-    if ($category) {
-        Flight::json($category);
-    } else {
-        Flight::halt(404, 'Category not found');
-    }
-});
-
-/**
  * @OA\Post(
  *     path="/categories",
  *     tags={"categories"},
@@ -97,8 +53,10 @@ Flight::route('GET /categories/name/@name', function($name) {
  *         required=true,
  *         @OA\JsonContent(
  *             required={"name", "description"},
- *             @OA\Property(property="name", type="string", example="Yoga"),
- *             @OA\Property(property="description", type="string", example="Yoga activities and exercises")
+ *             @OA\Property(property="name", type="string", example="Adventure"),
+ *             @OA\Property(property="description", type="string", example="Adventure activities and experiences"),
+ *             @OA\Property(property="parent_id", type="integer", example=null),
+ *             @OA\Property(property="icon", type="string", example="adventure-icon.png")
  *         )
  *     ),
  *     @OA\Response(
@@ -113,19 +71,14 @@ Flight::route('GET /categories/name/@name', function($name) {
  */
 Flight::route('POST /categories', function() {
     $data = Flight::request()->data->getData();
-    try {
-        $result = Flight::categoryService()->create($data);
-        Flight::json($result, 201);
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::categoryService()->create($data), 201);
 });
 
 /**
  * @OA\Put(
  *     path="/categories/{id}",
  *     tags={"categories"},
- *     summary="Update a category",
+ *     summary="Update category by ID",
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -135,8 +88,10 @@ Flight::route('POST /categories', function() {
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             @OA\Property(property="name", type="string", example="Yoga"),
- *             @OA\Property(property="description", type="string", example="Yoga activities and exercises")
+ *             @OA\Property(property="name", type="string", example="Adventure"),
+ *             @OA\Property(property="description", type="string", example="Adventure activities and experiences"),
+ *             @OA\Property(property="parent_id", type="integer", example=null),
+ *             @OA\Property(property="icon", type="string", example="adventure-icon.png")
  *         )
  *     ),
  *     @OA\Response(
@@ -151,23 +106,14 @@ Flight::route('POST /categories', function() {
  */
 Flight::route('PUT /categories/@id', function($id) {
     $data = Flight::request()->data->getData();
-    try {
-        $result = Flight::categoryService()->update($id, $data);
-        if ($result) {
-            Flight::json($result);
-        } else {
-            Flight::halt(404, 'Category not found');
-        }
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::categoryService()->update($id, $data));
 });
 
 /**
  * @OA\Delete(
  *     path="/categories/{id}",
  *     tags={"categories"},
- *     summary="Delete a category",
+ *     summary="Delete category by ID",
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -175,7 +121,7 @@ Flight::route('PUT /categories/@id', function($id) {
  *         @OA\Schema(type="integer", example=1)
  *     ),
  *     @OA\Response(
- *         response=204,
+ *         response=200,
  *         description="Category deleted successfully"
  *     ),
  *     @OA\Response(
@@ -185,16 +131,43 @@ Flight::route('PUT /categories/@id', function($id) {
  * )
  */
 Flight::route('DELETE /categories/@id', function($id) {
-    try {
-        $result = Flight::categoryService()->delete($id);
-        if ($result) {
-            Flight::halt(204);
-        } else {
-            Flight::halt(404, 'Category not found');
-        }
-    } catch (Exception $e) {
-        Flight::halt(400, $e->getMessage());
-    }
+    Flight::json(Flight::categoryService()->delete($id));
+});
+
+/**
+ * @OA\Get(
+ *     path="/categories/parent/{parent_id}",
+ *     tags={"categories"},
+ *     summary="Get subcategories by parent ID",
+ *     @OA\Parameter(
+ *         name="parent_id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of subcategories"
+ *     )
+ * )
+ */
+Flight::route('GET /categories/parent/@parent_id', function($parent_id) {
+    Flight::json(Flight::categoryService()->getSubcategories($parent_id));
+});
+
+/**
+ * @OA\Get(
+ *     path="/categories/tree",
+ *     tags={"categories"},
+ *     summary="Get category tree",
+ *     @OA\Response(
+ *         response=200,
+ *         description="Category hierarchy tree"
+ *     )
+ * )
+ */
+Flight::route('GET /categories/tree', function() {
+    Flight::json(Flight::categoryService()->getCategoryTree());
 });
 
 /**

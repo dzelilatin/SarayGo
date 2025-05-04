@@ -3,9 +3,8 @@ RewriteEngine On
 # Handle API requests
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^api/(.*)$ rest/routes.php [QSA,L]
+RewriteRule ^(.*)$ rest/index.php [QSA,L]
 
-# Handle root and docs requests
-RewriteCond %{REQUEST_URI} ^/SarayGo/backend/?$ [OR]
+# Handle docs requests
 RewriteCond %{REQUEST_URI} ^/SarayGo/backend/docs/?$
 RewriteRule .* public/v1/docs/index.php [L]
