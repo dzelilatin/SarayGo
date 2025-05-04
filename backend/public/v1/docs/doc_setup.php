@@ -12,7 +12,7 @@
  */
 /**
  * @OA\Server(
- *     url="http://localhost/SarayGo/backend",
+ *     url="http://localhost/SarayGo/backend/rest",
  *     description="API Server"
  * )
  */

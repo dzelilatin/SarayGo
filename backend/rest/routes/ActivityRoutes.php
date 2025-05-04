@@ -1,7 +1,7 @@
 <?php
 /**
  * @OA\Get(
- *     path="/SarayGo/backend/activities",
+ *     path="/activities",
  *     tags={"activities"},
  *     summary="Get all activities",
  *     @OA\Response(
@@ -10,54 +10,19 @@
  *     )
  * )
  */
-Flight::route('GET /SarayGo/backend/activities', function() {
-    Flight::json(Flight::activityService()->getAll());
-});
-
-/**
- * @OA\Get(
- *     path="/SarayGo/backend/activities/search",
- *     tags={"activities"},
- *     summary="Search activities",
- *     @OA\Parameter(
- *         name="query",
- *         in="query",
- *         required=true,
- *         @OA\Schema(type="string", example="hiking")
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="List of matching activities"
- *     ),
- *     @OA\Response(
- *         response=400,
- *         description="Invalid search query"
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="No activities found"
- *     )
- * )
- */
-Flight::route('GET /SarayGo/backend/activities/search', function() {
+Flight::route('GET /activities', function() {
     try {
-        $query = Flight::request()->query['query'] ?? null;
-        if (!$query) {
-            Flight::json(['error' => 'Search query is required'], 400);
-            return;
-        }
-        $results = Flight::activityService()->searchActivities($query);
-        Flight::json($results);
-    } catch (\Exception $e) {
-        $code = $e->getCode();
-        $code = ($code >= 400 && $code < 600) ? $code : 500;
-        Flight::json(['error' => $e->getMessage()], $code);
+        $activities = Flight::activityService()->getAll();
+        Flight::json($activities);
+    } catch (Exception $e) {
+        error_log("Error in GET /activities: " . $e->getMessage());
+        Flight::json(['error' => $e->getMessage()], 500);
     }
 });
 
 /**
  * @OA\Get(
- *     path="/SarayGo/backend/activities/{id}",
+ *     path="/activities/{id}",
  *     tags={"activities"},
  *     summary="Get activity by ID",
  *     @OA\Parameter(
@@ -76,7 +41,7 @@ Flight::route('GET /SarayGo/backend/activities/search', function() {
  *     )
  * )
  */
-Flight::route('GET /SarayGo/backend/activities/@id', function($id) {
+Flight::route('GET /activities/@id', function($id) {
     try {
         if (!is_numeric($id)) {
             Flight::json(['error' => 'Invalid activity ID'], 400);
@@ -97,7 +62,7 @@ Flight::route('GET /SarayGo/backend/activities/@id', function($id) {
 
 /**
  * @OA\Post(
- *     path="/SarayGo/backend/activities",
+ *     path="/activities",
  *     tags={"activities"},
  *     summary="Create a new activity",
  *     @OA\RequestBody(
@@ -121,7 +86,7 @@ Flight::route('GET /SarayGo/backend/activities/@id', function($id) {
  *     )
  * )
  */
-Flight::route('POST /SarayGo/backend/activities', function() {
+Flight::route('POST /activities', function() {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::activityService()->create($data);
@@ -133,7 +98,7 @@ Flight::route('POST /SarayGo/backend/activities', function() {
 
 /**
  * @OA\Put(
- *     path="/SarayGo/backend/activities/{id}",
+ *     path="/activities/{id}",
  *     tags={"activities"},
  *     summary="Update activity by ID",
  *     @OA\Parameter(
@@ -171,7 +136,7 @@ Flight::route('POST /SarayGo/backend/activities', function() {
  *     )
  * )
  */
-Flight::route('PUT /SarayGo/backend/activities/@id', function($id) {
+Flight::route('PUT /activities/@id', function($id) {
     try {
         $data = Flight::request()->data->getData();
         $result = Flight::activityService()->update($id, $data);
@@ -187,7 +152,7 @@ Flight::route('PUT /SarayGo/backend/activities/@id', function($id) {
 
 /**
  * @OA\Delete(
- *     path="/SarayGo/backend/activities/{id}",
+ *     path="/activities/{id}",
  *     tags={"activities"},
  *     summary="Delete activity by ID",
  *     @OA\Parameter(
@@ -206,7 +171,7 @@ Flight::route('PUT /SarayGo/backend/activities/@id', function($id) {
  *     )
  * )
  */
-Flight::route('DELETE /SarayGo/backend/activities/@id', function($id) {
+Flight::route('DELETE /activities/@id', function($id) {
     $result = Flight::activityService()->delete($id);
     if ($result) {
         Flight::json(['message' => 'Activity deleted successfully']);
@@ -217,7 +182,29 @@ Flight::route('DELETE /SarayGo/backend/activities/@id', function($id) {
 
 /**
  * @OA\Get(
- *     path="/SarayGo/backend/activities/location/{location}",
+ *     path="/activities/search",
+ *     tags={"activities"},
+ *     summary="Search activities",
+ *     @OA\Parameter(
+ *         name="query",
+ *         in="query",
+ *         required=true,
+ *         @OA\Schema(type="string", example="hiking")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of matching activities"
+ *     )
+ * )
+ */
+Flight::route('GET /activities/search', function() {
+    $query = Flight::request()->query['query'];
+    Flight::json(Flight::activityService()->search($query));
+});
+
+/**
+ * @OA\Get(
+ *     path="/activities/location/{location}",
  *     tags={"activities"},
  *     summary="Get activities by location",
  *     @OA\Parameter(
@@ -236,22 +223,7 @@ Flight::route('DELETE /SarayGo/backend/activities/@id', function($id) {
  *     )
  * )
  */
-Flight::route('GET /SarayGo/backend/activities/location/@location', function($location) {
-    try {
-        if (empty($location)) {
-            Flight::json(['error' => 'Location parameter is required'], 400);
-            return;
-        }
-        $activities = Flight::activityService()->getByLocation($location);
-        if (empty($activities)) {
-            Flight::json(['error' => 'No activities found for this location'], 404);
-            return;
-        }
-        Flight::json($activities);
-    } catch (\Exception $e) {
-        $code = $e->getCode();
-        $code = ($code >= 400 && $code < 600) ? $code : 500;
-        Flight::json(['error' => $e->getMessage()], $code);
-    }
+Flight::route('GET /activities/location/@location', function($location) {
+    Flight::json(Flight::activityService()->getByLocation($location));
 });
 ?> 

@@ -4,9 +4,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 
-// Set base path
-Flight::set('flight.base_path', '/SarayGo/backend');
-
 // Register services
 try {
     // Register services

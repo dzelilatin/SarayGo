@@ -1,16 +1,30 @@
 <?php
-$host = 'localhost';        // or 127.0.0.1
-$db   = 'SarayGo';    // your database name
-$user = 'root';    // your DB username (e.g., root)
-$pass = '';    // your DB password
-$charset = 'utf8mb4';
-
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+require_once __DIR__ . '/config.php';
 
 try {
-    $pdo = new PDO($dsn, $user, $pass);
-    echo "✅ Database connection successful!";
+    $conn = \Dzelitin\SarayGo\Database::connect();
+    echo "Database connection successful!\n";
+
+    // Check if activities table exists
+    $stmt = $conn->query("SHOW TABLES LIKE 'activities'");
+    if ($stmt->rowCount() > 0) {
+        echo "Activities table exists!\n";
+        
+        // Get table structure
+        $stmt = $conn->query("DESCRIBE activities");
+        echo "\nTable structure:\n";
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            echo "{$row['Field']} - {$row['Type']}\n";
+        }
+        
+        // Count records
+        $stmt = $conn->query("SELECT COUNT(*) as count FROM activities");
+        $count = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+        echo "\nNumber of records: {$count}\n";
+    } else {
+        echo "Activities table does not exist!\n";
+    }
 } catch (PDOException $e) {
-    echo "❌ Database connection failed: " . $e->getMessage();
+    echo "Error: " . $e->getMessage() . "\n";
 }
 ?>
