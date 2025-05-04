@@ -1,7 +1,7 @@
 <?php
 /**
  * @OA\Get(
- *     path="/api/contacts",
+ *     path="/contacts",
  *     tags={"contacts"},
  *     summary="Get all contacts",
  *     @OA\Response(
@@ -20,7 +20,7 @@
  *     )
  * )
  */
-Flight::route('GET /api/contacts', function() {
+Flight::route('GET /contacts', function() {
     $status = Flight::request()->query['status'] ?? null;
     $query = Flight::request()->query['query'] ?? null;
     
@@ -35,7 +35,7 @@ Flight::route('GET /api/contacts', function() {
 
 /**
  * @OA\Get(
- *     path="/api/contacts/{id}",
+ *     path="/contacts/{id}",
  *     tags={"contacts"},
  *     summary="Get contact by ID",
  *     @OA\Parameter(
@@ -54,7 +54,7 @@ Flight::route('GET /api/contacts', function() {
  *     )
  * )
  */
-Flight::route('GET /api/contacts/@id', function($id) {
+Flight::route('GET /contacts/@id', function($id) {
     $contact = Flight::contactService()->getById($id);
     if ($contact) {
         Flight::json($contact);
@@ -65,7 +65,7 @@ Flight::route('GET /api/contacts/@id', function($id) {
 
 /**
  * @OA\Post(
- *     path="/api/contacts",
+ *     path="/contacts",
  *     tags={"contacts"},
  *     summary="Create a new contact message",
  *     @OA\RequestBody(
@@ -87,7 +87,7 @@ Flight::route('GET /api/contacts/@id', function($id) {
  *     )
  * )
  */
-Flight::route('POST /api/contacts', function() {
+Flight::route('POST /contacts', function() {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::contactService()->create($data);
@@ -99,7 +99,7 @@ Flight::route('POST /api/contacts', function() {
 
 /**
  * @OA\Put(
- *     path="/api/contacts/{id}",
+ *     path="/contacts/{id}",
  *     tags={"contacts"},
  *     summary="Update a contact message",
  *     @OA\Parameter(
@@ -126,7 +126,7 @@ Flight::route('POST /api/contacts', function() {
  *     )
  * )
  */
-Flight::route('PUT /api/contacts/@id', function($id) {
+Flight::route('PUT /contacts/@id', function($id) {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::contactService()->update($id, $data);
@@ -142,7 +142,7 @@ Flight::route('PUT /api/contacts/@id', function($id) {
 
 /**
  * @OA\Delete(
- *     path="/api/contacts/{id}",
+ *     path="/contacts/{id}",
  *     tags={"contacts"},
  *     summary="Delete a contact message",
  *     @OA\Parameter(
@@ -161,7 +161,7 @@ Flight::route('PUT /api/contacts/@id', function($id) {
  *     )
  * )
  */
-Flight::route('DELETE /api/contacts/@id', function($id) {
+Flight::route('DELETE /contacts/@id', function($id) {
     try {
         $result = Flight::contactService()->delete($id);
         if ($result) {
@@ -175,7 +175,7 @@ Flight::route('DELETE /api/contacts/@id', function($id) {
 });
 
 // Mark contact as read
-Flight::route('PUT /api/contacts/@id/read', function($id) {
+Flight::route('PUT /contacts/@id/read', function($id) {
     try {
         $result = Flight::contactService()->mark_as_read($id);
         if ($result) {
@@ -189,7 +189,7 @@ Flight::route('PUT /api/contacts/@id/read', function($id) {
 });
 
 // Mark contact as unread
-Flight::route('PUT /api/contacts/@id/unread', function($id) {
+Flight::route('PUT /contacts/@id/unread', function($id) {
     try {
         $result = Flight::contactService()->mark_as_unread($id);
         if ($result) {
@@ -203,7 +203,7 @@ Flight::route('PUT /api/contacts/@id/unread', function($id) {
 });
 
 // Archive contact
-Flight::route('PUT /api/contacts/@id/archive', function($id) {
+Flight::route('PUT /contacts/@id/archive', function($id) {
     try {
         $result = Flight::contactService()->archive($id);
         if ($result) {
@@ -217,13 +217,13 @@ Flight::route('PUT /api/contacts/@id/archive', function($id) {
 });
 
 // Get recent contacts
-Flight::route('GET /api/contacts/recent', function() {
+Flight::route('GET /contacts/recent', function() {
     $limit = Flight::request()->query['limit'] ?? 10;
     Flight::json(Flight::contactService()->getRecentContacts($limit));
 });
 
 // Get unread count
-Flight::route('GET /api/contacts/unread-count', function() {
+Flight::route('GET /contacts/unread-count', function() {
     Flight::json(['count' => Flight::contactService()->getUnreadCount()]);
 });
 ?> 

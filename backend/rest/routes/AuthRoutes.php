@@ -1,7 +1,7 @@
 <?php
 /**
  * @OA\Post(
- *     path="/api/user/register",
+ *     path="/user/register",
  *     tags={"auth"},
  *     summary="Register a new user",
  *     @OA\RequestBody(
@@ -26,7 +26,7 @@
 
 /**
  * @OA\Post(
- *     path="/api/user/login",
+ *     path="/user/login",
  *     tags={"auth"},
  *     summary="Login user",
  *     @OA\RequestBody(

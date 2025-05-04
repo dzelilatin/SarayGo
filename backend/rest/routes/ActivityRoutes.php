@@ -1,7 +1,7 @@
 <?php
 /**
  * @OA\Get(
- *     path="/api/activities",
+ *     path="/activities",
  *     tags={"activities"},
  *     summary="Get all activities",
  *     @OA\Parameter(
@@ -27,7 +27,7 @@
  *     )
  * )
  */
-Flight::route('GET /api/activities', function() {
+Flight::route('GET /activities', function() {
     $category_id = Flight::request()->query['category_id'] ?? null;
     $difficulty = Flight::request()->query['difficulty'] ?? null;
     $query = Flight::request()->query['query'] ?? null;
@@ -43,7 +43,7 @@ Flight::route('GET /api/activities', function() {
 
 /**
  * @OA\Get(
- *     path="/api/activities/{id}",
+ *     path="/activities/{id}",
  *     tags={"activities"},
  *     summary="Get activity by ID",
  *     @OA\Parameter(
@@ -62,7 +62,7 @@ Flight::route('GET /api/activities', function() {
  *     )
  * )
  */
-Flight::route('GET /api/activities/@id', function($id) {
+Flight::route('GET /activities/@id', function($id) {
     $activity = Flight::activityService()->getById($id);
     if ($activity) {
         Flight::json($activity);
@@ -73,7 +73,7 @@ Flight::route('GET /api/activities/@id', function($id) {
 
 /**
  * @OA\Post(
- *     path="/api/activities",
+ *     path="/activities",
  *     tags={"activities"},
  *     summary="Create a new activity",
  *     @OA\RequestBody(
@@ -97,7 +97,7 @@ Flight::route('GET /api/activities/@id', function($id) {
  *     )
  * )
  */
-Flight::route('POST /api/activities', function() {
+Flight::route('POST /activities', function() {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::activityService()->create($data);
@@ -109,7 +109,7 @@ Flight::route('POST /api/activities', function() {
 
 /**
  * @OA\Put(
- *     path="/api/activities/{id}",
+ *     path="/activities/{id}",
  *     tags={"activities"},
  *     summary="Update an activity",
  *     @OA\Parameter(
@@ -138,7 +138,7 @@ Flight::route('POST /api/activities', function() {
  *     )
  * )
  */
-Flight::route('PUT /api/activities/@id', function($id) {
+Flight::route('PUT /activities/@id', function($id) {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::activityService()->update($id, $data);
@@ -154,7 +154,7 @@ Flight::route('PUT /api/activities/@id', function($id) {
 
 /**
  * @OA\Delete(
- *     path="/api/activities/{id}",
+ *     path="/activities/{id}",
  *     tags={"activities"},
  *     summary="Delete an activity",
  *     @OA\Parameter(
@@ -173,7 +173,7 @@ Flight::route('PUT /api/activities/@id', function($id) {
  *     )
  * )
  */
-Flight::route('DELETE /api/activities/@id', function($id) {
+Flight::route('DELETE /activities/@id', function($id) {
     try {
         $result = Flight::activityService()->delete($id);
         if ($result) {
@@ -188,7 +188,7 @@ Flight::route('DELETE /api/activities/@id', function($id) {
 
 /**
  * @OA\Get(
- *     path="/api/activities/popular",
+ *     path="/activities/popular",
  *     tags={"activities"},
  *     summary="Get popular activities",
  *     @OA\Parameter(
@@ -211,14 +211,14 @@ Flight::route('DELETE /api/activities/@id', function($id) {
  *     )
  * )
  */
-Flight::route('GET /api/activities/popular', function() {
+Flight::route('GET /activities/popular', function() {
     $limit = Flight::request()->query['limit'] ?? 10;
     Flight::json(Flight::activityService()->getPopularActivities($limit));
 });
 
 /**
  * @OA\Get(
- *     path="/api/activities/mood/{mood_id}",
+ *     path="/activities/mood/{mood_id}",
  *     tags={"activities"},
  *     summary="Get activities by mood",
  *     @OA\Parameter(
@@ -245,7 +245,7 @@ Flight::route('GET /api/activities/popular', function() {
  *     )
  * )
  */
-Flight::route('GET /api/activities/mood/@mood_id', function($mood_id) {
+Flight::route('GET /activities/mood/@mood_id', function($mood_id) {
     try {
         $activities = Flight::activityService()->getActivitiesByMood($mood_id);
         Flight::json($activities);

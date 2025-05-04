@@ -1,7 +1,7 @@
 <?php
 /**
  * @OA\Get(
- *     path="/api/recommendations",
+ *     path="/recommendations",
  *     tags={"recommendations"},
  *     summary="Get all recommendations",
  *     @OA\Parameter(
@@ -26,7 +26,7 @@
  *     )
  * )
  */
-Flight::route('GET /api/recommendations', function() {
+Flight::route('GET /recommendations', function() {
     $mood_id = Flight::request()->query['mood_id'] ?? null;
     $category_id = Flight::request()->query['category_id'] ?? null;
     $user_id = Flight::request()->query['user_id'] ?? null;
@@ -47,7 +47,7 @@ Flight::route('GET /api/recommendations', function() {
 
 /**
  * @OA\Get(
- *     path="/api/recommendations/{id}",
+ *     path="/recommendations/{id}",
  *     tags={"recommendations"},
  *     summary="Get recommendation by ID",
  *     @OA\Parameter(
@@ -66,7 +66,7 @@ Flight::route('GET /api/recommendations', function() {
  *     )
  * )
  */
-Flight::route('GET /api/recommendations/@id', function($id) {
+Flight::route('GET /recommendations/@id', function($id) {
     $recommendation = Flight::recommendationService()->getById($id);
     if ($recommendation) {
         Flight::json($recommendation);
@@ -77,7 +77,7 @@ Flight::route('GET /api/recommendations/@id', function($id) {
 
 /**
  * @OA\Post(
- *     path="/api/recommendations",
+ *     path="/recommendations",
  *     tags={"recommendations"},
  *     summary="Create a new recommendation",
  *     @OA\RequestBody(
@@ -99,7 +99,7 @@ Flight::route('GET /api/recommendations/@id', function($id) {
  *     )
  * )
  */
-Flight::route('POST /api/recommendations', function() {
+Flight::route('POST /recommendations', function() {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::recommendationService()->create($data);
@@ -111,7 +111,7 @@ Flight::route('POST /api/recommendations', function() {
 
 /**
  * @OA\Put(
- *     path="/api/recommendations/{id}",
+ *     path="/recommendations/{id}",
  *     tags={"recommendations"},
  *     summary="Update a recommendation",
  *     @OA\Parameter(
@@ -138,7 +138,7 @@ Flight::route('POST /api/recommendations', function() {
  *     )
  * )
  */
-Flight::route('PUT /api/recommendations/@id', function($id) {
+Flight::route('PUT /recommendations/@id', function($id) {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::recommendationService()->update($id, $data);
@@ -154,7 +154,7 @@ Flight::route('PUT /api/recommendations/@id', function($id) {
 
 /**
  * @OA\Delete(
- *     path="/api/recommendations/{id}",
+ *     path="/recommendations/{id}",
  *     tags={"recommendations"},
  *     summary="Delete a recommendation",
  *     @OA\Parameter(
@@ -173,7 +173,7 @@ Flight::route('PUT /api/recommendations/@id', function($id) {
  *     )
  * )
  */
-Flight::route('DELETE /api/recommendations/@id', function($id) {
+Flight::route('DELETE /recommendations/@id', function($id) {
     try {
         $result = Flight::recommendationService()->delete($id);
         if ($result) {
@@ -187,7 +187,7 @@ Flight::route('DELETE /api/recommendations/@id', function($id) {
 });
 
 // Get personalized recommendations
-Flight::route('GET /api/recommendations/personalized', function() {
+Flight::route('GET /recommendations/personalized', function() {
     $user_id = Flight::request()->query['user_id'] ?? null;
     $mood_id = Flight::request()->query['mood_id'] ?? null;
     
@@ -204,13 +204,13 @@ Flight::route('GET /api/recommendations/personalized', function() {
 });
 
 // Get popular recommendations
-Flight::route('GET /api/recommendations/popular', function() {
+Flight::route('GET /recommendations/popular', function() {
     $limit = Flight::request()->query['limit'] ?? 10;
     Flight::json(Flight::recommendationService()->getPopularRecommendations($limit));
 });
 
 // Get recommendation statistics
-Flight::route('GET /api/recommendations/statistics', function() {
+Flight::route('GET /recommendations/statistics', function() {
     Flight::json(Flight::recommendationService()->getRecommendationStatistics());
 });
 ?> 

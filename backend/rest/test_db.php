@@ -2,7 +2,7 @@
 $host = 'localhost';        // or 127.0.0.1
 $db   = 'SarayGo';    // your database name
 $user = 'root';    // your DB username (e.g., root)
-$pass = 'root';    // your DB password
+$pass = '';    // your DB password
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";

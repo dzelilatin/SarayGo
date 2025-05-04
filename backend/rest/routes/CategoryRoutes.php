@@ -1,7 +1,7 @@
 <?php
 /**
  * @OA\Get(
- *     path="/api/categories",
+ *     path="/categories",
  *     tags={"categories"},
  *     summary="Get all categories",
  *     @OA\Response(
@@ -18,7 +18,7 @@
  *     )
  * )
  */
-Flight::route('GET /api/categories', function() {
+Flight::route('GET /categories', function() {
     $query = Flight::request()->query['query'] ?? null;
     
     if ($query) {
@@ -30,7 +30,7 @@ Flight::route('GET /api/categories', function() {
 
 /**
  * @OA\Get(
- *     path="/api/categories/{id}",
+ *     path="/categories/{id}",
  *     tags={"categories"},
  *     summary="Get category by ID",
  *     @OA\Parameter(
@@ -49,7 +49,7 @@ Flight::route('GET /api/categories', function() {
  *     )
  * )
  */
-Flight::route('GET /api/categories/@id', function($id) {
+Flight::route('GET /categories/@id', function($id) {
     $category = Flight::categoryService()->getById($id);
     if ($category) {
         Flight::json($category);
@@ -60,7 +60,7 @@ Flight::route('GET /api/categories/@id', function($id) {
 
 /**
  * @OA\Get(
- *     path="/api/categories/name/@name",
+ *     path="/categories/name/@name",
  *     tags={"categories"},
  *     summary="Get category by name",
  *     @OA\Parameter(
@@ -79,7 +79,7 @@ Flight::route('GET /api/categories/@id', function($id) {
  *     )
  * )
  */
-Flight::route('GET /api/categories/name/@name', function($name) {
+Flight::route('GET /categories/name/@name', function($name) {
     $category = Flight::categoryService()->getByName($name);
     if ($category) {
         Flight::json($category);
@@ -90,7 +90,7 @@ Flight::route('GET /api/categories/name/@name', function($name) {
 
 /**
  * @OA\Post(
- *     path="/api/categories",
+ *     path="/categories",
  *     tags={"categories"},
  *     summary="Create a new category",
  *     @OA\RequestBody(
@@ -111,7 +111,7 @@ Flight::route('GET /api/categories/name/@name', function($name) {
  *     )
  * )
  */
-Flight::route('POST /api/categories', function() {
+Flight::route('POST /categories', function() {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::categoryService()->create($data);
@@ -123,7 +123,7 @@ Flight::route('POST /api/categories', function() {
 
 /**
  * @OA\Put(
- *     path="/api/categories/{id}",
+ *     path="/categories/{id}",
  *     tags={"categories"},
  *     summary="Update a category",
  *     @OA\Parameter(
@@ -149,7 +149,7 @@ Flight::route('POST /api/categories', function() {
  *     )
  * )
  */
-Flight::route('PUT /api/categories/@id', function($id) {
+Flight::route('PUT /categories/@id', function($id) {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::categoryService()->update($id, $data);
@@ -165,7 +165,7 @@ Flight::route('PUT /api/categories/@id', function($id) {
 
 /**
  * @OA\Delete(
- *     path="/api/categories/{id}",
+ *     path="/categories/{id}",
  *     tags={"categories"},
  *     summary="Delete a category",
  *     @OA\Parameter(
@@ -184,7 +184,7 @@ Flight::route('PUT /api/categories/@id', function($id) {
  *     )
  * )
  */
-Flight::route('DELETE /api/categories/@id', function($id) {
+Flight::route('DELETE /categories/@id', function($id) {
     try {
         $result = Flight::categoryService()->delete($id);
         if ($result) {
@@ -199,7 +199,7 @@ Flight::route('DELETE /api/categories/@id', function($id) {
 
 /**
  * @OA\Get(
- *     path="/api/categories/with-blog-count",
+ *     path="/categories/with-blog-count",
  *     tags={"categories"},
  *     summary="Get categories with blog count",
  *     @OA\Response(
@@ -208,13 +208,13 @@ Flight::route('DELETE /api/categories/@id', function($id) {
  *     )
  * )
  */
-Flight::route('GET /api/categories/with-blog-count', function() {
+Flight::route('GET /categories/with-blog-count', function() {
     Flight::json(Flight::categoryService()->get_with_blog_count());
 });
 
 /**
  * @OA\Get(
- *     path="/api/categories/with-activity-count",
+ *     path="/categories/with-activity-count",
  *     tags={"categories"},
  *     summary="Get categories with activity count",
  *     @OA\Response(
@@ -223,13 +223,13 @@ Flight::route('GET /api/categories/with-blog-count', function() {
  *     )
  * )
  */
-Flight::route('GET /api/categories/with-activity-count', function() {
+Flight::route('GET /categories/with-activity-count', function() {
     Flight::json(Flight::categoryService()->getCategoriesWithActivityCount());
 });
 
 /**
  * @OA\Get(
- *     path="/api/categories/popular",
+ *     path="/categories/popular",
  *     tags={"categories"},
  *     summary="Get popular categories",
  *     @OA\Parameter(
@@ -244,7 +244,7 @@ Flight::route('GET /api/categories/with-activity-count', function() {
  *     )
  * )
  */
-Flight::route('GET /api/categories/popular', function() {
+Flight::route('GET /categories/popular', function() {
     $limit = Flight::request()->query['limit'] ?? 10;
     Flight::json(Flight::categoryService()->getPopularCategories($limit));
 });

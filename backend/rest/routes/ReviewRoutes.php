@@ -1,7 +1,7 @@
 <?php
 /**
  * @OA\Get(
- *     path="/api/reviews",
+ *     path="/reviews",
  *     tags={"reviews"},
  *     summary="Get all reviews",
  *     @OA\Parameter(
@@ -27,7 +27,7 @@
  *     )
  * )
  */
-Flight::route('GET /api/reviews', function() {
+Flight::route('GET /reviews', function() {
     $user_id = Flight::request()->query['user_id'] ?? null;
     $activity_id = Flight::request()->query['activity_id'] ?? null;
     $recommendation_id = Flight::request()->query['recommendation_id'] ?? null;
@@ -48,7 +48,7 @@ Flight::route('GET /api/reviews', function() {
 
 /**
  * @OA\Get(
- *     path="/api/reviews/{id}",
+ *     path="/reviews/{id}",
  *     tags={"reviews"},
  *     summary="Get review by ID",
  *     @OA\Parameter(
@@ -67,7 +67,7 @@ Flight::route('GET /api/reviews', function() {
  *     )
  * )
  */
-Flight::route('GET /api/reviews/@id', function($id) {
+Flight::route('GET /reviews/@id', function($id) {
     $review = Flight::reviewService()->getById($id);
     if ($review) {
         Flight::json($review);
@@ -78,7 +78,7 @@ Flight::route('GET /api/reviews/@id', function($id) {
 
 /**
  * @OA\Post(
- *     path="/api/reviews",
+ *     path="/reviews",
  *     tags={"reviews"},
  *     summary="Create a new review",
  *     @OA\RequestBody(
@@ -101,7 +101,7 @@ Flight::route('GET /api/reviews/@id', function($id) {
  *     )
  * )
  */
-Flight::route('POST /api/reviews', function() {
+Flight::route('POST /reviews', function() {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::reviewService()->create($data);
@@ -113,7 +113,7 @@ Flight::route('POST /api/reviews', function() {
 
 /**
  * @OA\Put(
- *     path="/api/reviews/{id}",
+ *     path="/reviews/{id}",
  *     tags={"reviews"},
  *     summary="Update a review",
  *     @OA\Parameter(
@@ -139,7 +139,7 @@ Flight::route('POST /api/reviews', function() {
  *     )
  * )
  */
-Flight::route('PUT /api/reviews/@id', function($id) {
+Flight::route('PUT /reviews/@id', function($id) {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::reviewService()->update($id, $data);
@@ -155,7 +155,7 @@ Flight::route('PUT /api/reviews/@id', function($id) {
 
 /**
  * @OA\Delete(
- *     path="/api/reviews/{id}",
+ *     path="/reviews/{id}",
  *     tags={"reviews"},
  *     summary="Delete a review",
  *     @OA\Parameter(
@@ -174,7 +174,7 @@ Flight::route('PUT /api/reviews/@id', function($id) {
  *     )
  * )
  */
-Flight::route('DELETE /api/reviews/@id', function($id) {
+Flight::route('DELETE /reviews/@id', function($id) {
     try {
         $result = Flight::reviewService()->delete($id);
         if ($result) {
@@ -188,19 +188,19 @@ Flight::route('DELETE /api/reviews/@id', function($id) {
 });
 
 // Get recent reviews
-Flight::route('GET /api/reviews/recent', function() {
+Flight::route('GET /reviews/recent', function() {
     $limit = Flight::request()->query['limit'] ?? 10;
     Flight::json(Flight::reviewService()->getRecentReviews($limit));
 });
 
 // Get top rated activities
-Flight::route('GET /api/reviews/top-rated', function() {
+Flight::route('GET /reviews/top-rated', function() {
     $limit = Flight::request()->query['limit'] ?? 10;
     Flight::json(Flight::reviewService()->getTopRatedActivities($limit));
 });
 
 // Get average rating for a recommendation
-Flight::route('GET /api/reviews/average-rating/@recommendation_id', function($recommendation_id) {
+Flight::route('GET /reviews/average-rating/@recommendation_id', function($recommendation_id) {
     try {
         $average = Flight::reviewService()->get_average_rating($recommendation_id);
         Flight::json(['average_rating' => $average]);
@@ -210,7 +210,7 @@ Flight::route('GET /api/reviews/average-rating/@recommendation_id', function($re
 });
 
 // Get review statistics
-Flight::route('GET /api/reviews/statistics', function() {
+Flight::route('GET /reviews/statistics', function() {
     Flight::json(Flight::reviewService()->getReviewStatistics());
 });
 ?> 

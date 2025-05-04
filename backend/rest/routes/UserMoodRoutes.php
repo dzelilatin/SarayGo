@@ -1,7 +1,7 @@
 <?php
 /**
  * @OA\Get(
- *     path="/api/user-moods",
+ *     path="/user-moods",
  *     tags={"user-moods"},
  *     summary="Get all user moods",
  *     @OA\Parameter(
@@ -25,7 +25,7 @@
  *     )
  * )
  */
-Flight::route('GET /api/user-moods', function() {
+Flight::route('GET /user-moods', function() {
     $user_id = Flight::request()->query['user_id'] ?? null;
     $mood_id = Flight::request()->query['mood_id'] ?? null;
     $query = Flight::request()->query['query'] ?? null;
@@ -43,7 +43,7 @@ Flight::route('GET /api/user-moods', function() {
 
 /**
  * @OA\Get(
- *     path="/api/user-moods/{id}",
+ *     path="/user-moods/{id}",
  *     tags={"user-moods"},
  *     summary="Get user mood by ID",
  *     @OA\Parameter(
@@ -62,7 +62,7 @@ Flight::route('GET /api/user-moods', function() {
  *     )
  * )
  */
-Flight::route('GET /api/user-moods/@id', function($id) {
+Flight::route('GET /user-moods/@id', function($id) {
     $userMood = Flight::userMoodService()->getById($id);
     if ($userMood) {
         Flight::json($userMood);
@@ -73,7 +73,7 @@ Flight::route('GET /api/user-moods/@id', function($id) {
 
 /**
  * @OA\Post(
- *     path="/api/user-moods",
+ *     path="/user-moods",
  *     tags={"user-moods"},
  *     summary="Create a new user mood",
  *     @OA\RequestBody(
@@ -94,7 +94,7 @@ Flight::route('GET /api/user-moods/@id', function($id) {
  *     )
  * )
  */
-Flight::route('POST /api/user-moods', function() {
+Flight::route('POST /user-moods', function() {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::userMoodService()->create($data);
@@ -106,7 +106,7 @@ Flight::route('POST /api/user-moods', function() {
 
 /**
  * @OA\Put(
- *     path="/api/user-moods/{id}",
+ *     path="/user-moods/{id}",
  *     tags={"user-moods"},
  *     summary="Update a user mood",
  *     @OA\Parameter(
@@ -131,7 +131,7 @@ Flight::route('POST /api/user-moods', function() {
  *     )
  * )
  */
-Flight::route('PUT /api/user-moods/@id', function($id) {
+Flight::route('PUT /user-moods/@id', function($id) {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::userMoodService()->update($id, $data);
@@ -147,7 +147,7 @@ Flight::route('PUT /api/user-moods/@id', function($id) {
 
 /**
  * @OA\Delete(
- *     path="/api/user-moods/{id}",
+ *     path="/user-moods/{id}",
  *     tags={"user-moods"},
  *     summary="Delete a user mood",
  *     @OA\Parameter(
@@ -166,7 +166,7 @@ Flight::route('PUT /api/user-moods/@id', function($id) {
  *     )
  * )
  */
-Flight::route('DELETE /api/user-moods/@id', function($id) {
+Flight::route('DELETE /user-moods/@id', function($id) {
     try {
         $result = Flight::userMoodService()->delete($id);
         if ($result) {
@@ -180,7 +180,7 @@ Flight::route('DELETE /api/user-moods/@id', function($id) {
 });
 
 // Get current mood for a user
-Flight::route('GET /api/user-moods/current/@user_id', function($user_id) {
+Flight::route('GET /user-moods/current/@user_id', function($user_id) {
     try {
         $currentMood = Flight::userMoodService()->get_current_mood($user_id);
         if ($currentMood) {
@@ -194,7 +194,7 @@ Flight::route('GET /api/user-moods/current/@user_id', function($user_id) {
 });
 
 // Get mood history for a user
-Flight::route('GET /api/user-moods/history/@user_id', function($user_id) {
+Flight::route('GET /user-moods/history/@user_id', function($user_id) {
     try {
         $history = Flight::userMoodService()->getMoodHistory($user_id);
         Flight::json($history);
@@ -204,7 +204,7 @@ Flight::route('GET /api/user-moods/history/@user_id', function($user_id) {
 });
 
 // Get mood trends for a user
-Flight::route('GET /api/user-moods/trends/@user_id', function($user_id) {
+Flight::route('GET /user-moods/trends/@user_id', function($user_id) {
     try {
         $trends = Flight::userMoodService()->getMoodTrends($user_id);
         Flight::json($trends);
@@ -214,7 +214,7 @@ Flight::route('GET /api/user-moods/trends/@user_id', function($user_id) {
 });
 
 // Get mood statistics
-Flight::route('GET /api/user-moods/statistics', function() {
+Flight::route('GET /user-moods/statistics', function() {
     Flight::json(Flight::userMoodService()->getMoodStatistics());
 });
 ?> 

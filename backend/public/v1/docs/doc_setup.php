@@ -2,7 +2,7 @@
 /**
  * @OA\Info(
  *     title="SarayGo API",
- *     description="Travel and Activity API",
+ *     description="Travel and Activity Guide API",
  *     version="1.0",
  *     @OA\Contact(
  *         email="saraygo@gmail.com",
@@ -13,7 +13,7 @@
 /**
  * @OA\Server(
  *     url="http://localhost/SarayGo/backend",
- *     description="Local Development Server"
+ *     description="API Server"
  * )
  */
 /**

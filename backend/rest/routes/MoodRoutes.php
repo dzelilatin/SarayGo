@@ -1,7 +1,7 @@
 <?php
 /**
  * @OA\Get(
- *     path="/api/moods",
+ *     path="/moods",
  *     tags={"moods"},
  *     summary="Get all moods",
  *     @OA\Response(
@@ -19,14 +19,14 @@
  *     )
  * )
  */
-Flight::route('GET /api/moods', function() {
+Flight::route('GET /moods', function() {
     $result = Flight::moodService()->getAll();
     Flight::json($result);
 });
 
 /**
  * @OA\Get(
- *     path="/api/moods/{id}",
+ *     path="/moods/{id}",
  *     tags={"moods"},
  *     summary="Get mood by ID",
  *     @OA\Parameter(
@@ -45,7 +45,7 @@ Flight::route('GET /api/moods', function() {
  *     )
  * )
  */
-Flight::route('GET /api/moods/@id', function($id) {
+Flight::route('GET /moods/@id', function($id) {
     $result = Flight::moodService()->getById($id);
     if (!$result) {
         Flight::halt(404, json_encode(['error' => 'Mood not found']));
@@ -55,7 +55,7 @@ Flight::route('GET /api/moods/@id', function($id) {
 
 /**
  * @OA\Post(
- *     path="/api/moods",
+ *     path="/moods",
  *     tags={"moods"},
  *     summary="Create a new mood",
  *     @OA\RequestBody(
@@ -77,7 +77,7 @@ Flight::route('GET /api/moods/@id', function($id) {
  *     )
  * )
  */
-Flight::route('POST /api/moods', function() {
+Flight::route('POST /moods', function() {
     $data = Flight::request()->data->getData();
     
     // Validate required fields
@@ -94,7 +94,7 @@ Flight::route('POST /api/moods', function() {
 
 /**
  * @OA\Put(
- *     path="/api/moods/{id}",
+ *     path="/moods/{id}",
  *     tags={"moods"},
  *     summary="Update a mood",
  *     @OA\Parameter(
@@ -121,7 +121,7 @@ Flight::route('POST /api/moods', function() {
  *     )
  * )
  */
-Flight::route('PUT /api/moods/@id', function($id) {
+Flight::route('PUT /moods/@id', function($id) {
     $data = Flight::request()->data->getData();
     $result = Flight::moodService()->update($id, $data);
     if (!$result) {
@@ -132,7 +132,7 @@ Flight::route('PUT /api/moods/@id', function($id) {
 
 /**
  * @OA\Delete(
- *     path="/api/moods/{id}",
+ *     path="/moods/{id}",
  *     tags={"moods"},
  *     summary="Delete a mood",
  *     @OA\Parameter(
@@ -151,7 +151,7 @@ Flight::route('PUT /api/moods/@id', function($id) {
  *     )
  * )
  */
-Flight::route('DELETE /api/moods/@id', function($id) {
+Flight::route('DELETE /moods/@id', function($id) {
     $result = Flight::moodService()->delete($id);
     if (!$result) {
         Flight::halt(404, json_encode(['error' => 'Mood not found']));

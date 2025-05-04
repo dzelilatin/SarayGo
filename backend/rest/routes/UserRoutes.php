@@ -1,7 +1,7 @@
 <?php
 /**
  * @OA\Get(
- *     path="/api/users",
+ *     path="/users",
  *     tags={"users"},
  *     summary="Get all users",
  *     @OA\Response(
@@ -19,7 +19,7 @@
  *     )
  * )
  */
-Flight::route('GET /api/users', function() {
+Flight::route('GET /users', function() {
     $query = Flight::request()->query['query'] ?? null;
     $role = Flight::request()->query['role'] ?? null;
     
@@ -34,7 +34,7 @@ Flight::route('GET /api/users', function() {
 
 /**
  * @OA\Get(
- *     path="/api/users/{id}",
+ *     path="/users/{id}",
  *     tags={"users"},
  *     summary="Get user by ID",
  *     @OA\Parameter(
@@ -53,7 +53,7 @@ Flight::route('GET /api/users', function() {
  *     )
  * )
  */
-Flight::route('GET /api/users/@id', function($id) {
+Flight::route('GET /users/@id', function($id) {
     $user = Flight::userService()->getById($id);
     if ($user) {
         Flight::json($user);
@@ -64,7 +64,7 @@ Flight::route('GET /api/users/@id', function($id) {
 
 /**
  * @OA\Post(
- *     path="/api/users",
+ *     path="/users",
  *     tags={"users"},
  *     summary="Create a new user",
  *     @OA\RequestBody(
@@ -86,7 +86,7 @@ Flight::route('GET /api/users/@id', function($id) {
  *     )
  * )
  */
-Flight::route('POST /api/users', function() {
+Flight::route('POST /users', function() {
     $data = Flight::request()->data->getData();
     
     // Validate required fields
@@ -113,7 +113,7 @@ Flight::route('POST /api/users', function() {
 
 /**
  * @OA\Put(
- *     path="/api/users/{id}",
+ *     path="/users/{id}",
  *     tags={"users"},
  *     summary="Update a user",
  *     @OA\Parameter(
@@ -140,7 +140,7 @@ Flight::route('POST /api/users', function() {
  *     )
  * )
  */
-Flight::route('PUT /api/users/@id', function($id) {
+Flight::route('PUT /users/@id', function($id) {
     $data = Flight::request()->data->getData();
 
     // Validate email format if provided
@@ -162,7 +162,7 @@ Flight::route('PUT /api/users/@id', function($id) {
 
 /**
  * @OA\Delete(
- *     path="/api/users/{id}",
+ *     path="/users/{id}",
  *     tags={"users"},
  *     summary="Delete a user",
  *     @OA\Parameter(
@@ -181,7 +181,7 @@ Flight::route('PUT /api/users/@id', function($id) {
  *     )
  * )
  */
-Flight::route('DELETE /api/users/@id', function($id) {
+Flight::route('DELETE /users/@id', function($id) {
     $result = Flight::userService()->delete($id);
     if (!$result) {
         Flight::halt(404, json_encode(['error' => 'User not found']));
@@ -190,7 +190,7 @@ Flight::route('DELETE /api/users/@id', function($id) {
 });
 
 // Get user by username
-Flight::route('GET /api/users/username/@username', function($username) {
+Flight::route('GET /users/username/@username', function($username) {
     try {
         $user = Flight::userService()->getByUsername($username);
         if ($user) {
@@ -204,7 +204,7 @@ Flight::route('GET /api/users/username/@username', function($username) {
 });
 
 // Get user by email
-Flight::route('GET /api/users/email/@email', function($email) {
+Flight::route('GET /users/email/@email', function($email) {
     try {
         $user = Flight::userService()->getByEmail($email);
         if ($user) {
@@ -218,7 +218,7 @@ Flight::route('GET /api/users/email/@email', function($email) {
 });
 
 // Register a new user
-Flight::route('POST /api/users/register', function() {
+Flight::route('POST /users/register', function() {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::userService()->register($data);
@@ -229,7 +229,7 @@ Flight::route('POST /api/users/register', function() {
 });
 
 // User login
-Flight::route('POST /api/users/login', function() {
+Flight::route('POST /users/login', function() {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::userService()->login($data);
@@ -240,7 +240,7 @@ Flight::route('POST /api/users/login', function() {
 });
 
 // Change password
-Flight::route('PUT /api/users/@id/password', function($id) {
+Flight::route('PUT /users/@id/password', function($id) {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::userService()->changePassword($id, $data);
@@ -255,7 +255,7 @@ Flight::route('PUT /api/users/@id/password', function($id) {
 });
 
 // Reset password
-Flight::route('POST /api/users/reset-password', function() {
+Flight::route('POST /users/reset-password', function() {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::userService()->resetPassword($data);
@@ -266,13 +266,13 @@ Flight::route('POST /api/users/reset-password', function() {
 });
 
 // Get active users
-Flight::route('GET /api/users/active', function() {
+Flight::route('GET /users/active', function() {
     $limit = Flight::request()->query['limit'] ?? 10;
     Flight::json(Flight::userService()->getActiveUsers($limit));
 });
 
 // Get user statistics
-Flight::route('GET /api/users/statistics', function() {
+Flight::route('GET /users/statistics', function() {
     Flight::json(Flight::userService()->getUserStatistics());
 });
 ?> 

@@ -1,7 +1,7 @@
 <?php
 /**
  * @OA\Get(
- *     path="/api/blog",
+ *     path="/blog",
  *     tags={"blogs"},
  *     summary="Get all blogs",
  *     @OA\Parameter(
@@ -26,7 +26,7 @@
  *     )
  * )
  */
-Flight::route('GET /api/blogs', function() {
+Flight::route('GET /blogs', function() {
     $category_id = Flight::request()->query['category_id'] ?? null;
     $user_id = Flight::request()->query['user_id'] ?? null;
     $query = Flight::request()->query['query'] ?? null;
@@ -44,7 +44,7 @@ Flight::route('GET /api/blogs', function() {
 
 /**
  * @OA\Get(
- *     path="/api/blog/{id}",
+ *     path="/blog/{id}",
  *     tags={"blogs"},
  *     summary="Get blog by ID",
  *     @OA\Parameter(
@@ -63,7 +63,7 @@ Flight::route('GET /api/blogs', function() {
  *     )
  * )
  */
-Flight::route('GET /api/blogs/@id', function($id) {
+Flight::route('GET /blogs/@id', function($id) {
     $blog = Flight::blogService()->getById($id);
     if ($blog) {
         Flight::json($blog);
@@ -74,7 +74,7 @@ Flight::route('GET /api/blogs/@id', function($id) {
 
 /**
  * @OA\Post(
- *     path="/api/blog",
+ *     path="/blog",
  *     tags={"blogs"},
  *     summary="Create a new blog post",
  *     @OA\RequestBody(
@@ -97,7 +97,7 @@ Flight::route('GET /api/blogs/@id', function($id) {
  *     )
  * )
  */
-Flight::route('POST /api/blogs', function() {
+Flight::route('POST /blogs', function() {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::blogService()->create($data);
@@ -109,7 +109,7 @@ Flight::route('POST /api/blogs', function() {
 
 /**
  * @OA\Put(
- *     path="/api/blog/{id}",
+ *     path="/blog/{id}",
  *     tags={"blogs"},
  *     summary="Update a blog post",
  *     @OA\Parameter(
@@ -137,7 +137,7 @@ Flight::route('POST /api/blogs', function() {
  *     )
  * )
  */
-Flight::route('PUT /api/blogs/@id', function($id) {
+Flight::route('PUT /blogs/@id', function($id) {
     $data = Flight::request()->data->getData();
     try {
         $result = Flight::blogService()->update($id, $data);
@@ -153,7 +153,7 @@ Flight::route('PUT /api/blogs/@id', function($id) {
 
 /**
  * @OA\Delete(
- *     path="/api/blog/{id}",
+ *     path="/blog/{id}",
  *     tags={"blogs"},
  *     summary="Delete a blog post",
  *     @OA\Parameter(
@@ -172,7 +172,7 @@ Flight::route('PUT /api/blogs/@id', function($id) {
  *     )
  * )
  */
-Flight::route('DELETE /api/blogs/@id', function($id) {
+Flight::route('DELETE /blogs/@id', function($id) {
     try {
         $result = Flight::blogService()->delete($id);
         if ($result) {
@@ -186,19 +186,19 @@ Flight::route('DELETE /api/blogs/@id', function($id) {
 });
 
 // Get recent blogs
-Flight::route('GET /api/blogs/recent', function() {
+Flight::route('GET /blogs/recent', function() {
     $limit = Flight::request()->query['limit'] ?? 10;
     Flight::json(Flight::blogService()->getRecentBlogs($limit));
 });
 
 // Get popular blogs
-Flight::route('GET /api/blogs/popular', function() {
+Flight::route('GET /blogs/popular', function() {
     $limit = Flight::request()->query['limit'] ?? 10;
     Flight::json(Flight::blogService()->getPopularBlogs($limit));
 });
 
 // Get blogs by tags
-Flight::route('GET /api/blogs/tags', function() {
+Flight::route('GET /blogs/tags', function() {
     $tags = Flight::request()->query['tags'] ?? null;
     $limit = Flight::request()->query['limit'] ?? 10;
     

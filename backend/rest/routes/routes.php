@@ -1,4 +1,15 @@
 <?php
+require_once 'ActivityRoutes.php';
+require_once 'AuthRoutes.php';
+require_once 'BlogRoutes.php';
+require_once 'CategoryRoutes.php';
+require_once 'ContactRoutes.php';
+require_once 'MoodRoutes.php';
+require_once 'RecommendationRoutes.php';
+require_once 'ReviewRoutes.php';
+require_once 'UserMoodRoutes.php';
+require_once 'UserRoutes.php';
+
 require_once __DIR__ . '/../services/ActivityService.php';
 require_once __DIR__ . '/../services/BlogService.php';
 require_once __DIR__ . '/../services/CategoryService.php';
@@ -10,7 +21,7 @@ require_once __DIR__ . '/../services/UserMoodService.php';
 require_once __DIR__ . '/../services/UserService.php';
 
 // Get the base path
-$base_path = '/SarayGo/backend/api';
+$base_path = '/SarayGo/backend/';
 $request_uri = explode('?', $_SERVER['REQUEST_URI'], 2)[0]; // Remove query params
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -48,7 +59,7 @@ function sendError($message, $code = 400) {
 
 /**
  * @OA\Post(
- *     path="/api/user/register",
+ *     path="/user/register",
  *     tags={"auth"},
  *     summary="Register a new user",
  *     @OA\RequestBody(
@@ -117,7 +128,7 @@ if ($method === 'POST' && $path === '/user/register') {
 
 /**
  * @OA\Post(
- *     path="/api/user/login",
+ *     path="/user/login",
  *     tags={"auth"},
  *     summary="Login user",
  *     @OA\RequestBody(
@@ -175,7 +186,7 @@ if ($method === 'POST' && $path === '/user/login') {
 
 /**
  * @OA\Get(
- *     path="/api/activities",
+ *     path="/activities",
  *     tags={"activities"},
  *     summary="Get all activities",
  *     @OA\Parameter(
@@ -214,7 +225,7 @@ if ($method === 'GET' && $path === '/activities') {
 
 /**
  * @OA\Get(
- *     path="/api/blog",
+ *     path="/blog",
  *     tags={"blogs"},
  *     summary="Get all blogs",
  *     @OA\Parameter(
@@ -252,7 +263,7 @@ if ($method === 'GET' && $path === '/blog') {
 
 /**
  * @OA\Get(
- *     path="/api/categories",
+ *     path="/categories",
  *     tags={"categories"},
  *     summary="Get all categories",
  *     @OA\Response(
@@ -268,7 +279,7 @@ if ($method === 'GET' && $path === '/categories') {
 
 /**
  * @OA\Get(
- *     path="/api/contacts",
+ *     path="/contacts",
  *     tags={"contacts"},
  *     summary="Get all contacts",
  *     @OA\Response(
@@ -284,7 +295,7 @@ if ($method === 'GET' && $path === '/contacts') {
 
 /**
  * @OA\Get(
- *     path="/api/moods",
+ *     path="/moods",
  *     tags={"moods"},
  *     summary="Get all moods",
  *     @OA\Response(
@@ -300,7 +311,7 @@ if ($method === 'GET' && $path === '/moods') {
 
 /**
  * @OA\Get(
- *     path="/api/recommendations",
+ *     path="/recommendations",
  *     tags={"recommendations"},
  *     summary="Get all recommendations",
  *     @OA\Response(
@@ -316,7 +327,7 @@ if ($method === 'GET' && $path === '/recommendations') {
 
 /**
  * @OA\Get(
- *     path="/api/reviews",
+ *     path="/reviews",
  *     tags={"reviews"},
  *     summary="Get all reviews",
  *     @OA\Response(
@@ -332,7 +343,7 @@ if ($method === 'GET' && $path === '/reviews') {
 
 /**
  * @OA\Get(
- *     path="/api/user-moods",
+ *     path="/user-moods",
  *     tags={"user-moods"},
  *     summary="Get all user moods",
  *     @OA\Response(
@@ -348,7 +359,7 @@ if ($method === 'GET' && $path === '/user-moods') {
 
 /**
  * @OA\Get(
- *     path="/api/activities/{id}",
+ *     path="/activities/{id}",
  *     tags={"activities"},
  *     summary="Get activity by ID",
  *     @OA\Parameter(
@@ -391,7 +402,7 @@ if ($method === 'GET' && preg_match('/^\/activities\/(\d+)$/', $path, $matches))
 
 /**
  * @OA\Post(
- *     path="/api/activities",
+ *     path="/activities",
  *     tags={"activities"},
  *     summary="Create a new activity",
  *     @OA\RequestBody(
@@ -456,7 +467,7 @@ if ($method === 'POST' && $path === '/activities') {
 
 /**
  * @OA\Put(
- *     path="/api/activities/{id}",
+ *     path="/activities/{id}",
  *     tags={"activities"},
  *     summary="Update an activity",
  *     @OA\Parameter(
@@ -519,7 +530,7 @@ if ($method === 'PUT' && preg_match('/^\/activities\/(\d+)$/', $path, $matches))
 
 /**
  * @OA\Delete(
- *     path="/api/activities/{id}",
+ *     path="/activities/{id}",
  *     tags={"activities"},
  *     summary="Delete an activity",
  *     @OA\Parameter(

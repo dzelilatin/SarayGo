@@ -1,5 +1,19 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../rest/routes/routes.php';
+
+// Register Routes
+require_once __DIR__ . '/routes/ActivityRoutes.php';
+require_once __DIR__ . '/routes/AuthRoutes.php'; // ✅ Add this line
+require_once __DIR__ . '/routes/BlogRoutes.php';
+require_once __DIR__ . '/routes/CategoryRoutes.php';
+require_once __DIR__ . '/routes/ContactRoutes.php';
+require_once __DIR__ . '/routes/MoodRoutes.php';
+require_once __DIR__ . '/routes/RecommendationRoutes.php';
+require_once __DIR__ . '/routes/ReviewRoutes.php';
+require_once __DIR__ . '/routes/UserMoodRoutes.php';
+require_once __DIR__ . '/routes/UserRoutes.php';
+
 
 // Load environment variables
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
