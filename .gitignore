@@ -1,1 +1,26 @@
+# Vendor files
 /vendor/
+/backend/vendor/
+
+# Composer files
+composer.lock
+/backend/composer.lock
+
+# IDE files
+.DS_Store
+.idea/
+.vscode/
+
+# Environment files
+.env
+.env.local
+
+# Log files
+*.log
+
+# Database files
+*.sql
+*.sqlite
+
+# Cache files
+*.cache

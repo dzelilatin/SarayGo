@@ -9,16 +9,14 @@ namespace OpenApi\Annotations;
 use OpenApi\Generator;
 
 /**
+ * @Annotation
  * The discriminator is a specific object in a schema which is used to inform the consumer of
  * the specification of an alternative schema based on the value associated with it.
- *
  * This object is based on the [JSON Schema Specification](http://json-schema.org) and uses a predefined subset of it.
  * On top of this subset, there are extensions provided by this specification to allow for more complete documentation.
  *
- * @see [Discriminator Object](https://spec.openapis.org/oas/v3.1.1.html#discriminator-object)
- * @see [JSON Schema](http://json-schema.org/)
- *
- * @Annotation
+ * A "Discriminator Object": https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#discriminatorObject
+ * JSON Schema: http://json-schema.org/
  */
 class Discriminator extends AbstractAnnotation
 {

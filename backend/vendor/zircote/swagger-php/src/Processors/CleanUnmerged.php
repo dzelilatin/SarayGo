@@ -7,7 +7,7 @@
 namespace OpenApi\Processors;
 
 use OpenApi\Analysis;
-use OpenApi\Annotations as OA;
+use OpenApi\Annotations\AbstractAnnotation;
 
 class CleanUnmerged
 {
@@ -17,12 +17,12 @@ class CleanUnmerged
         $merged = $split->merged->annotations;
         $unmerged = $split->unmerged->annotations;
 
-        /** @var OA\AbstractAnnotation $annotation */
+        /** @var AbstractAnnotation $annotation */
         foreach ($analysis->annotations as $annotation) {
             if (property_exists($annotation, '_unmerged')) {
-                foreach ($annotation->_unmerged as $ii => $item) {
+                foreach ($annotation->_unmerged as $i => $item) {
                     if ($merged->contains($item)) {
-                        unset($annotation->_unmerged[$ii]); // Property was merged
+                        unset($annotation->_unmerged[$i]); // Property was merged
                     }
                 }
             }

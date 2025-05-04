@@ -1,6 +1,11 @@
 RewriteEngine On
 
-# Redirect all requests to routes.php except for actual files/folders
+# Handle API requests
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^api/(.*)$ /backend/rest/routes.php [QSA,L]
+RewriteRule ^api/(.*)$ rest/routes.php [QSA,L]
+
+# Handle root and docs requests
+RewriteCond %{REQUEST_URI} ^/SarayGo/backend/?$ [OR]
+RewriteCond %{REQUEST_URI} ^/SarayGo/backend/docs/?$
+RewriteRule .* public/v1/docs/index.php [L]

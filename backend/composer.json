@@ -1,25 +1,17 @@
 {
-    "name": "saraygo/api",
-    "description": "SarayGo REST API",
-    "type": "project",
     "require": {
-        "php": ">=7.4",
-        "flightphp/core": "^3.15",
-        "vlucas/phpdotenv": "^5.3",
-        "firebase/php-jwt": "^6.0",
-        "phpmailer/phpmailer": "^6.5",
-        "monolog/monolog": "^2.3"
+      "flightphp/core": "^3.15",
+      "zircote/swagger-php": "^3.3"
     },
     "autoload": {
-        "psr-4": {
-            "SarayGo\\": "src/"
-        }
+      "psr-4": {
+        "Dzelitin\\SarayGo\\": "rest/"
+      }
     },
     "authors": [
-        {
-            "name": "SarayGo Team",
-            "email": "team@saraygo.com"
-        }
-    ],
-    "minimum-stability": "stable"
-}
+      {
+        "name": "Dželila",
+        "email": "dzelila.tinjak@stu.ibu.edu.ba"
+      }
+    ]
+  }

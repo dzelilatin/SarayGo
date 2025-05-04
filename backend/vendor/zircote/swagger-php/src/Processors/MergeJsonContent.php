@@ -7,7 +7,11 @@
 namespace OpenApi\Processors;
 
 use OpenApi\Analysis;
-use OpenApi\Annotations as OA;
+use OpenApi\Annotations\JsonContent;
+use OpenApi\Annotations\MediaType;
+use OpenApi\Annotations\Parameter;
+use OpenApi\Annotations\RequestBody;
+use OpenApi\Annotations\Response;
 use OpenApi\Context;
 use OpenApi\Generator;
 
@@ -18,12 +22,12 @@ class MergeJsonContent
 {
     public function __invoke(Analysis $analysis)
     {
-        /** @var OA\JsonContent[] $annotations */
-        $annotations = $analysis->getAnnotationsOfType(OA\JsonContent::class);
+        /** @var JsonContent[] $annotations */
+        $annotations = $analysis->getAnnotationsOfType(JsonContent::class);
 
         foreach ($annotations as $jsonContent) {
             $parent = $jsonContent->_context->nested;
-            if (!($parent instanceof OA\Response) && !($parent instanceof OA\RequestBody) && !($parent instanceof OA\Parameter)) {
+            if (!($parent instanceof Response) && !($parent instanceof RequestBody) && !($parent instanceof Parameter)) {
                 if ($parent) {
                     $jsonContent->_context->logger->warning('Unexpected ' . $jsonContent->identity() . ' in ' . $parent->identity() . ' in ' . $parent->_context);
                 } else {
@@ -31,17 +35,16 @@ class MergeJsonContent
                 }
                 continue;
             }
-            if (Generator::isDefault($parent->content)) {
+            if ($parent->content === Generator::UNDEFINED) {
                 $parent->content = [];
             }
-            $parent->content['application/json'] = $mediaType = new OA\MediaType([
+            $parent->content['application/json'] = new MediaType([
                 'schema' => $jsonContent,
                 'example' => $jsonContent->example,
                 'examples' => $jsonContent->examples,
                 '_context' => new Context(['generated' => true], $jsonContent->_context),
             ]);
-            $analysis->addAnnotation($mediaType, $mediaType->_context);
-            if (!$parent instanceof OA\Parameter) {
+            if (!$parent instanceof Parameter) {
                 $parent->content['application/json']->mediaType = 'application/json';
             }
             $jsonContent->example = Generator::UNDEFINED;
