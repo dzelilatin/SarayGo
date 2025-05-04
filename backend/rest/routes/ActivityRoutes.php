@@ -46,19 +46,18 @@ Flight::route('GET /SarayGo/backend/activities/@id', function($id) {
 
 /**
  * @OA\Post(
- *     path="/activities",
+ *     path="/SarayGo/backend/activities",
  *     tags={"activities"},
  *     summary="Create a new activity",
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"name", "description", "location"},
- *             @OA\Property(property="name", type="string", example="Hiking"),
+ *             required={"activity_name", "description", "category_id", "mood_id"},
+ *             @OA\Property(property="activity_name", type="string", example="Hiking"),
  *             @OA\Property(property="description", type="string", example="Mountain hiking activity"),
- *             @OA\Property(property="location", type="string", example="Mountains"),
- *             @OA\Property(property="price", type="number", format="float", example=50.00),
- *             @OA\Property(property="duration", type="integer", example=120),
- *             @OA\Property(property="max_participants", type="integer", example=20)
+ *             @OA\Property(property="category_id", type="integer", example=1),
+ *             @OA\Property(property="mood_id", type="integer", example=1),
+ *             @OA\Property(property="location", type="string", example="Mountains")
  *         )
  *     ),
  *     @OA\Response(
@@ -71,9 +70,14 @@ Flight::route('GET /SarayGo/backend/activities/@id', function($id) {
  *     )
  * )
  */
-Flight::route('POST /activities', function() {
+Flight::route('POST /SarayGo/backend/activities', function() {
     $data = Flight::request()->data->getData();
-    Flight::json(Flight::activityService()->create($data), 201);
+    try {
+        $result = Flight::activityService()->create($data);
+        Flight::json($result, 201);
+    } catch (\Exception $e) {
+        Flight::json(['error' => $e->getMessage()], 400);
+    }
 });
 
 /**

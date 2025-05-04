@@ -23,18 +23,27 @@ class ActivityService extends BaseService {
 
     public function create($data) {
         $this->validateActivityData($data);
-        return $this->dao->createActivity(
+        $result = $this->dao->createActivity(
             $data['activity_name'],
             $data['description'],
             $data['category_id'],
             $data['mood_id'],
             $data['location'] ?? null
         );
+        
+        if ($result) {
+            // Get the last inserted ID
+            $lastId = $this->dao->getLastInsertId();
+            // Return the created activity
+            return $this->getById($lastId);
+        }
+        
+        return false;
     }
 
     public function update($id, $data) {
         $this->validateActivityData($data);
-        return $this->dao->updateActivity(
+        $result = $this->dao->updateActivity(
             $id,
             $data['activity_name'],
             $data['description'],
@@ -42,6 +51,12 @@ class ActivityService extends BaseService {
             $data['mood_id'],
             $data['location'] ?? null
         );
+        
+        if ($result) {
+            return $this->getById($id);
+        }
+        
+        return false;
     }
 
     public function delete($id) {
