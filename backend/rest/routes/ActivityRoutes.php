@@ -22,6 +22,47 @@ Flight::route('GET /activities', function() {
 
 /**
  * @OA\Get(
+ *     path="/activities/search",
+ *     tags={"activities"},
+ *     summary="Search activities",
+ *     @OA\Parameter(
+ *         name="query",
+ *         in="query",
+ *         required=true,
+ *         @OA\Schema(type="string", example="hiking")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of matching activities"
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Invalid search query"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="No activities found"
+ *     )
+ * )
+ */
+Flight::route('GET /activities/search', function() {
+    try {
+        $query = Flight::request()->query['query'] ?? null;
+        if (!$query) {
+            Flight::json(['error' => 'Search query is required'], 400);
+            return;
+        }
+        $results = Flight::activityService()->searchActivities($query);
+        Flight::json($results);
+    } catch (\Exception $e) {
+        $code = $e->getCode();
+        $code = ($code >= 400 && $code < 600) ? $code : 500;
+        Flight::json(['error' => $e->getMessage()], $code);
+    }
+});
+
+/**
+ * @OA\Get(
  *     path="/activities/{id}",
  *     tags={"activities"},
  *     summary="Get activity by ID",
@@ -182,28 +223,6 @@ Flight::route('DELETE /activities/@id', function($id) {
 
 /**
  * @OA\Get(
- *     path="/activities/search",
- *     tags={"activities"},
- *     summary="Search activities",
- *     @OA\Parameter(
- *         name="query",
- *         in="query",
- *         required=true,
- *         @OA\Schema(type="string", example="hiking")
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="List of matching activities"
- *     )
- * )
- */
-Flight::route('GET /activities/search', function() {
-    $query = Flight::request()->query['query'];
-    Flight::json(Flight::activityService()->search($query));
-});
-
-/**
- * @OA\Get(
  *     path="/activities/location/{location}",
  *     tags={"activities"},
  *     summary="Get activities by location",
@@ -224,6 +243,21 @@ Flight::route('GET /activities/search', function() {
  * )
  */
 Flight::route('GET /activities/location/@location', function($location) {
-    Flight::json(Flight::activityService()->getByLocation($location));
+    try {
+        if (empty($location)) {
+            Flight::json(['error' => 'Location parameter is required'], 400);
+            return;
+        }
+        $activities = Flight::activityService()->getByLocation($location);
+        if (empty($activities)) {
+            Flight::json(['error' => 'No activities found for this location'], 404);
+            return;
+        }
+        Flight::json($activities);
+    } catch (\Exception $e) {
+        $code = $e->getCode();
+        $code = ($code >= 400 && $code < 600) ? $code : 500;
+        Flight::json(['error' => $e->getMessage()], $code);
+    }
 });
 ?> 
