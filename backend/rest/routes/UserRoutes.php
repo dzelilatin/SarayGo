@@ -285,4 +285,71 @@ Flight::route('PUT /users/@id/change-password', function($id) {
 Flight::route('GET /users/statistics', function() {
     Flight::json(Flight::userService()->getUserStatistics());
 });
+
+/**
+ * @OA\Post(
+ *     path="/auth/register",
+ *     tags={"auth"},
+ *     summary="User registration",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"username", "email", "password"},
+ *             @OA\Property(property="username", type="string", example="john_doe"),
+ *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+ *             @OA\Property(property="password", type="string", example="password123")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="User registered successfully"
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Invalid input"
+ *     )
+ * )
+ */
+Flight::route('POST /auth/register', function() {
+    $data = Flight::request()->data->getData();
+    try {
+        $result = Flight::userService()->create($data);
+        Flight::json($result, 201);
+    } catch (\Exception $e) {
+        Flight::json(['error' => $e->getMessage()], 400);
+    }
+});
+
+/**
+ * @OA\Post(
+ *     path="/auth/login",
+ *     tags={"auth"},
+ *     summary="User login",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"email", "password"},
+ *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+ *             @OA\Property(property="password", type="string", example="password123")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Login successful"
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Invalid credentials"
+ *     )
+ * )
+ */
+Flight::route('POST /auth/login', function() {
+    $data = Flight::request()->data->getData();
+    try {
+        $result = Flight::userService()->login($data['email'], $data['password']);
+        Flight::json($result);
+    } catch (\Exception $e) {
+        Flight::json(['error' => $e->getMessage()], 401);
+    }
+});
 ?> 

@@ -76,9 +76,8 @@ class UserService extends BaseService {
             throw new \Exception("Invalid password");
         }
 
-        // Remove sensitive data before returning
-        unset($user['password']);
-        return $user;
+        // Return clean user data without password
+        return $this->dao->getCleanUserData($user);
     }
 
     public function changePassword($user_id, $current_password, $new_password) {

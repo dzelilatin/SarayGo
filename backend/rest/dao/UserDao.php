@@ -2,6 +2,8 @@
 namespace Dzelitin\SarayGo\Dao;
 require_once __DIR__ . '/BaseDao.php';
 use Dzelitin\SarayGo\Dao\BaseDao;
+use PDO;
+use Exception;
 
 class UserDao extends BaseDao {
 
@@ -19,7 +21,9 @@ class UserDao extends BaseDao {
             throw new Exception("Email already exists");
         }
 
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT); // Hash the password
+        // Always hash the password
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        
         $data = [
             'username' => $username,
             'email' => $email,
@@ -27,30 +31,62 @@ class UserDao extends BaseDao {
             'role' => 'user', // Default role
             'created_at' => date('Y-m-d H:i:s')
         ];
-        return $this->insert($data); // Use BaseDao's insert method
+        
+        error_log("Creating user with email: " . $email);
+        error_log("Original password: " . $password);
+        error_log("Hashed password: " . $hashedPassword);
+        
+        $result = $this->insert($data);
+        if ($result) {
+            error_log("User created successfully");
+        } else {
+            error_log("Failed to create user");
+        }
+        return $result;
     }
 
     // Get user by username
     public function getUserByUsername($username) {
-        $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = :username");
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE username = :username");
         $stmt->bindValue(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
-        $user = $stmt->fetch();
-        return $user ?: null; // Return null if no user found
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $user ?: null;
     }
 
     // Get user by email
     public function getUserByEmail($email) {
-        $stmt = $this->connection->prepare("SELECT * FROM users WHERE email = :email");
+        error_log("Getting user by email: " . $email);
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
-        $user = $stmt->fetch();
-        return $user ?: null; // Return null if no user found
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($user) {
+            error_log("User found: " . json_encode($user));
+        } else {
+            error_log("No user found with email: " . $email);
+        }
+        return $user ?: null;
     }
 
     // Verify password for user
     public function verifyPassword($user, $password) {
-        return password_verify($password, $user['password']);
+        error_log("Verifying password for user: " . $user['email']);
+        error_log("Stored hash: " . $user['password']);
+        error_log("Input password: " . $password);
+        
+        // If the stored password is not hashed, hash it first
+        if (strlen($user['password']) < 60) { // bcrypt hashes are always 60 characters
+            error_log("Password in database is not hashed, hashing it now");
+            $hashedPassword = password_hash($user['password'], PASSWORD_DEFAULT);
+            $this->update($user['id'], ['password' => $hashedPassword]);
+            $user['password'] = $hashedPassword;
+        }
+        
+        $result = password_verify($password, $user['password']);
+        error_log("Password verification result: " . ($result ? "true" : "false"));
+        return $result;
     }
 
     // Update user information (password included)
@@ -69,7 +105,7 @@ class UserDao extends BaseDao {
 
     // Get users by role
     public function getUsersByRole($role) {
-        $stmt = $this->connection->prepare("SELECT * FROM users WHERE role = :role");
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE role = :role");
         $stmt->bindValue(':role', $role, PDO::PARAM_STR);
         $stmt->execute();
         return $stmt->fetchAll();
@@ -86,22 +122,22 @@ class UserDao extends BaseDao {
         $stats = [];
 
         // Get total users
-        $stmt = $this->connection->prepare("SELECT COUNT(*) as total FROM users");
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM users");
         $stmt->execute();
         $stats['total_users'] = $stmt->fetch()['total'];
 
         // Get users by role
-        $stmt = $this->connection->prepare("SELECT role, COUNT(*) as count FROM users GROUP BY role");
+        $stmt = $this->conn->prepare("SELECT role, COUNT(*) as count FROM users GROUP BY role");
         $stmt->execute();
         $stats['users_by_role'] = $stmt->fetchAll();
 
         // Get active users (users who logged in within the last 30 days)
-        $stmt = $this->connection->prepare("SELECT COUNT(*) as active FROM users WHERE last_login >= DATE_SUB(NOW(), INTERVAL 30 DAY)");
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as active FROM users WHERE last_login >= DATE_SUB(NOW(), INTERVAL 30 DAY)");
         $stmt->execute();
         $stats['active_users'] = $stmt->fetch()['active'];
 
         // Get new users this month
-        $stmt = $this->connection->prepare("SELECT COUNT(*) as new_users FROM users WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)");
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as new_users FROM users WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)");
         $stmt->execute();
         $stats['new_users'] = $stmt->fetch()['new_users'];
 
@@ -142,7 +178,7 @@ class UserDao extends BaseDao {
 
     // Get active users
     public function getActiveUsers($limit) {
-        $stmt = $this->connection->prepare("SELECT * FROM users WHERE last_login >= DATE_SUB(NOW(), INTERVAL 30 DAY) ORDER BY last_login DESC LIMIT :limit");
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE last_login >= DATE_SUB(NOW(), INTERVAL 30 DAY) ORDER BY last_login DESC LIMIT :limit");
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
@@ -150,10 +186,18 @@ class UserDao extends BaseDao {
 
     // Search users
     public function searchUsers($query) {
-        $stmt = $this->connection->prepare("SELECT * FROM users WHERE username LIKE :query OR email LIKE :query");
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE username LIKE :query OR email LIKE :query");
         $stmt->bindValue(':query', "%$query%", PDO::PARAM_STR);
         $stmt->execute();
         return $stmt->fetchAll();
+    }
+
+    // Get clean user data (without password)
+    public function getCleanUserData($user) {
+        if (!$user) return null;
+        $cleanUser = $user;
+        unset($cleanUser['password']);
+        return $cleanUser;
     }
 }
 ?>
