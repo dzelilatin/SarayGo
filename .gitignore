@@ -1,1 +1,33 @@
+<<<<<<< HEAD
 /vendor/
+=======
+# Vendor files
+/vendor/
+/backend/vendor/
+
+# Composer files
+composer.lock
+/backend/composer.lock
+
+# IDE files
+.DS_Store
+.idea/
+.vscode/
+
+# Environment files
+.env
+.env.local
+
+# Log files
+*.log
+
+# Database files
+*.sql
+*.sqlite
+
+# Cache files
+*.cache
+
+# Node modules
+/node_modules/
+>>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889

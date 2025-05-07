@@ -778,15 +778,28 @@ section
 }
 .home_slider_background
 {
+<<<<<<< HEAD
 	position: absolute;
+=======
+	position: absolute !important;
+>>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
+<<<<<<< HEAD
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: center center;
 	opacity:0.5;
+=======
+	background-repeat: no-repeat !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: -1 !important;
+>>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
 }
 .home_slider_content
 {
@@ -2194,4 +2207,66 @@ section
 .btn-close {
     color: white;
     opacity: 1;
+<<<<<<< HEAD
 }
+=======
+}
+
+/* Main Owl Carousel container positioning */
+.owl-carousel {
+    position: relative;  /* Makes sure child elements are positioned relative to this container */
+    display: block;
+}
+
+/* Navigation container positioning */
+.owl-nav {
+    position: absolute;
+    top: 50%;  /* Vertically center the arrows */
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);  /* Adjust to center vertically */
+    width: 100%;  /* Make the navigation span the entire width */
+}
+
+/* Individual navigation arrows */
+.owl-nav .owl-prev,
+.owl-nav .owl-next {
+    background-color: rgba(0, 0, 0, 0.5);  /* Dark background for visibility */
+    color: white;
+    border-radius: 50%;
+    padding: 15px;
+    font-size: 20px;
+    z-index: 15;  /* Make sure arrows appear above images */
+    position: absolute;
+    top: 50%;  /* Vertically center arrows */
+    transform: translateY(-50%);  /* Adjust vertical centering */
+}
+
+/* Left arrow */
+.owl-nav .owl-prev {
+    left: 10px;  /* Place the left arrow 10px from the left */
+}
+
+/* Right arrow */
+.owl-nav .owl-next {
+    right: 10px;  /* Place the right arrow 10px from the right */
+}
+
+/* Hover effect for the arrows */
+.owl-nav .owl-prev:hover,
+.owl-nav .owl-next:hover {
+    background-color: rgba(0, 0, 0, 0.7);  /* Darker background on hover */
+}
+
+/* Style the images inside the carousel */
+.owl-carousel .item img {
+    display: block;  /* Prevents image spacing */
+    width: 100%;  /* Make sure the image fills the container */
+    height: auto;  /* Maintain aspect ratio */
+}
+
+
+>>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
