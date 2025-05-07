@@ -10,7 +10,10 @@
     <link href="../frontend/assets/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../frontend/assets/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
     <link rel="stylesheet" type="text/css" href="../frontend/assets/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+<<<<<<< HEAD
 	<link rel="stylesheet" type="text/css" href="../frontend/assets/plugins/OwlCarousel2-2.2.1/owl.carousel.js">
+=======
+>>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
     <link rel="stylesheet" type="text/css" href="../frontend/assets/plugins/OwlCarousel2-2.2.1/animate.css">
     <link rel="stylesheet" type="text/css" href="../frontend/css/styles/main_styles.css">
     <link rel="stylesheet" type="text/css" href="../frontend/css/styles/responsive.css">
@@ -275,7 +278,11 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		</div>
 	</div>
 
+<<<<<<< HEAD
 	<!-- Login Modal -->
+=======
+<!-- Login Modal -->
+>>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -287,11 +294,19 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                 <form>
                     <div class="mb-3">
                         <label for="loginEmail" class="form-label">Email address</label>
+<<<<<<< HEAD
                         <input type="email" class="form-control" id="loginEmail" required>
                     </div>
                     <div class="mb-3">
                         <label for="loginPassword" class="form-label">Password</label>
                         <input type="password" class="form-control" id="loginPassword" required>
+=======
+                        <input type="email" class="form-control" id="loginEmail" name="loginEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="loginPassword" name="loginPassword" required>
+>>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
                     </div>
                     <button type="submit" class="btn btn-primary">Login</button>
                 </form>
@@ -312,6 +327,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                 <form>
                     <div class="mb-3">
                         <label for="registerName" class="form-label">Full Name</label>
+<<<<<<< HEAD
                         <input type="text" class="form-control" id="registerName" required>
                     </div>
                     <div class="mb-3">
@@ -321,6 +337,17 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                     <div class="mb-3">
                         <label for="registerPassword" class="form-label">Password</label>
                         <input type="password" class="form-control" id="registerPassword" required>
+=======
+                        <input type="text" class="form-control" id="registerName" name="registerName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerEmail" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="registerEmail" name="registerEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="registerPassword" name="registerPassword" required>
+>>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
                     </div>
                     <button type="submit" class="btn btn-primary">Register</button>
                 </form>
@@ -329,7 +356,10 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     </div>
 </div>
 
+<<<<<<< HEAD
 </div>
+=======
+>>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
 
 <script src="../frontend/js/jquery-3.2.1.min.js"></script>
 <script src="../frontend/css/styles/bootstrap4/popper.js"></script>
@@ -348,12 +378,17 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         // Initialize SPApp and dynamic content loading
         var app = $.spapp({
             defaultView: "home", 
+<<<<<<< HEAD
             templateDir: "./tpl/", 
+=======
+            templateDir: "", 
+>>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
             pageNotFound: "error_40324", 
         });
 
         app.run();  
 
+<<<<<<< HEAD
         // Handle dynamic content loading based on 'data-load' attribute
         const sections = document.querySelectorAll('section[data-load]');
         sections.forEach(function (section) {
@@ -371,6 +406,14 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         // Handle SPA routing logic based on URL hash
         function loadContent(sectionId, filePath) {
             $('#' + sectionId).load(filePath);
+=======
+        // Handle SPA routing logic based on URL hash
+        function loadContent(sectionId, filePath) {
+            $('#' + sectionId).load(filePath, function() {
+                console.log(sectionId + " content loaded");
+                $(document).trigger("spapp.contentLoaded"); // Notify content change
+            });
+>>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
         }
 
         // Listen for hash changes and load content
@@ -392,6 +435,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             loadContent('home', './tpl/home.html'); // default to home
         }
 
+<<<<<<< HEAD
         // Link handling for the main navigation
         $('.main_nav_item a').click(function(e) {
             e.preventDefault();
@@ -400,6 +444,8 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             loadContent(target, './tpl/' + target + '.html');
         });
 
+=======
+>>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
         // Handle login and register buttons
         const loginBtn = document.getElementById('loginBtn');
         const registerBtn = document.getElementById('registerBtn');
@@ -415,9 +461,60 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
             registerModal.show();
         });
+<<<<<<< HEAD
     });
 </script>
 
+=======
+
+        // Force reinitialization of Owl Carousel after SPApp loads a new section
+        $(document).on("spapp.contentLoaded", function () {
+            console.log("SPApp loaded new section. Reinitializing Owl Carousel...");
+
+            $(".home_slider").trigger('destroy.owl.carousel').removeClass('owl-loaded');
+            $(".home_slider").find('.owl-stage-outer').children().unwrap();
+
+            $(".home_slider").owlCarousel({
+                items: 1, 
+                loop: true,
+                margin: 10,
+                nav: true,
+                dots: true,
+                autoplay: true,
+                autoplayTimeout: 5000,
+                autoplayHoverPause: true
+            });
+
+            // Debugging: Check if images are loading
+            $(".home_slider_background").each(function () {
+                var imgUrl = $(this).css("background-image");
+                if (imgUrl === "none" || imgUrl === "url(invalid)") {
+                    console.error("Background image failed to load:", imgUrl);
+                } else {
+                    console.log("Background image loaded:", imgUrl);
+                }
+            });
+        });
+
+    });
+</script>
+	
+<script>
+    $(document).ready(function(){
+        $(".test_slider").owlCarousel({
+            items: 1,  // Only show one testimonial at a time
+            loop: true,  // Infinite loop
+            margin: 30,  // Space between items
+            nav: true,  // Show next/prev arrows
+            navText: ["<div class='test_slider_prev'></div>", "<div class='test_slider_next'></div>"],
+            dots: true,  // Show dots navigation
+            autoplay: true,  // Auto slide
+            autoplayTimeout: 5000,  // Interval between slides
+            autoplayHoverPause: true  // Pause on hover
+        });
+    });
+</script>
+>>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
 
 </body>
 
