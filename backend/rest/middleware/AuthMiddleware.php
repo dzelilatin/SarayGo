@@ -4,87 +4,72 @@ namespace Dzelitin\SarayGo\middleware;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Dzelitin\SarayGo\Config;
+use Dzelitin\SarayGo\Roles;
 
 class AuthMiddleware {
-    public function verifyToken() {
-        error_log("🔍 AuthMiddleware::verifyToken() - Starting token verification");
+    public function verifyToken($token) {
+        error_log("Starting token verification...");
+        error_log("Initial token parameter: " . ($token ? "present" : "null"));
         
-        // Get Authorization header from $_SERVER
         $headers = getallheaders();
-        error_log("📝 All headers: " . print_r($headers, true));
+        error_log("All headers: " . json_encode($headers));
         
-        // Try different ways to get the Authorization header
-        $token = null;
-        if (isset($headers['Authorization'])) {
-            $token = $headers['Authorization'];
-        } elseif (isset($headers['authorization'])) {
-            $token = $headers['authorization'];
-        } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) {
-            $token = $_SERVER['HTTP_AUTHORIZATION'];
-        } elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
-            $token = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+        // Check both Authorization and Authentication headers
+        $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? $headers['Authentication'] ?? $headers['authentication'] ?? null;
+        error_log("Authorization/Authentication header: " . ($authHeader ?: "null"));
+        
+        if (!$token && $authHeader) {
+            $token = $authHeader;
+            error_log("Using token from header: " . $token);
         }
-        
-        error_log("🔑 Authorization header: " . ($token ? $token : 'null'));
         
         if (!$token) {
-            error_log("❌ No token provided in request");
-            \Flight::halt(401, json_encode(['error' => 'No token provided']));
-            return false;
+            error_log("No token provided in either parameter or headers");
+            \Flight::halt(401, "No token provided");
         }
-
+        
+        // Remove 'Bearer ' if present
+        $token = str_replace('Bearer ', '', $token);
+        error_log("Cleaned token: " . $token);
+        
         try {
-            $token = str_replace('Bearer ', '', $token);
-            error_log("🔑 Cleaned token: " . $token);
-            
             $decoded = JWT::decode($token, new Key(Config::JWT_SECRET(), 'HS256'));
-            error_log("✅ Token decoded successfully: " . print_r($decoded, true));
-            
+            error_log("Token decoded successfully");
             \Flight::set('user', $decoded->user);
+            \Flight::set('jwt_token', $token);
             return true;
         } catch (\Exception $e) {
-            error_log("❌ Token verification failed: " . $e->getMessage());
-            \Flight::halt(401, json_encode(['error' => 'Invalid token: ' . $e->getMessage()]));
-            return false;
+            error_log("Token verification failed: " . $e->getMessage());
+            \Flight::halt(401, "Invalid token: " . $e->getMessage());
         }
     }
 
-    public function isAdmin() {
+    public function authorizeRole($requiredRole) {
         $user = \Flight::get('user');
-        return $user && isset($user->role) && $user->role === 'admin';
-    }
-
-    public function hasPermission($permission) {
-        $user = \Flight::get('user');
-        return $user && isset($user->permissions) && in_array($permission, $user->permissions);
-    }
-
-    public function authorizeRole(int $requiredPermissionLevel) {
-        $user = \Flight::get('user');
-        if ($user->is_admin === $requiredPermissionLevel) {
+        if (!$user || !isset($user->role) || $user->role !== $requiredRole) {
             \Flight::halt(403, 'Access denied: insufficient privileges');
         }
     }
 
-    public function verifyIsAdmin() {
-        $user = \Flight::get('user');
-        if ($user->is_admin === 0) {
-            \Flight::halt(403, 'Access denied: User is NOT admin.');
-        }
-        return true;
-    }
-
     public function authorizeRoles($roles) {
         $user = \Flight::get('user');
-        if (!in_array($user->role, $roles)) {
+        if (!$user || !isset($user->role) || !in_array($user->role, $roles)) {
             \Flight::halt(403, 'Forbidden: role not allowed');
         }
     }
 
     public function authorizePermission($permission) {
         $user = \Flight::get('user');
-        if (!in_array($permission, $user->permissions)) {
+        if (!$user || !isset($user->permissions) || !in_array($permission, $user->permissions)) {
             \Flight::halt(403, 'Access denied: permission missing');
         }
+    }
+
+    public function verifyIsAdmin() {
+        $this->authorizeRole(Roles::ADMIN);
+    }
+
+    public function verifyIsUser() {
+        $this->authorizeRole(Roles::USER);
     }
 } 
