@@ -28,5 +28,10 @@ class Database {
         }
         return self::$connection;
     }
+
+    // JWT Secret Key Definition
+    public static function JWT_SECRET() {
+        return 'SarayGo_2025_Secure_JWT_Key_8f7d3b2a1e6c9f4a5b8d2e7c3f6a9b4d';
+    }
 }
 ?>
