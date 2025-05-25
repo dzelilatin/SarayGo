@@ -16,6 +16,7 @@ return array(
     'PhpOption\\' => array($vendorDir . '/phpoption/phpoption/src/PhpOption'),
     'OpenApi\\' => array($vendorDir . '/zircote/swagger-php/src'),
     'GrahamCampbell\\ResultType\\' => array($vendorDir . '/graham-campbell/result-type/src'),
+    'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
     'Dzelitin\\SarayGo\\Services\\' => array($baseDir . '/rest/services'),
     'Dzelitin\\SarayGo\\Dao\\' => array($baseDir . '/rest/dao'),
     'Dzelitin\\SarayGo\\Controllers\\' => array($baseDir . '/rest/controllers'),
