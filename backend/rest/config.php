@@ -3,20 +3,49 @@ namespace Dzelitin\SarayGo;
 use PDO;
 use PDOException;
 
+// Set the reporting
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL ^ (E_NOTICE | E_DEPRECATED));
+
+class Config
+{
+    public static function DB_NAME()
+    {
+        return 'SarayGo'; 
+    }
+    public static function DB_PORT()
+    {
+        return 3306;
+    }
+    public static function DB_USER()
+    {
+        return 'root';
+    }
+    public static function DB_PASSWORD()
+    {
+        return '';
+    }
+    public static function DB_HOST()
+    {
+        return '127.0.0.1';
+    }
+
+    public static function JWT_SECRET() {
+        return 'SarayGo_2025_Secure_JWT_Key_8f7d3b2a1e6c9f4a5b8d2e7c3f6a9b4d';
+    }
+}
+
 class Database {
-    const HOST = '127.0.0.1';  // Use 127.0.0.1 instead of localhost
-    const DB_NAME = 'SarayGo';
-    const USER = 'root';
-    const PASSWORD = '';  // Adjust this if you use a password for root
     private static $connection = null;
 
     public static function connect() {
         if (self::$connection === null) {
             try {
                 self::$connection = new PDO(
-                    "mysql:host=" . self::HOST . ";dbname=" . self::DB_NAME,
-                    self::USER,
-                    self::PASSWORD,
+                    "mysql:host=" . Config::DB_HOST() . ";dbname=" . Config::DB_NAME(),
+                    Config::DB_USER(),
+                    Config::DB_PASSWORD(),
                     [
                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
@@ -27,11 +56,6 @@ class Database {
             }
         }
         return self::$connection;
-    }
-
-    // JWT Secret Key Definition
-    public static function JWT_SECRET() {
-        return 'SarayGo_2025_Secure_JWT_Key_8f7d3b2a1e6c9f4a5b8d2e7c3f6a9b4d';
     }
 }
 ?>
