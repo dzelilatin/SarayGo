@@ -30,7 +30,7 @@ class AuthDao extends BaseDao {
         $sql = "INSERT INTO users (username, email, password, role, created_at) 
                 VALUES (:username, :email, :password, :role, NOW())";
         
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         $stmt->execute([
             'username' => $data['username'],
             'email' => $data['email'],
@@ -38,7 +38,7 @@ class AuthDao extends BaseDao {
             'role' => $data['role']
         ]);
 
-        return $this->db->lastInsertId();
+        return $this->conn->lastInsertId();
     }
 
     public function update($id, $data) {
@@ -65,7 +65,7 @@ class AuthDao extends BaseDao {
             $params['password'] = $data['password'];
         }
         
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         return $stmt->execute($params);
     }
 }

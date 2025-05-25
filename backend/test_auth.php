@@ -1,4 +1,6 @@
 <?php
+define('TEST_MODE', true);
+
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/rest/config.php';
 require_once __DIR__ . '/middleware/AuthMiddleware.php';
@@ -9,7 +11,7 @@ use Dzelitin\SarayGo\Roles;
 use Firebase\JWT\JWT;
 
 // Test data
-$testUser = [
+$testUser = (object)[
     'id' => 1,
     'username' => 'testuser',
     'email' => 'test@example.com',
@@ -17,7 +19,7 @@ $testUser = [
     'permissions' => Roles::getRolePermissions(Roles::USER)
 ];
 
-$testAdmin = [
+$testAdmin = (object)[
     'id' => 2,
     'username' => 'admin',
     'email' => 'admin@example.com',
