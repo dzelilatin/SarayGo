@@ -97,7 +97,9 @@ Flight::route('/*', function() use ($authMiddleware) {
     }
 
     // For all other routes, verify JWT token
-    $token = Flight::request()->getHeader("Authentication");
+    $headers = getallheaders();
+    $token = $headers['Authorization'] ?? $headers['authorization'] ?? $headers['Authentication'] ?? $headers['authentication'] ?? null;
+    error_log("Index.php - Token from headers: " . ($token ?: "null"));
     return $authMiddleware->verifyToken($token);
 });
 
