@@ -83,7 +83,7 @@ Flight::register('auth_service', 'Dzelitin\\SarayGo\\services\\AuthService', arr
 Flight::register('authService', 'Dzelitin\\SarayGo\\services\\AuthService', array(Flight::authDao()));
 
 // Register Middleware
-require_once __DIR__ . '/middleware/AuthMiddleware.php';
+require_once __DIR__ . '/../middleware/AuthMiddleware.php';
 $authMiddleware = new Dzelitin\SarayGo\middleware\AuthMiddleware();
 
 // Authentication Middleware
