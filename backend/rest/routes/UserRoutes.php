@@ -3,7 +3,7 @@ namespace Dzelitin\SarayGo\routes;
 
 require_once 'BaseRoutes.php';
 require_once(__DIR__ . '/../services/UserService.php');
-require_once(__DIR__ . '/../middleware/AuthMiddleware.php');
+require_once(__DIR__ . '/../../middleware/AuthMiddleware.php');
 
 use Dzelitin\SarayGo\services\UserService;
 use Dzelitin\SarayGo\middleware\AuthMiddleware;

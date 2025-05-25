@@ -10,7 +10,8 @@
         "Dzelitin\\SarayGo\\": "rest/",
         "Dzelitin\\SarayGo\\Dao\\": "rest/dao/",
         "Dzelitin\\SarayGo\\Services\\": "rest/services/",
-        "Dzelitin\\SarayGo\\Controllers\\": "rest/controllers/"
+        "Dzelitin\\SarayGo\\Controllers\\": "rest/controllers/",
+        "Dzelitin\\SarayGo\\middleware\\": "middleware/"
       }
     },
     "authors": [
