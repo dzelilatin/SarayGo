@@ -27,6 +27,11 @@ class AuthDao extends BaseDao {
             $data['role'] = Roles::USER;
         }
 
+        // Use email as username if username is not provided
+        if (!isset($data['username'])) {
+            $data['username'] = $data['email'];
+        }
+
         $sql = "INSERT INTO users (username, email, password, role, created_at) 
                 VALUES (:username, :email, :password, :role, NOW())";
         
