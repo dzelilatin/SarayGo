@@ -10,10 +10,6 @@
     <link href="../frontend/assets/plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../frontend/assets/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
     <link rel="stylesheet" type="text/css" href="../frontend/assets/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
-<<<<<<< HEAD
-	<link rel="stylesheet" type="text/css" href="../frontend/assets/plugins/OwlCarousel2-2.2.1/owl.carousel.js">
-=======
->>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
     <link rel="stylesheet" type="text/css" href="../frontend/assets/plugins/OwlCarousel2-2.2.1/animate.css">
     <link rel="stylesheet" type="text/css" href="../frontend/css/styles/main_styles.css">
     <link rel="stylesheet" type="text/css" href="../frontend/css/styles/responsive.css">
@@ -45,8 +41,8 @@
 							</ul>
 						</div>
 						<div class="user_box ml-auto">
-							<div class="user_box_login user_box_link"><a href="#">login</a></div>
-							<div class="user_box_register user_box_link"><a href="#">register</a></div>
+							<div class="user_box_login user_box_link"><a href="#" id="loginBtnTop">login</a></div>
+							<div class="user_box_register user_box_link"><a href="#" id="registerBtnTop">register</a></div>
 						</div>
 					</div>
 				</div>
@@ -135,6 +131,12 @@
 		<section id="offers" data-load="tpl/offers.html" class="spapp-section"></section>
 		<section id="elements" data-load="tpl/elements.html" class="spapp-section"></section>
 		<section id="single_listing" data-load="tpl/single_listing.html" class="spapp-section"></section>
+		<section id="dashboard" data-load="tpl/dashboard.html" class="spapp-section" style="display: none;">
+			<div class="container">
+				<h2>Dashboard</h2>
+				<div id="dashboardContent"></div>
+			</div>
+		</section>
 	</main>
 
     <!-- Footer -->
@@ -278,11 +280,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		</div>
 	</div>
 
-<<<<<<< HEAD
-	<!-- Login Modal -->
-=======
 <!-- Login Modal -->
->>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -294,19 +292,11 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                 <form>
                     <div class="mb-3">
                         <label for="loginEmail" class="form-label">Email address</label>
-<<<<<<< HEAD
-                        <input type="email" class="form-control" id="loginEmail" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="loginPassword" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="loginPassword" required>
-=======
                         <input type="email" class="form-control" id="loginEmail" name="loginEmail" required>
                     </div>
                     <div class="mb-3">
                         <label for="loginPassword" class="form-label">Password</label>
                         <input type="password" class="form-control" id="loginPassword" name="loginPassword" required>
->>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
                     </div>
                     <button type="submit" class="btn btn-primary">Login</button>
                 </form>
@@ -327,17 +317,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                 <form>
                     <div class="mb-3">
                         <label for="registerName" class="form-label">Full Name</label>
-<<<<<<< HEAD
-                        <input type="text" class="form-control" id="registerName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="registerEmail" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="registerEmail" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="registerPassword" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="registerPassword" required>
-=======
                         <input type="text" class="form-control" id="registerName" name="registerName" required>
                     </div>
                     <div class="mb-3">
@@ -347,7 +326,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                     <div class="mb-3">
                         <label for="registerPassword" class="form-label">Password</label>
                         <input type="password" class="form-control" id="registerPassword" name="registerPassword" required>
->>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
                     </div>
                     <button type="submit" class="btn btn-primary">Register</button>
                 </form>
@@ -356,12 +334,10 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     </div>
 </div>
 
-<<<<<<< HEAD
 </div>
-=======
->>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
 
 <script src="../frontend/js/jquery-3.2.1.min.js"></script>
+<script src="../frontend/js/jquery.spapp.min.js"></script>
 <script src="../frontend/css/styles/bootstrap4/popper.js"></script>
 <script src="../frontend/css/styles/bootstrap4/bootstrap.min.js"></script>
 <script src="../frontend/assets/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
@@ -378,45 +354,17 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         // Initialize SPApp and dynamic content loading
         var app = $.spapp({
             defaultView: "home", 
-<<<<<<< HEAD
-            templateDir: "./tpl/", 
-=======
             templateDir: "", 
->>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
             pageNotFound: "error_40324", 
         });
-
         app.run();  
 
-<<<<<<< HEAD
-        // Handle dynamic content loading based on 'data-load' attribute
-        const sections = document.querySelectorAll('section[data-load]');
-        sections.forEach(function (section) {
-            const url = section.getAttribute('data-load');
-            fetch(url)
-                .then(response => response.text())
-                .then(data => {
-                    section.innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('Error loading content:', error);
-                });
-        });
-
-        // Handle SPA routing logic based on URL hash
-        function loadContent(sectionId, filePath) {
-            $('#' + sectionId).load(filePath);
-=======
-        // Handle SPA routing logic based on URL hash
+        // SPA routing logic
         function loadContent(sectionId, filePath) {
             $('#' + sectionId).load(filePath, function() {
-                console.log(sectionId + " content loaded");
-                $(document).trigger("spapp.contentLoaded"); // Notify content change
+                $(document).trigger("spapp.contentLoaded");
             });
->>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
         }
-
-        // Listen for hash changes and load content
         $(window).on('hashchange', function() {
             var hash = window.location.hash.substring(1);
             if (hash) {
@@ -424,56 +372,51 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                 $('#' + hash).show();
             } else {
                 $('.spapp-section').hide();
-                $('#home').show();  // default view
+                $('#home').show();
             }
         });
-
-        // Trigger initial page load based on hash (if present)
         if (window.location.hash) {
             $(window).trigger('hashchange');
         } else {
-            loadContent('home', './tpl/home.html'); // default to home
+            loadContent('home', './tpl/home.html');
         }
-
-<<<<<<< HEAD
-        // Link handling for the main navigation
+        // Main navigation click handler
         $('.main_nav_item a').click(function(e) {
             e.preventDefault();
             var target = $(this).attr('href').substring(1);
-            window.location.hash = target; // Update URL hash
+            window.location.hash = target;
             loadContent(target, './tpl/' + target + '.html');
         });
-
-=======
->>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
-        // Handle login and register buttons
+        // Handle login and register buttons (navbar)
         const loginBtn = document.getElementById('loginBtn');
         const registerBtn = document.getElementById('registerBtn');
-
         loginBtn.addEventListener('click', function (event) {
             event.preventDefault();
             const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
             loginModal.show();
         });
-
         registerBtn.addEventListener('click', function (event) {
             event.preventDefault();
             const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
             registerModal.show();
         });
-<<<<<<< HEAD
-    });
-</script>
-
-=======
-
-        // Force reinitialization of Owl Carousel after SPApp loads a new section
+        // Handle login and register buttons (top bar)
+        const loginBtnTop = document.getElementById('loginBtnTop');
+        const registerBtnTop = document.getElementById('registerBtnTop');
+        loginBtnTop.addEventListener('click', function (event) {
+            event.preventDefault();
+            const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
+        });
+        registerBtnTop.addEventListener('click', function (event) {
+            event.preventDefault();
+            const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+            registerModal.show();
+        });
+        // Reinitialize Owl Carousel after SPApp loads a new section
         $(document).on("spapp.contentLoaded", function () {
-            console.log("SPApp loaded new section. Reinitializing Owl Carousel...");
-
             $(".home_slider").trigger('destroy.owl.carousel').removeClass('owl-loaded');
             $(".home_slider").find('.owl-stage-outer').children().unwrap();
-
             $(".home_slider").owlCarousel({
                 items: 1, 
                 loop: true,
@@ -484,21 +427,141 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                 autoplayTimeout: 5000,
                 autoplayHoverPause: true
             });
-
-            // Debugging: Check if images are loading
-            $(".home_slider_background").each(function () {
-                var imgUrl = $(this).css("background-image");
-                if (imgUrl === "none" || imgUrl === "url(invalid)") {
-                    console.error("Background image failed to load:", imgUrl);
-                } else {
-                    console.log("Background image loaded:", imgUrl);
-                }
-            });
         });
-
+        // Register form handler
+        document.querySelector('#registerModal form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            try {
+                const response = await fetch('/backend/rest/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: name, email, password })
+                });
+                console.log('Register request sent:', { username: name, email, password });
+                if (response.ok) {
+                    alert('Registration successful!');
+                    bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
+                } else {
+                    const data = await response.json();
+                    console.error('Registration failed:', data);
+                    alert('Registration failed: ' + (data.error || 'Unknown error'));
+                }
+            } catch (err) {
+                console.error('Registration AJAX error:', err);
+                alert('Registration failed: ' + err.message);
+            }
+        });
+        // Login form handler
+        document.querySelector('#loginModal form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            try {
+                const response = await fetch('/backend/rest/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                console.log('Login request sent:', { email, password });
+                if (response.ok) {
+                    const data = await response.json();
+                    alert('Login successful!');
+                    bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+                    if (data.data && data.data.token) {
+                        localStorage.setItem('jwtToken', data.data.token);
+                        fetchCurrentUser().then(user => updateUIForUser(user));
+                    }
+                } else {
+                    const data = await response.json();
+                    console.error('Login failed:', data);
+                    alert('Login failed: ' + (data.error || 'Unknown error'));
+                }
+            } catch (err) {
+                console.error('Login AJAX error:', err);
+                alert('Login failed: ' + err.message);
+            }
+        });
+        // Add dashboard section to SPA
+        const dashboardSection = document.createElement('section');
+        dashboardSection.id = 'dashboard';
+        dashboardSection.className = 'spapp-section';
+        dashboardSection.style.display = 'none';
+        dashboardSection.innerHTML = `
+            <div class="container"><h2>Dashboard</h2><div id="dashboardContent"></div></div>
+        `;
+        document.querySelector('main#spapp').appendChild(dashboardSection);
+        // Add logout button to nav (hidden by default)
+        const navList = document.querySelector('.main_nav_list');
+        const logoutLi = document.createElement('li');
+        logoutLi.className = 'main_nav_item';
+        logoutLi.style.display = 'none';
+        logoutLi.innerHTML = '<a href="#" id="logoutBtn">Logout</a>';
+        navList.appendChild(logoutLi);
+        // Helper: update UI for user
+        function updateUIForUser(user) {
+            if (user) {
+                logoutLi.style.display = '';
+                document.querySelectorAll('.main_nav_item').forEach(li => {
+                    if (li.textContent.trim().toLowerCase() === 'login' || li.textContent.trim().toLowerCase() === 'register') {
+                        li.style.display = 'none';
+                    }
+                });
+                // Show dashboard link for all users
+                let dashLink = document.getElementById('dashboardNav');
+                if (!dashLink) {
+                    dashLink = document.createElement('li');
+                    dashLink.className = 'main_nav_item';
+                    dashLink.id = 'dashboardNav';
+                    dashLink.innerHTML = '<a href="#dashboard">Dashboard</a>';
+                    navList.appendChild(dashLink);
+                }
+                dashLink.style.display = '';
+                // Show admin features if admin
+                if (user.role && user.role.toLowerCase() === 'admin') {
+                    document.getElementById('dashboardContent').innerHTML = '<p>Welcome, Admin! You have full access.</p><button id="adminAction">Admin Action</button>';
+                } else {
+                    document.getElementById('dashboardContent').innerHTML = '<p>Welcome, ' + user.username + '!</p>';
+                }
+            } else {
+                logoutLi.style.display = 'none';
+                let dashLink = document.getElementById('dashboardNav');
+                if (dashLink) dashLink.style.display = 'none';
+                document.querySelectorAll('.main_nav_item').forEach(li => {
+                    if (li.textContent.trim().toLowerCase() === 'login' || li.textContent.trim().toLowerCase() === 'register') {
+                        li.style.display = '';
+                    }
+                });
+            }
+        }
+        // Fetch current user
+        async function fetchCurrentUser() {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) return null;
+            try {
+                const res = await fetch('/backend/rest/auth/me', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (res.ok) {
+                    return await res.json();
+                }
+            } catch (e) { console.error('Fetch user error', e); }
+            return null;
+        }
+        // On page load, check for token and update UI
+        fetchCurrentUser().then(user => updateUIForUser(user));
+        // Logout handler
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('jwtToken');
+            updateUIForUser(null);
+            window.location.hash = 'home';
+        });
     });
 </script>
-	
+
 <script>
     $(document).ready(function(){
         $(".test_slider").owlCarousel({
@@ -514,7 +577,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         });
     });
 </script>
->>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889
 
 </body>
 

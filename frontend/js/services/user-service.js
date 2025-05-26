@@ -1,81 +1,147 @@
-let UserService = {
-    init: function () {
-        var token = localStorage.getItem("user_token");
-        if (token && token !== undefined) {
-            window.location.replace("index.html");
-        }
-        $("#login-form").validate({
-            submitHandler: function (form) {
-                var entity = Object.fromEntries(new FormData(form).entries());
-                UserService.login(entity);
-            },
-        });
-    },
-    login: function (entity) {
-        $.ajax({
-            url: Constants.PROJECT_BASE_URL + "auth/login",
-            type: "POST",
-            data: JSON.stringify(entity),
-            contentType: "application/json",
-            dataType: "json",
-            success: function (result) {
-                console.log(result);
-                localStorage.setItem("user_token", result.data.token);
-                window.location.replace("index.html");
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                toastr.error(XMLHttpRequest?.responseText ? XMLHttpRequest.responseText : 'Error');
-            },
-        });
-    },
-    logout: function () {
-        localStorage.clear();
-        window.location.replace("login.html");
-    },
-    generateMenuItems: function() {
-        const token = localStorage.getItem("user_token");
-        const user = Utils.parseJwt(token)?.user;
+class UserService {
+    constructor() {
+        this.baseUrl = '/backend/rest';
+    }
 
-        if (user && user.role) {
-            let nav = "";
-            let main = "";
+    async login(credentials) {
+        try {
+            const response = await fetch(`${this.baseUrl}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(credentials)
+            });
+
+            const data = await response.json();
             
-            // Common menu items for all users
-            nav = '<li class="nav-item mx-0 mx-lg-1">' +
-                    '<a class="nav-link py-3 px-0 px-lg-3 rounded" href="#activities">Activities</a>' +
-                  '</li>' +
-                  '<li class="nav-item mx-0 mx-lg-1">' +
-                    '<a class="nav-link py-3 px-0 px-lg-3 rounded" href="#moods">Moods</a>' +
-                  '</li>';
-
-            // Admin-specific menu items
-            if (user.role === Constants.ADMIN_ROLE) {
-                nav += '<li class="nav-item mx-0 mx-lg-1">' +
-                         '<a class="nav-link py-3 px-0 px-lg-3 rounded" href="#users">Users</a>' +
-                       '</li>' +
-                       '<li class="nav-item mx-0 mx-lg-1">' +
-                         '<a class="nav-link py-3 px-0 px-lg-3 rounded" href="#reviews">Reviews</a>' +
-                       '</li>';
+            if (!response.ok) {
+                throw new Error(data.message || `Login failed: ${response.statusText}`);
             }
 
-            // Add logout button
-            nav += '<li class="nav-item mx-0 mx-lg-1">' +
-                     '<button class="btn btn-primary" onclick="UserService.logout()">Logout</button>' +
-                   '</li>';
-
-            // Main content sections
-            main = '<section id="activities" data-load="activities.html"></section>' +
-                   '<section id="moods" data-load="moods.html"></section>';
-
-            if (user.role === Constants.ADMIN_ROLE) {
-                main += '<section id="users" data-load="users.html"></section>' +
-                        '<section id="reviews" data-load="reviews.html"></section>';
+            if (data.data && data.data.token) {
+                localStorage.setItem('token', data.data.token);
+                localStorage.setItem('userRole', data.data.role || 'user');
+                return data.data;
+            } else {
+                throw new Error('No token received from server');
             }
-
-            $("#tabs").html(nav);
-            $("#spapp").html(main);
-        } else {
-            window.location.replace("login.html");
+        } catch (error) {
+            console.error('Login error:', error);
+            throw error;
         }
     }
-}; 
+
+    async register(userData) {
+        try {
+            const response = await fetch(`${this.baseUrl}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Registration failed: ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Registration error:', error);
+            throw error;
+        }
+    }
+
+    logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userRole');
+    }
+
+    async getCurrentUser() {
+        try {
+            const response = await fetch(`${this.baseUrl}/users/me`, {
+                headers: {
+                    'Authorization': `Bearer ${this.getToken()}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to get current user: ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Get current user error:', error);
+            throw error;
+        }
+    }
+
+    async updateProfile(userData) {
+        try {
+            const response = await fetch(`${this.baseUrl}/users/profile`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.getToken()}`
+                },
+                body: JSON.stringify(userData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Profile update failed: ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Profile update error:', error);
+            throw error;
+        }
+    }
+
+    async changePassword(currentPassword, newPassword) {
+        try {
+            const response = await fetch(`${this.baseUrl}/users/change-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.getToken()}`
+                },
+                body: JSON.stringify({
+                    currentPassword,
+                    newPassword
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Password change failed: ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Password change error:', error);
+            throw error;
+        }
+    }
+
+    isAuthenticated() {
+        return !!this.getToken();
+    }
+
+    getUserRole() {
+        return localStorage.getItem('userRole');
+    }
+
+    hasPermission(permission) {
+        const role = this.getUserRole();
+        // Implement permission checking logic based on role
+        return role === 'admin'; // Simplified for now
+    }
+
+    getToken() {
+        return localStorage.getItem('token');
+    }
+}
+
+// Export the service
+window.UserService = UserService; 
