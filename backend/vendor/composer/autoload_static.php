@@ -38,6 +38,10 @@ class ComposerStaticInit28d3ef1d5a7fef5bc0831e923c485fe9
         array (
             'GrahamCampbell\\ResultType\\' => 26,
         ),
+        'F' => 
+        array (
+            'Firebase\\JWT\\' => 13,
+        ),
         'D' => 
         array (
             'Dzelitin\\SarayGo\\Services\\' => 26,
@@ -91,6 +95,10 @@ class ComposerStaticInit28d3ef1d5a7fef5bc0831e923c485fe9
         'GrahamCampbell\\ResultType\\' => 
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
+        ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'Dzelitin\\SarayGo\\Services\\' => 
         array (

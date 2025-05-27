@@ -26,12 +26,18 @@ class UserService extends BaseService {
     public function create($data) {
         $this->validateUserData($data);
         $this->checkDuplicateUser($data);
+        if (isset($data['password'])) {
+            $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+        }
         return $this->dao->insert($data);
     }
 
     public function update($id, $data) {
         $this->validateUserData($data);
         $this->checkDuplicateUser($data, $id);
+        if (isset($data['password']) && !empty($data['password'])) {
+            $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+        }
         return $this->dao->update($id, $data);
     }
 
@@ -59,6 +65,7 @@ class UserService extends BaseService {
     public function register($data) {
         $this->validateUserData($data, true);
         $this->checkDuplicateUser($data);
+        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         return $this->dao->createUser($data['username'], $data['email'], $data['password']);
     }
 
@@ -118,6 +125,9 @@ class UserService extends BaseService {
     public function updateProfile($id, $data) {
         $this->validateUserData($data, false);
         $this->checkDuplicateUser($data, $id);
+        if (isset($data['password']) && !empty($data['password'])) {
+            $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+        }
         return $this->dao->updateUser($id, $data['username'], $data['email'], $data['password'] ?? null);
     }
 
