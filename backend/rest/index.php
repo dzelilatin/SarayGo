@@ -18,7 +18,10 @@ error_log("Request Time: " . date('Y-m-d H:i:s'));
 require_once __DIR__ . '/../vendor/autoload.php'; // Autoload classes using Composer
 require_once __DIR__ . '/config.php';  // Include the config.php with Database class
 use Dzelitin\SarayGo\Database;
+use Dzelitin\SarayGo\Config;
 use PDO;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 // Configure error handling
 Flight::set('flight.handle_errors', true);
@@ -46,9 +49,9 @@ Flight::map('notFound', function() {
 
 // Use custom Database class for DB connection
 Flight::register('db', 'PDO', array(
-    'mysql:host=' . Database::HOST . ';dbname=' . Database::DB_NAME,
-    Database::USER,
-    Database::PASSWORD
+    'mysql:host=' . Config::DB_HOST() . ';dbname=' . Config::DB_NAME(),
+    Config::DB_USER(),
+    Config::DB_PASSWORD()
 ), function($db) {
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -64,6 +67,7 @@ Flight::register('recommendationDao', 'Dzelitin\SarayGo\Dao\RecommendationDao', 
 Flight::register('reviewDao', 'Dzelitin\SarayGo\Dao\ReviewDao', array(Flight::db()));
 Flight::register('userMoodDao', 'Dzelitin\SarayGo\Dao\UserMoodDao', array(Flight::db()));
 Flight::register('userDao', 'Dzelitin\SarayGo\Dao\UserDao', array(Flight::db()));
+Flight::register('authDao', 'Dzelitin\SarayGo\Dao\AuthDao', array(Flight::db()));
 
 // Register Services (which rely on DAOs)
 Flight::register('activityService', 'Dzelitin\\SarayGo\\services\\ActivityService', array(Flight::activityDao()));
@@ -75,9 +79,33 @@ Flight::register('recommendationService', 'Dzelitin\\SarayGo\\services\\Recommen
 Flight::register('reviewService', 'Dzelitin\\SarayGo\\services\\ReviewService', array(Flight::reviewDao()));
 Flight::register('userMoodService', 'Dzelitin\\SarayGo\\services\\UserMoodService', array(Flight::userMoodDao()));
 Flight::register('userService', 'Dzelitin\\SarayGo\\services\\UserService', array(Flight::userDao()));
+Flight::register('auth_service', 'Dzelitin\\SarayGo\\services\\AuthService', array(Flight::authDao()));
+Flight::register('authService', 'Dzelitin\\SarayGo\\services\\AuthService', array(Flight::authDao()));
+
+// Register Middleware
+require_once __DIR__ . '/../middleware/AuthMiddleware.php';
+$authMiddleware = new Dzelitin\SarayGo\middleware\AuthMiddleware();
+
+// Authentication Middleware
+Flight::route('/*', function() use ($authMiddleware) {
+    // Skip authentication for login and register routes
+    if(
+        strpos(Flight::request()->url, '/auth/login') === 0 ||
+        strpos(Flight::request()->url, '/auth/register') === 0
+    ) {
+        return TRUE;
+    }
+
+    // For all other routes, verify JWT token
+    $headers = getallheaders();
+    $token = $headers['Authorization'] ?? $headers['authorization'] ?? $headers['Authentication'] ?? $headers['authentication'] ?? null;
+    error_log("Index.php - Token from headers: " . ($token ?: "null"));
+    return $authMiddleware->verifyToken($token);
+});
 
 // Register Routes
 error_log("Loading routes...");
+require_once __DIR__ . '/routes/AuthRoutes.php';
 require_once __DIR__ . '/routes/ActivityRoutes.php';
 require_once __DIR__ . '/routes/BlogRoutes.php';
 require_once __DIR__ . '/routes/CategoryRoutes.php';
@@ -87,13 +115,22 @@ require_once __DIR__ . '/routes/RecommendationRoutes.php';
 require_once __DIR__ . '/routes/ReviewRoutes.php';
 require_once __DIR__ . '/routes/UserMoodRoutes.php';
 require_once __DIR__ . '/routes/UserRoutes.php';
+require_once __DIR__ . '/routes/BaseRoutes.php';
+
+// Initialize and register routes
+$authRoutes = new Dzelitin\SarayGo\routes\AuthRoutes();
+$authRoutes->get_routes();
+
+$userRoutes = new Dzelitin\SarayGo\routes\UserRoutes();
+$userRoutes->get_routes();
+
 error_log("Routes loaded");
 
 // Add CORS headers
 Flight::before('start', function() {
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, Authentication');
     
     // Handle pre-flight requests (OPTIONS)
     if (Flight::request()->method == 'OPTIONS') {

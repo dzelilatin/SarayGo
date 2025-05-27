@@ -21,14 +21,7 @@ if (!class_exists('Dzelitin\SarayGo\dao\BaseDao')) {
 
         protected function getConnection() {
             try {
-                $host = 'localhost';
-                $dbname = 'saraygo';
-                $username = 'root';
-                $password = '';
-                
-                $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                return $conn;
+                return Database::connect();
             } catch(PDOException $e) {
                 error_log("Connection failed: " . $e->getMessage());
                 throw $e;
