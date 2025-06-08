@@ -1,0 +1,108 @@
+<div class="mt-5 container">
+  <div class="mt-5 register-form text-center">
+    <h3>Enter your information to join us.</h3>
+    <form
+      action="/SarayGo/backend/auth/register"
+      method="post"
+      class="d-flex flex-column gather-email"
+      id="register_form"
+    >
+      <input
+        type="email"
+        class="text-center"
+        placeholder="Email"
+        name="email"
+        id="register_email"
+        required
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        min="8"
+        max="31"
+        name="password"
+        id="register_password"
+        required
+      />
+
+      <div
+        class="namesection d-flex text-center flex-row justify-content-evenly"
+      >
+        <input
+          type="text"
+          placeholder="First Name"
+          name="first_name"
+          id="register_first_name"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Last Name"
+          name="last_name"
+          id="register_last_name"
+          required
+        />
+      </div>
+
+      <div>
+        <input
+          type="tel"
+          placeholder="Phone Number"
+          name="phone"
+          id="phone"
+          required
+        />
+      </div>
+      <div>
+        <input
+          type="text"
+          name="address_line1"
+          id="address_line1"
+          required
+          placeholder="Enter your address"
+        />
+        <input
+          type="text"
+          name="address_line2"
+          id="address_line2"
+          placeholder="Enter your address (optional)"
+        />
+      </div>
+
+      <div class="d-flex text-center flex-row justify-content-evenly">
+        <input
+          type="text"
+          style="width: 35%"
+          placeholder="Country"
+          name="country"
+          id="country"
+          required
+        />
+        <input
+          type="text"
+          style="width: 35%"
+          placeholder="City"
+          name="city"
+          id="city"
+          required
+        />
+      </div>
+
+      <div>
+        <input
+          type="number"
+          name="postal_code"
+          id="postal_code"
+          required
+          placeholder="Postal Code"
+        />
+      </div>
+
+      <button type="submit" class="mt-5">Continue</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  AuthService.register();
+</script>
