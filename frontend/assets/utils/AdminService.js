@@ -323,7 +323,7 @@ let AdminService = {
         const userToken = localStorage.getItem("user_token");
 
         $.ajax({
-          url: "http://web-project-ajna.local/api/admin/product/addproduct",
+          url: "http://saraygo.local/api/admin/product/addproduct",
           type: "POST",
           headers: {
             Authentication: userToken,
