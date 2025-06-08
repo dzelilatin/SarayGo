@@ -1,0 +1,270 @@
+.test {
+  display: flex;
+}
+
+.puppy-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  height: 25rem;
+  width: 100%;
+  margin-bottom: 5rem;
+}
+
+.puppy-container img {
+  margin-top: 2rem;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.puppy-container button {
+  background-color: transparent;
+  outline: none;
+  border: none !important;
+  border-bottom: 1px solid black !important;
+  font-weight: 600;
+}
+
+#categories-div {
+  margin-top: 6rem !important;
+}
+
+.aboutus {
+  font-family: "SF Pro Rounded";
+}
+
+.aboutus a {
+  color: inherit;
+}
+
+.test h2 {
+  display: inline-block;
+}
+
+/*LATEST ARRIVALS*/
+
+#secondary-header {
+  min-height: 200px;
+}
+
+.latest-arrivals {
+  height: 800px;
+  width: 100%;
+  display: inline-flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.latest-arrivals-product {
+  transition: all 0.23111s ease-in-out;
+  position: relative;
+  padding: 18px;
+  box-shadow: 2px 4px 12px #00000014;
+  border-radius: 18px;
+  background-color: white;
+  min-width: 400px;
+  min-height: 500px;
+  max-width: 400px;
+  max-height: 500px;
+  height: 100%;
+  margin: 0.673399rem;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.latest-arrivals-product:hover {
+  scale: 1.031102;
+}
+
+.latest-arrivals-header {
+  color: #1d1d1f;
+  font-family: SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial,
+    sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.007em;
+  line-height: 1.1428571429;
+  margin: 0 0 9px;
+  padding-top: 24px;
+}
+
+.latest-arrivals-info {
+  color: #1d1d1f;
+  font-family: SF Pro Text, SF Pro Icons, Helvetica Neue, Helvetica, Arial,
+    sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.022em;
+  line-height: 1.2353641176;
+  margin-top: 0;
+  padding-top: 10px;
+}
+
+.latest-arrivals-image {
+  position: absolute;
+  bottom: 0;
+}
+
+.latest-arrivals-image img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.light-typography {
+  font-family: SF Pro Text, SF Pro Icons, Helvetica Neue, Helvetica, Arial,
+    sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.022em;
+  line-height: 1.2353641176;
+}
+
+.latest-arrivals-product:nth-of-type(1) {
+  margin-left: 15px;
+}
+
+/*END OF LATEST ARRIVALS*/
+
+/* Collections Section */
+
+.shop-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  justify-items: center;
+  align-items: center;
+}
+
+.shop-item-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.3rem;
+  transition: transform 0.3s ease-in-out;
+  text-align: center;
+}
+
+.shop-item-div:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.item {
+  width: 150px;
+  height: 150px;
+  display: flex;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  background-color: #333;
+  font-size: 4rem;
+  color: white;
+}
+
+.shop-item-div h4 {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+.brand-carousel-track {
+  display: flex;
+
+  animation: scroll 25s linear infinite;
+}
+
+.brand-item {
+  flex-shrink: 0;
+  width: 160px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+}
+
+.brand-item img {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: grayscale(100%);
+  opacity: 0.7;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.brand-item:hover img {
+  filter: grayscale(0%);
+  opacity: 1;
+}
+
+#res {
+  resize: both;
+}
+
+.hero-categories {
+  width: 75% !important;
+  font-size: 64px;
+  gap: 30px;
+  margin-bottom: 15rem;
+  display: flex;
+  justify-content: center !important;
+}
+
+.hero-categories h1 {
+  z-index: 13;
+  top: 0;
+  position: relative;
+}
+
+.hero-categories div {
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column !important;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes hidetext {
+  from {
+    opacity: 25%;
+  }
+  to {
+    opacity: 100%;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  50%,
+  100% {
+    transform: translateX(0);
+  }
+  30%,
+  70% {
+    transform: translateX(-2.5px);
+  }
+}
