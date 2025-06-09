@@ -1,0 +1,49 @@
+<div class="container mt-5" id="product-view">
+  <div class="row">
+    <p>Shop /</p>
+    <h1>Pets > Dogs</h1>
+  </div>
+  <div class="product-view row mt-5">
+    <div class="col-md-7 shadow-lg mt-5">
+      <img src="/Frontend/assets/images/Bryan.png" alt="" srcset="" />
+    </div>
+    <div class="col-md-4 rounded p-lg-5 d-flex flex-column text-start">
+      <h1>Brian</h1>
+      <span>The Golden Retriever</span>
+      <h6
+        style="
+          border-bottom: 1px solid #333;
+          width: 100%;
+          display: flex;
+          margin-top: 1rem;
+          padding-bottom: 1rem;
+        "
+      >
+        $320
+      </h6>
+      <div class="row row-cols-auto text-center d-flex justify-content-between">
+        <div class="product-info col mt-5">
+          <p class="product-info-header">Age</p>
+          <p>18 Months</p>
+        </div>
+        <div class="product-info col mt-5">
+          <p class="product-info-header">Gender</p>
+          <p>Male</p>
+        </div>
+        <div class="product-info col mt-5">
+          <p class="product-info-header">Vaccine</p>
+          <p>Yes</p>
+        </div>
+      </div>
+      <button>Adopt</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  NavbarService.__init();
+</script>
+
+<script>
+  CartService.initializeCart();
+</script>

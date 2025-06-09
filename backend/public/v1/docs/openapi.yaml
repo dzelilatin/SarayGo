@@ -1,0 +1,266 @@
+openapi: 3.0.0
+info:
+  title: SarayGo API
+  description: API documentation for SarayGo project.
+  version: 1.0.1 # You can increment this if needed
+
+servers:
+  - url: http://localhost/api # Adjust if your base URL is different
+
+tags:
+  - name: User
+    description: Operations available to regular users (Shop functionality).
+  - name: Admin
+    description: Operations restricted to administrators (Product, User, Order management).
+
+paths:
+  # ------------------
+  # User (Shop) Routes (Kept from previous version)
+  # ------------------
+  /shop:
+    get:
+      summary: Get all products
+      tags: [User]
+      responses:
+        '200':
+          description: List of all products
+
+  /shop/{category_name}/{id}:
+    get:
+      summary: Get a specific product by ID and category
+      tags: [User]
+      parameters:
+        - name: category_name
+          in: path
+          required: true
+          description: The name of the product's category.
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the product.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Product data
+
+  /shop/{category_name}:
+    get:
+      summary: Get all products in a category
+      tags: [User]
+      parameters:
+        - name: category_name
+          in: path
+          required: true
+          description: The name of the category to filter products by.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Products by category
+
+  # ------------------
+  # Admin Routes (Implementing the new PHP routes)
+  # ------------------
+  /admin/product/{id}: # Combined GET, PUT, DELETE from your PHP
+    get:
+      summary: Get a specific product by ID (Admin)
+      tags: [Admin]
+      description: Retrieves details for a single product by its ID for administrative purposes.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the product.
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Product data found.
+          content:
+            application/json:
+              schema:
+                type: object # Define Product Schema if available
+        '404':
+          description: Product not found.
+    put:
+      summary: Update an existing product
+      tags: [Admin]
+      description: Modifies the details of an existing product identified by its ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the product to update.
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Product data fields to update. (Requires implementation in PHP to read body).
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object 
+           
+      responses:
+        '200':
+          description: Product updated successfully.
+        '400':
+          description: Bad Request (Invalid data format or missing fields).
+        '404':
+          description: Product not found.
+    delete:
+      summary: Delete a product by ID
+      tags: [Admin]
+      description: Removes a product from the system using its unique identifier.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the product to delete.
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Product deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Product deleted successfully.
+        '404':
+          description: Product not found.
+
+  /admin/product/new:
+    post:
+      summary: Create a new product
+      tags: [Admin]
+      description: Adds a new product to the system.
+      requestBody:
+        description: Data for the new product. (Requires implementation in PHP to read body).
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object # Define Product Schema for creation
+              example: { "subcategory_id": 1, "name": "NAME HERE", "description": "Description", "price": 199.99, "stock_quantity": 1, "image_url": "images/test/doggo.jpg", "type": "pet", "details": { "breed": "TestBreed", "age": "1 year", "gender": "female","color": "white", "health_status": "healthy", "vaccination_status": "vaccinated", "special_needs": "none"}}
+      responses:
+        '201': # Typically used for successful creation
+          description: Product created successfully.
+        '400':
+          description: Bad Request (Invalid data format or missing required fields).
+
+  /admin/{category_name}: # Changed from /admin/{category} to match PHP $category_name
+    get:
+      summary: Get products by category (Admin)
+      tags: [Admin]
+      description: Retrieves products filtered by category name for administrative purposes. 
+      parameters:
+        - name: category_name # Changed from 'category'
+          in: path
+          required: true
+          description: The name of the product category to retrieve.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of products in the specified category.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object # Define Product Schema if available
+
+  /admin/users:
+    get:
+      summary: Get all users (Admin)
+      tags: [Admin]
+      description: Retrieves a list of all registered users.
+      responses:
+        '200':
+          description: A list of all users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object # Define User Schema if available
+
+  /admin/user/{id}: # Combined GET and DELETE for user by ID
+    get:
+      summary: Get a specific user by ID (Admin)
+      tags: [Admin]
+      description: Retrieves details for a specific user identified by their ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the user.
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: User data found.
+          content:
+            application/json:
+              schema:
+                type: object # Define User Schema if available
+        '404':
+          description: User not found.
+    delete:
+      summary: Delete a user by ID (Admin)
+      tags: [Admin]
+      description: Removes a user from the system using their unique identifier.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the user to delete.
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200': # Or 204 No Content if nothing is returned
+          description: User deleted successfully.
+        '204':
+          description: User deleted successfully (No Content).
+        '404':
+          description: User not found.
+
+  /admin/user/{id}/orders:
+    get:
+      summary: Get all orders for a specific user (Admin)
+      tags: [Admin]
+      description: Retrieves a list of all orders placed by a specific user.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the user whose orders are to be retrieved.
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: A list of orders for the specified user.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object # Define Order Schema if available
+        '404':
+          description: User not found (or user has no orders, depending on implementation).

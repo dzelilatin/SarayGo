@@ -1,0 +1,380 @@
+h1 {
+  font-family: "SF Pro Rounded";
+}
+
+#navbar {
+  font-size: 12px !important;
+  z-index: 3;
+  text-decoration: none;
+}
+
+#cart-div h1 {
+  font-family: SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial,
+    sans-serif;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.1;
+  padding-bottom: 2px;
+}
+
+#cart-div p {
+  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.022em;
+  line-height: 1.47059;
+}
+
+#cart-header h1 {
+  font-family: SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial,
+    sans-serif;
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.1;
+  padding-bottom: 2px;
+}
+
+.summary {
+  color: #1d1d1f !important;
+  font-family: SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial,
+    sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.009em !important;
+  line-height: 1.1666666667 !important ;
+}
+
+.more-info a:hover {
+  text-decoration: underline !important;
+}
+
+#purchaseNowButton {
+  margin-top: 3rem;
+  background-color: transparent !important;
+  outline: none !important;
+  border-top: none !important;
+  border-right: none !important;
+  border-left: none !important;
+  color: #06c;
+  border-bottom: 1px solid #06c !important;
+}
+
+#cart-total-section {
+  border-left: 1px solid;
+}
+
+.order-text {
+  color: var(--sk-body-text-color, #1d1d1f);
+  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+
+  font-style: normal;
+
+  letter-spacing: -0.022em;
+  line-height: 1.47059;
+}
+
+.cart-order {
+  min-width: 100%;
+  min-height: 140px;
+  background-color: #1d1d1f;
+}
+
+.heading {
+  display: inline;
+  font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+  font-size: 48px;
+  font-weight: 600;
+  letter-spacing: -0.144px;
+  line-height: 52.0077px;
+  color: rgb(110, 110, 115);
+  margin-top: 38.4px;
+}
+
+.style-0 {
+  display: inline;
+  font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+  font-size: 48px;
+  font-weight: 600;
+  letter-spacing: -0.144px;
+  line-height: 52.0077px;
+  color: rgb(29, 29, 31);
+  margin: 0px;
+  padding: 0px;
+}
+
+.style-1 {
+  display: inline;
+  font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+  font-size: 48px;
+  font-weight: 600;
+  letter-spacing: -0.144px;
+  line-height: 52.0077px;
+  color: rgb(29, 29, 31);
+  margin: 0px;
+  padding: 0px;
+}
+
+.style-2 {
+  display: inline;
+  font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+  font-size: 48px;
+  font-weight: 600;
+  letter-spacing: -0.144px;
+  line-height: 52.0077px;
+  color: #1d1d1f;
+  margin-top: 38.4px;
+}
+
+.in-active {
+  display: none !important;
+}
+
+#navbar a {
+  font-family: "SF Pro Display";
+  font-size: 16px;
+  font-weight: 400;
+  transition: 0.251532s ease-in-out;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.button-line {
+  background-color: transparent;
+  outline: none;
+  border: none !important;
+  border-bottom: 1px solid black !important;
+  font-weight: 600;
+}
+
+html {
+  scroll-behavior: smooth !important;
+  background: linear-gradient(to bottom, #a237b3, white) !important;
+  min-height: 100vh;
+}
+
+html body {
+  background: linear-gradient(to bottom, #a237b3, white) !important; /* Purple to white gradient */
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden !important;
+}
+
+#all {
+  user-select: none;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  white-space: nowrap;
+  cursor: grab;
+}
+
+#all.dragging {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
+#forwards,
+#backwards {
+  width: 32px;
+  height: 32px;
+  background-color: rgba(255, 255, 255, 0.73);
+  border-radius: 50%;
+  z-index: 15;
+  position: absolute;
+  top: 42%;
+  cursor: pointer;
+  display: none;
+}
+
+#backwards {
+  left: 8%;
+}
+
+#forwards {
+  right: 16%;
+}
+
+.shelf-secondaryheader h2 {
+  display: inline;
+  font-family: SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial,
+    sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.007em;
+  line-height: 1.1428571429;
+}
+
+.secondary-h2 {
+  display: inline;
+  color: #6e6e73;
+  font-family: SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial,
+    sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.007em;
+  line-height: 1.1428571429;
+}
+
+.button-confirm {
+  outline: none;
+  border: none;
+  border-radius: 9px;
+  background-color: #0077ed;
+}
+
+#navbar span {
+  font-family: "SF Pro Display";
+  font-size: 14px;
+  font-weight: 400;
+  transition: 0.251532s ease-in-out;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+#navbar a:hover {
+  border-bottom: 1px solid black;
+}
+
+.shop-container {
+  position: fixed;
+  bottom: 150px;
+  right: 50px;
+  background-color: white;
+  border: 1px solid #333;
+  color: #333333;
+  padding: 23px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 4;
+  transition: 0.25s ease-in-out;
+}
+
+.shop-container:hover {
+  transform: scale(110%);
+}
+
+.is-visible {
+  display: block;
+}
+
+@keyframes slide-left {
+  from {
+    right: -15%;
+  }
+  to {
+    right: 0%;
+  }
+}
+
+@keyframes slide-right {
+  from {
+    right: 0;
+  }
+  to {
+    right: -15%;
+  }
+}
+
+.cartflyout span {
+  background-color: #333;
+  margin-top: 3rem;
+  position: absolute;
+  right: 10px;
+  top: -10px;
+  width: 30px;
+  height: 2.5px;
+  border-radius: 16px;
+  z-index: 301;
+  transform: rotate(45deg);
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+
+.cartflyout span:nth-of-type(1) {
+  transform: rotate(-45deg);
+}
+
+.spansection {
+  z-index: 3001;
+  position: absolute;
+  height: 80px;
+  width: 100%;
+}
+
+.shoppingcartspan:hover {
+  cursor: pointer;
+}
+
+.shoppingcart-items {
+  display: flex;
+  flex-direction: column;
+  height: 80%;
+  gap: 1.2rem;
+  width: 90%;
+  margin-top: 30%;
+  align-self: center;
+  position: absolute;
+  z-index: 300;
+  overflow-y: auto;
+}
+
+.shoppingcart-item {
+  font-family: "SF Pro Rounded";
+  font-weight: 700;
+  padding: 1rem;
+  height: 100px;
+  border-bottom: 1px solid #eee;
+}
+
+.shop-flydown-menu {
+  width: 100%;
+  position: relative;
+  height: fit-content;
+  top: -250px;
+  background-color: rgba(250, 250, 250, 0.8) !important;
+  z-index: 1;
+  display: none;
+  padding-bottom: 3rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #eee;
+  transition: 0.2s ease-in-out;
+}
+
+.shop-flydown-menu a {
+  color: grey;
+  font-family: "SF Pro Rounded";
+  padding-bottom: 5px;
+  text-decoration: none;
+}
+
+.shop-flydown-menu a:first-child {
+  font-family: "SF Pro Rounded";
+  color: #333 !important;
+  font-weight: bold;
+  font-size: 17px;
+  padding-bottom: 10px;
+}
+
+.shop-flydown-menu a:first-child:hover {
+  font-weight: bold !important;
+}
+
+.shop-flydown-menu a:hover {
+  cursor: pointer;
+  color: #333;
+  font-weight: 500;
+}
+
+.shop-flydown-menu.show {
+  display: flex;
+  transform: translateY(250px);
+}

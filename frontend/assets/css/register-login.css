@@ -1,0 +1,70 @@
+.gather-email input {
+  margin-top: 3rem;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #333;
+  width: 80%;
+  text-align: center;
+  align-self: center;
+}
+
+.register-form input {
+  font-family: "SF Pro Text";
+  background-color: transparent;
+  background: none;
+}
+
+.register-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.register-form h3 {
+  font-family: SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial,
+    sans-serif;
+  letter-spacing: 0;
+  line-height: 1.1;
+  padding-bottom: 2px;
+}
+
+.register-form p {
+  font-family: SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial,
+    sans-serif;
+  letter-spacing: 0;
+  padding-bottom: 2px;
+}
+
+.register-form button {
+  padding: 5px 10px;
+  width: 25%;
+  background-color: #0077ed;
+  border: none;
+  outline: none;
+  border-radius: 32px;
+  color: white;
+  box-shadow: 0px 2px 4px #eee, 8px 16px 32px #eee;
+  transition: all 0.15s ease-in-out;
+  align-self: center;
+}
+
+.register-form a {
+  color: 0077ed;
+}
+
+.register-form button:hover {
+  transform: scale(103%);
+}
+
+.termsandservices tos {
+  text-decoration: underline;
+}
+
+.namesection input {
+  width: 35%;
+}
+
+.dateofbirth input {
+  color: #737373;
+}

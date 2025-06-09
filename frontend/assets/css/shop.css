@@ -1,0 +1,115 @@
+.categories-shop span {
+  color: grey;
+}
+.categories-shop {
+  gap: 14px;
+  border-bottom: 1px solid #333;
+}
+
+#category-search * {
+  letter-spacing: -0.144px !important;
+}
+
+#category-search .d-flex.flex-wrap {
+  gap: 0.5rem 0.5rem;
+}
+#category-search .subcategory-card {
+  flex: 0 0 50%;
+  max-width: 100px;
+}
+
+.categories-shop span:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.inputfields input {
+  padding-top: 1rem;
+  border: none;
+  border-bottom: 1px #333 solid;
+  outline: none;
+  background-color: transparent;
+  width: 100%;
+}
+
+.subcategory-item span:hover {
+  border-bottom: 1px #333 solid;
+}
+
+.fieldname {
+  padding-bottom: 1rem;
+}
+
+.fieldname range {
+  background-color: pink;
+  color: orange;
+}
+
+.fieldname h6 {
+  margin-top: 3rem;
+}
+
+.price-range-divs {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.product-item {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  width: 300px;
+  height: 30rem;
+}
+
+.category-collection {
+  overflow-y: auto;
+  overflow-x: auto;
+  overflow: hidden;
+}
+
+.product-item a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-item-image img {
+  object-fit: contain;
+  height: 20rem;
+  width: 100%;
+}
+
+.product-item:hover {
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  transition: all 0.12s ease-in-out;
+}
+
+.product-item-info {
+  padding-top: 10px;
+  gap: 10px;
+}
+
+#whichcategory {
+  font-size: 48px;
+  font-weight: 600;
+  letter-spacing: -0.144px;
+  line-height: 52.0077px;
+  color: rgb(29, 29, 31);
+  margin: 0px;
+  padding: 0px;
+}
+
+.buttondiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttondiv button {
+  margin-top: 3rem;
+  padding: 5px 10px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #333;
+}

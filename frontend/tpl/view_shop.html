@@ -1,0 +1,77 @@
+<section id="popular-books" class="bookshelf py-5 my-5" on>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div
+          class="section-header d-flex flex-column text-center align-items-center justify-content-center mb-4"
+        >
+          <h1 class="section-title">
+            Search more than 1500+ locations for you.
+          </h1>
+          <input
+            class="form-control text-center w-25 rounded border shadow-md mt-3"
+            type="text"
+            id="offer-searcher"
+            placeholder="Search available offers..."
+            onkeypress="OfferService.getByName(this.value)"
+          />
+        </div>
+
+        <ul class="tabs" id="bookCategoryTabs">
+          <li
+            data-tab-target="#all-genre"
+            onclick="BookService.getAllBooks()"
+            class="active tab"
+          >
+            All Genre
+          </li>
+          <li
+            data-tab-target="#all-genre"
+            class="tab"
+            onclick="OfferService.getByCategory('Hotel')"
+          >
+            Hotels
+          </li>
+          <li
+            data-tab-target="#all-genre"
+            onclick="OfferService.getByCategory('Hostel')"
+            class="tab"
+          >
+            Hostels
+          </li>
+          <li
+            data-tab-target="#all-genre"
+            onclick="OfferService.getByCategory('Restaurant')"
+            class="tab"
+          >
+            Restaurants
+          </li>
+          <li
+            data-tab-target="#all-genre"
+            onclick="OfferService.getByCategory('Coffee Shop')"
+            class="tab"
+          >
+            Coffee Shops
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <div id="all-genre" class="active">
+            <div
+              class="row"
+              id="bookshelf"
+              onload="OfferService.getOffers()"
+            ></div>
+          </div>
+
+          <!-- Additional genre tabs will continue here -->
+        </div>
+        <!--inner-tabs-->
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  OfferService.getOffers();
+</script>

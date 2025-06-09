@@ -1,7 +1,5 @@
 # SarayGo
 Repository for a Web application project for the purposes of Introduction to Web Programming course.
-<<<<<<< HEAD
-=======
 
 # SarayGo API Documentation
 
@@ -60,11 +58,3 @@ If you don't see the correct version, force a specific version by running:
 composer require zircote/swagger-php:^3.3 --no-cache
 ```
 
-## Accessing Swagger UI
-
-After completing the setup, you can access the Swagger UI documentation at:
-```
-http://localhost/SarayGo/backend/public/v1/docs/
-or http://localhost/SarayGo/backend/
-```
->>>>>>> 2aa61c51e6c4711150514c4f9f0942cd7d323889

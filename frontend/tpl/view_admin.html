@@ -1,0 +1,94 @@
+<div class="container">
+  <h1 class="text-center mt-5">Admin Dashboard</h1>
+  <div class="row d-flex justify-content-center align-items-center gap-3">
+    <div class="col-md-3 mt-5 d-flex justify-content-start align-items-start flex-column flex-wrap gap-3">
+      <div class="card text-center p-2 ">
+        <h2>Total Sales</h2>
+        <canvas id="salesChart"></canvas>
+      </div>
+
+      <div class="card text-center p-2 ">
+        <h2>Most Sold Categories</h2>
+        <canvas id="categoriesChart">
+
+        </canvas>
+      </div>
+    </div>
+    <div class="col-md-6 mt-5 d-flex justify-content-start align-items-start flex-column flex-nowrap gap-3">
+      <div class="d-flex text-center card w-100 ">
+        <h2>Users</h2>
+        <div class="d-flex justify-content-center align-items-center">
+          <input type="text" name="" id="" placeholder="Search Users by name" class="text-center form-control w-75" 
+            onkeyup="AdminService.getUsersByName(this.value)">
+        </div>
+        <div>
+      
+        </div>
+
+        <div class="card-body overflow-auto text-start px-5" id = "user-card-body">
+          <h5 class="text-center">Enter a name to search for users.</h5>
+        </div>
+     
+      </div>
+
+      <div class="text-center card p-2 w-100 ">
+        <h2>Products</h2>
+
+        <div class="d-flex justify-content-center align-items-center">
+          <input type="text" name="" id="" placeholder="Search Products by name" class=" text-center form-control w-75" 
+            onkeyup="AdminService.getProductByName(this.value)">
+        </div>
+        <div>
+      
+        </div>
+
+        <div class="card-body overflow-auto text-start px-5" id = "product-card-body">
+          <div class="d-flex flex-row justify-content-center align-items-center">
+            
+            <div class = "d-flex p-2 flex-column justify-content-center align-items-center">
+                <img style="width: 24px; height: 24px;" src = "../assets/images/icons/addIcon.png" class="img-fluid rounded-circle mb-3 mt-3">
+                <p class= "border-bottom" onclick="AdminService.addProductModal()"> Add a Product</p>
+            </div>
+
+        </div>
+        </div>
+
+      </div>
+    </div>
+
+    
+  </div>
+</div>
+</div>
+
+
+
+<div id="bookDataModal">
+  
+</div>
+
+<div id="addProductModal">
+
+</div>
+
+<div id="editBookModal">
+  
+</div>
+
+
+<div id="userCartModal">
+
+</div>
+
+<div id="userOrderHistory">
+  
+</div>
+
+
+<div id="moreUserInfo">
+
+</div>
+
+<script>
+  AdminService.init();
+</script>
