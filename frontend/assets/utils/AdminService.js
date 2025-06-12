@@ -1,107 +1,593 @@
 let AdminService = {
   init: function () {
-    AdminService.renderAdminDiv();
+    AdminService.initializeCharts();
+    AdminService.loadSampleOffers();
+    AdminService.setupEventListeners();
   },
 
-  renderAdminDiv: function () {
-    console.log("Rendering Admin Div");
-    // Add logic to render the admin div here
-  },
-
-  getUsersByName: function (name) {
-    console.log("CURRENT NAME:: ", name);
-
-    if (!name) {
-      console.log("CURRENT NAME:: ", name);
-      const cardBody = document.getElementById("user-card-body");
-      cardBody.innerHTML = "";
-      cardBody.innerHTML =
-        '<h5 class="text-center mt-5">Please enter a name to search for users.</h5>';
-      return;
+  initializeCharts: function () {
+    // Revenue Chart
+    const revenueCtx = document.getElementById("revenueChart");
+    if (revenueCtx) {
+      new Chart(revenueCtx, {
+        type: "line",
+        data: {
+          labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+          datasets: [
+            {
+              label: "Revenue",
+              data: [4200, 3800, 5100, 4600, 6200, 5800, 7100],
+              borderColor: "#3b82f6",
+              backgroundColor: "rgba(59, 130, 246, 0.1)",
+              borderWidth: 3,
+              fill: true,
+              tension: 0.4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            y: { display: false },
+            x: {
+              display: true,
+              grid: { display: false },
+              ticks: { color: "#6b7280", font: { size: 12 } },
+            },
+          },
+          elements: {
+            point: { radius: 0, hoverRadius: 6 },
+          },
+        },
+      });
+    }    // Category Chart
+    const categoryCtx = document.getElementById("categoryChart");
+    if (categoryCtx) {
+      new Chart(categoryCtx, {
+        type: "bar",
+        data: {
+          labels: ["Hotels", "Restaurants", "Hostels"],
+          datasets: [
+            {
+              data: [45, 32, 23],
+              backgroundColor: ["#3b82f6", "#10b981", "#f59e0b"],
+              borderWidth: 0,
+              borderRadius: 8,
+              borderSkipped: false
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            y: {
+              display: false,
+              beginAtZero: true
+            },            x: {
+              display: true,
+              grid: { display: false },
+              ticks: { color: "#6b7280", font: { size: 12 } }
+            }
+          }
+        }
+      });
     }
+  },
 
-    const cardBody = document.getElementById("user-card-body");
+  loadSampleOffers: function () {
+    const sampleOffers = [
+      {
+        offer_id: 1,
+        offer_name: "Hotel Europe",
+        offer_type: "Hotel",
+        offer_price: "180.00",
+        offer_location: "Sarajevo",
+        offer_image: "assets/images/offers/3+Hotel-Hills-Sarajevo.png",
+        status: "active",
+      },
+      {
+        offer_id: 2,
+        offer_name: "Ćevabdžinica Petica",
+        offer_type: "Restaurant",
+        offer_price: "25.00",
+        offer_location: "Sarajevo",
+        offer_image: "assets/images/offers/3+Hotel-Hills-Sarajevo.png",
+        status: "active",
+      },
+      {
+        offer_id: 3,
+        offer_name: "Hostel Franz Ferdinand",
+        offer_type: "Hostel",
+        offer_price: "45.00",
+        offer_location: "Sarajevo",
+        offer_image: "assets/images/offers/3+Hotel-Hills-Sarajevo.png",
+        status: "inactive",
+      },
+    ];
 
-    cardBody.innerHTML = "";
-    RestClient.get(`/admin/user/name/${name}`, function (data) {
-      console.log(data);
-
-      data.forEach((user) => {
-        cardBody.innerHTML += ` 
-        <div class="d-flex flex-column justify-content-between align-items-center  p-1">
-            <div class="d-flex flex-row justify-content-between align-items-center w-100">
-              <h5 class="mb-0">${user.first_name} ${user.last_name}</h5>
-              <div onclick="AdminService.toggleOnOff(${user.user_id})" title="Show Details">
-                <img src="/assets/images/icons/down-icon.png" id="down-icon${user.user_id}" style="width: 22px; height: 22px;" alt="Show Details">
-              </div>
-            </div>
-
-            <div class="px-1 mt-3 in-active w-100" id="user-card-body-${user.user_id}">
-              <div class="d-flex flex-row justify-content-around align-items-center w-100">
-                <div class="mt-1 p-1 text-center">
-                  <div onclick="AdminService.getUserOrderHistory(${user.user_id})" class="text-center">
-                    <img class="align-self-center" src="/assets/images/icons/historyIcon.png" style="width: 28px; height: 28px;" alt="View Order History">
-                    <p class="border-bottom">Order History</p>
-                  </div>
-                </div>
-
-                <div class="mb-0 p-1 d-flex justify-content-center align-items-center flex-column" onclick="AdminService.getUserCart(${user.user_id})">
-                  <img class="align-self-center" src="/assets/images/icons/cart.png" style="width: 28px; height: 28px; " alt="View Carts">
-                  <p  class = "border-bottom text-end">Active Carts</p>
-                </div>
-
-
-                <div  class="mb-0 p-1 d-flex justify-content-center align-items-center flex-column" onclick="AdminService.showMoreUserInfo(${user.user_id})">
-                  
-                <img class="align-self-center" src="/assets/images/icons/infoIcon.png" style="width: 28px; height: 28px; " alt="View More Info">
-                <p  class = "border-bottom">More Info</p>
-                  </div>
-
-
-              </div>
+    const grid = document.getElementById("offer-management-grid");
+    if (grid) {
+      grid.innerHTML = sampleOffers
+        .map(
+          (offer) => `
+        <div class="offer-card ${offer.status}">
+          <div class="offer-image">
+            <img src="${offer.offer_image}" alt="${offer.offer_name}" />
+            <div class="offer-status ${offer.status}">
+              ${offer.status === "active" ? "●" : "○"} ${offer.status}
             </div>
           </div>
-        
-        
-        `;
+          <div class="offer-details">
+            <div class="offer-header">
+              <h4>${offer.offer_name}</h4>
+              <span class="offer-type">${offer.offer_type}</span>
+            </div>
+            <div class="offer-meta">
+              <span class="offer-price">$${offer.offer_price}</span>
+              <span class="offer-location">📍 ${offer.offer_location}</span>
+            </div>
+            <div class="offer-actions">
+              <button class="action-btn small" onclick="AdminService.editOffer(${
+                offer.offer_id
+              })">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Edit
+              </button>
+              <button class="action-btn small danger" onclick="AdminService.deleteOffer(${
+                offer.offer_id
+              })">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3,6 5,6 21,6"/>
+                  <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"/>
+                </svg>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      `
+        )
+        .join("");
+    }
+  },
+
+  setupEventListeners: function () {
+    // Period selector buttons
+    document.querySelectorAll(".period-btn").forEach((btn) => {
+      btn.addEventListener("click", function () {
+        document
+          .querySelectorAll(".period-btn")
+          .forEach((b) => b.classList.remove("active"));
+        this.classList.add("active");
       });
     });
   },
 
-  toggleOnOff: function (data) {
-    console.log(data);
+  getUsersByName: function (name) {
+    if (!name) {
+      const cardBody = document.getElementById("user-card-body");
+      cardBody.innerHTML = `
+        <div class="empty-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <p>Search for customers by name</p>
+        </div>
+      `;
+      return;
+    }
 
-    const cardBody = document.getElementById(`user-card-body-${data}`);
-    const downIcon = document.getElementById(`down-icon${data}`);
+    const cardBody = document.getElementById("user-card-body");
+    cardBody.innerHTML = '<div class="loading-spinner"></div>';
 
-    if (cardBody.classList.contains("in-active")) {
-      downIcon.src = "/assets/images/icons/up-icon.png";
+    RestClient.get(`/admin/user/name/${name}`, function (data) {
+      cardBody.innerHTML = data
+        .map(
+          (user) => `
+        <div class="customer-item">
+          <div class="customer-header" onclick="AdminService.toggleCustomerDetails(${
+            user.user_id
+          })">
+            <div class="customer-info">
+              <div class="customer-avatar">
+                <img src="${
+                  user.user_image_url || "/assets/images/default-avatar.png"
+                }" alt="${user.first_name}" />
+              </div>
+              <div class="customer-details">
+                <h4>${user.first_name} ${user.last_name}</h4>
+                <span class="customer-email">${user.email}</span>
+              </div>
+            </div>
+            <div class="expand-icon" id="expand-${user.user_id}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6,9 12,15 18,9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="customer-actions collapsed" id="actions-${user.user_id}">
+            <button class="action-btn small" onclick="AdminService.viewCustomerDetails(${
+              user.user_id
+            })">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              View Details
+            </button>
+            <button class="action-btn small" onclick="AdminService.getUserCart(${
+              user.user_id
+            })">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 0 1-8 0"/>
+              </svg>
+              View Cart
+            </button>
+            <button class="action-btn small" onclick="AdminService.getUserOrderHistory(${
+              user.user_id
+            })">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 3h18v18H3zM9 9h6m-6 4h6"/>
+              </svg>
+              Order History
+            </button>
+          </div>
+        </div>
+      `
+        )
+        .join("");
+    });
+  },
 
-      cardBody.classList.remove("in-active");
-      cardBody.classList.add("is-active");
+  toggleCustomerDetails: function (userId) {
+    const actions = document.getElementById(`actions-${userId}`);
+    const icon = document.getElementById(`expand-${userId}`);
+
+    if (actions.classList.contains("collapsed")) {
+      actions.classList.remove("collapsed");
+      actions.classList.add("expanded");
+      icon.style.transform = "rotate(180deg)";
     } else {
-      downIcon.src = "/assets/images/icons/down-icon.png";
-      cardBody.classList.remove("is-active");
-      cardBody.classList.add("in-active");
+      actions.classList.remove("expanded");
+      actions.classList.add("collapsed");
+      icon.style.transform = "rotate(0deg)";
     }
   },
 
-  toggleOnOffproduct: function (data) {
-    console.log(data);
+  viewCustomerDetails: function (userId) {
+    // Sample customer data
+    const sampleUser = {
+      user_id: userId,
+      name: "John Doe",
+      email: "john.doe@example.com",
+      address: "123 Main St, Sarajevo, Bosnia and Herzegovina",
+      user_image_url: "/assets/images/default-avatar.png",
+    };
 
-    const cardBody = document.getElementById(`product-card-body-${data}`);
-    const downIcon = document.getElementById(`down-icon-product-${data}`);
+    const modalHTML = `
+      <div class="modern-modal" id="customerModal">
+        <div class="modal-backdrop" onclick="AdminService.closeModal('customerModal')"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Customer Details</h3>
+            <button class="close-btn" onclick="AdminService.closeModal('customerModal')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="customer-profile">
+              <div class="profile-image">
+                <img src="${sampleUser.user_image_url}" alt="Customer" />
+              </div>
+              <div class="profile-info">
+                <h4>${sampleUser.name}</h4>
+                <div class="info-grid">
+                  <div class="info-item">
+                    <label>Email</label>
+                    <span>${sampleUser.email}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Address</label>
+                    <span>${sampleUser.address}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Customer ID</label>
+                    <span>#${sampleUser.user_id}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
 
-    if (cardBody.classList.contains("in-active")) {
-      downIcon.src = "images/icons/up-icon.png";
+    document.getElementById("userDetailsModal").innerHTML = modalHTML;
+  },
 
-      cardBody.classList.remove("in-active");
-      cardBody.classList.add("is-active");
-    } else {
-      downIcon.src = "images/icons/down-icon.png";
-      cardBody.classList.remove("is-active");
-      cardBody.classList.add("in-active");
+  getUserCart: function (user_id) {
+    const sampleCart = {
+      cart: {
+        cart_ID: 123,
+        status: "active",
+        created_at: "2025-06-12 10:30:00",
+        updated_at: "2025-06-12 14:15:00",
+        price_total: "285.50",
+      },
+    };
+
+    const modalHTML = `
+      <div class="modern-modal" id="cartModal">
+        <div class="modal-backdrop" onclick="AdminService.closeModal('cartModal')"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Customer Cart</h3>
+            <button class="close-btn" onclick="AdminService.closeModal('cartModal')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="cart-details">
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <label>Cart ID</label>
+                  <span>#${sampleCart.cart.cart_ID}</span>
+                </div>
+                <div class="detail-item">
+                  <label>Status</label>
+                  <span class="status-badge ${sampleCart.cart.status}">${
+      sampleCart.cart.status
+    }</span>
+                </div>
+                <div class="detail-item">
+                  <label>Created</label>
+                  <span>${new Date(
+                    sampleCart.cart.created_at
+                  ).toLocaleDateString()}</span>
+                </div>
+                <div class="detail-item">
+                  <label>Last Updated</label>
+                  <span>${new Date(
+                    sampleCart.cart.updated_at
+                  ).toLocaleDateString()}</span>
+                </div>
+                <div class="detail-item total">
+                  <label>Total Amount</label>
+                  <span class="amount">$${sampleCart.cart.price_total}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById("userCartModal").innerHTML = modalHTML;
+  },
+
+  getUserOrderHistory: function (user_id) {
+    const sampleOrders = [
+      {
+        order_ID: 1001,
+        order_date: "2025-06-10",
+        status: "Completed",
+        total_amount: "189.50",
+      },
+      {
+        order_ID: 1002,
+        order_date: "2025-06-05",
+        status: "Completed",
+        total_amount: "75.00",
+      },
+      {
+        order_ID: 1003,
+        order_date: "2025-05-28",
+        status: "Cancelled",
+        total_amount: "225.00",
+      },
+    ];
+
+    const modalHTML = `
+      <div class="modern-modal" id="orderHistoryModal">
+        <div class="modal-backdrop" onclick="AdminService.closeModal('orderHistoryModal')"></div>
+        <div class="modal-content large">
+          <div class="modal-header">
+            <h3>Order History</h3>
+            <button class="close-btn" onclick="AdminService.closeModal('orderHistoryModal')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="orders-table">
+              <div class="table-header">
+                <div>Order ID</div>
+                <div>Date</div>
+                <div>Status</div>
+                <div>Amount</div>
+              </div>
+              ${sampleOrders
+                .map(
+                  (order) => `
+                <div class="table-row">
+                  <div class="order-id">#${order.order_ID}</div>
+                  <div>${new Date(order.order_date).toLocaleDateString()}</div>
+                  <div><span class="status-badge ${order.status.toLowerCase()}">${
+                    order.status
+                  }</span></div>
+                  <div class="amount">$${order.total_amount}</div>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById("userOrderHistory").innerHTML = modalHTML;
+  },
+
+  addOfferModal: function () {
+    const modalHTML = `
+      <div class="modern-modal" id="addOfferModalInstance">
+        <div class="modal-backdrop" onclick="AdminService.closeModal('addOfferModalInstance')"></div>
+        <div class="modal-content large">
+          <div class="modal-header">
+            <h3>Add New Offer</h3>
+            <button class="close-btn" onclick="AdminService.closeModal('addOfferModalInstance')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form class="offer-form" id="addOfferForm">
+              <div class="form-section">
+                <div class="form-group">
+                  <label>Offer Name</label>
+                  <input type="text" name="offer_name" placeholder="Enter offer name" required />
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Type</label>
+                    <select name="offer_type" required>
+                      <option value="">Select type</option>
+                      <option value="Hotel">Hotel</option>
+                      <option value="Restaurant">Restaurant</option>
+                      <option value="Hostel">Hostel</option>
+                      <option value="Coffee Shop">Coffee Shop</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Price</label>
+                    <input type="number" name="offer_price" placeholder="0.00" step="0.01" required />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Location</label>
+                  <input type="text" name="offer_location" placeholder="Enter location" required />
+                </div>
+                <div class="form-group">
+                  <label>Description</label>
+                  <textarea name="offer_description" placeholder="Enter description" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label>Image</label>
+                  <div class="file-upload">
+                    <input type="file" name="offer_image" accept="image/*" />
+                    <div class="file-upload-text">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21,15 16,10 5,21"/>
+                      </svg>
+                      <span>Choose image or drag here</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="action-btn secondary" onclick="AdminService.closeModal('addOfferModalInstance')">Cancel</button>
+                <button type="submit" class="action-btn primary">Add Offer</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById("addOfferModal").innerHTML = modalHTML;
+    document
+      .getElementById("addOfferForm")
+      .addEventListener("submit", AdminService.handleAddOffer);
+  },
+
+  handleAddOffer: function (e) {
+    e.preventDefault();
+    // Simulate success
+    AdminService.showNotification("Offer added successfully!", "success");
+    AdminService.closeModal("addOfferModalInstance");
+    AdminService.loadSampleOffers(); // Refresh the offers
+  },
+
+  editOffer: function (offerId) {
+    toastr.error("Error editing offer");
+  },
+
+  deleteOffer: function (offerId) {
+    if (confirm("Are you sure you want to delete this offer?")) {
+      AdminService.showNotification("Offer deleted successfully!", "success");
+      AdminService.loadSampleOffers(); // Refresh the offers
     }
+  },
+
+  getOfferByName: function (name) {
+    // Filter existing offers based on name
+    AdminService.loadSampleOffers();
+  },
+
+  closeModal: function (modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.remove();
+    }
+  },
+
+  showNotification: function (message, type = "info") {
+    const notification = document.createElement("div");
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+      <div class="notification-content">
+        <span>${message}</span>
+        <button onclick="this.parentElement.parentElement.remove()">×</button>
+      </div>
+    `;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.remove();
+    }, 5000);
+  },
+
+  // Legacy methods for compatibility
+  renderAdminDiv: function () {
+    console.log("Rendering Admin Div");
+  },
+
+  toggleOnOff: function (data) {
+    AdminService.toggleCustomerDetails(data);
+  },
+
+  toggleOnOffproduct: function (data) {
+    console.log("Toggle product:", data);
   },
 
   getUserByID: function (id) {
@@ -111,322 +597,14 @@ let AdminService = {
   },
 
   showMoreUserInfo: function (user_id) {
-    console.log("Fetching user info for ID:", user_id);
-
-    RestClient.get(`/admin/user/id/${user_id}`, function (user) {
-      const existingModal = document.getElementById("moreUserInfo");
-      if (existingModal) existingModal.innerHTML = "";
-
-      let modalHTML = `
-          <div class="modal fade" id="moreUserInfoModal" tabindex="-1" aria-labelledby="moreUserInfoLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="moreUserInfoLabel">User Information</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="row">
-                    <dvv class="col-md-4 d-flex justify-content-center align-items-center text-center">
-                      <img src="${
-                        user.user_image_url || "/assets/images/default.png"
-                      }" alt="User Image" class="img-fluid rounded-circle mb-3" style="object-fit:cover; max-width:150px; max-height=150px; height=150px; width=150px;" />
-                    </dvv>
-                    <div class="col-md-8">
-                      <p><strong>ID:</strong> ${user.user_id || ""}</p>
-                      <p><strong>Full Name:</strong> ${user.name || ""}</p>
-                      <p><strong>Email:</strong> ${user.email || ""}</p>
-                      <p><strong>Address:</strong> ${user.address || ""}</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      document.getElementById("moreUserInfo").innerHTML = modalHTML;
-      const modal = new bootstrap.Modal(
-        document.getElementById("moreUserInfoModal")
-      );
-      modal.show();
-    });
-  },
-
-  getUserCart: function (user_id) {
-    console.log("CLICKED");
-
-    RestClient.get(`/admin/user/cart/${user_id}`, function (cart) {
-      console.log(cart);
-
-      const existingModal = document.getElementById("userCartModal");
-      if (existingModal) existingModal.innerHTML = "";
-
-      let modalHTML = `
-
-      <div class = "col-md-12">
-          <div class="modal fade" id="userCartModalInner" tabindex="-1" aria-labelledby="userCartModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg text-center modal-dialog-centered">
-              <div class="modal-content">
-                <div class="text-center">
-                  <h3 class="modal-title p-2 text-center" id="userCartModalLabel">User's Active Cart</h3>
-                </div>
-
-                <table class="mt-3 text-center gap-5">
-                  <thead>
-                      <tr>
-                          <th>Cart ID</th>
-                          <th>Cart Status</th>
-                          <th>Created At</th>
-                          <th>Updated At</th>
-                          <th>Cart Total</th>
-                      </tr>
-                  </thead>
-
-                  <tbody class="mb-5 pb-5 "> 
-                      <tr>
-                        <td>
-                        ${cart.cart.cart_ID}
-                        </td>
-
-                        <td>
-                        ${cart.cart.status}
-                        </td>
-
-                         <td>
-                        ${cart.cart.created_at}
-                        </td>
-
-                         <td>
-                        ${cart.cart.updated_at}
-                        </td>
-
-                          <td>
-                          $${cart.cart.price_total}
-                        </td>
-                      </tr>
-                  </tbody>
-                </table>
-
-
-                
-         
-                <div class="modal-footer">
-                  <button type="button" class="button-line" data-bs-dismiss="modal">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          </div>
-        `;
-      document.getElementById("userCartModal").innerHTML = modalHTML;
-      const modal = new bootstrap.Modal(
-        document.getElementById("userCartModalInner")
-      );
-      modal.show();
-    });
+    AdminService.viewCustomerDetails(user_id);
   },
 
   addProductModal: function () {
-    console.log("Adding product modal");
-
-    // Remove any existing modal
-    const existingModal = document.getElementById("addProductModal");
-    if (existingModal) existingModal.remove();
-
-    // Category options
-    const categories = [
-      { id: 1, name: "Pets" },
-      { id: 2, name: "Accessories" },
-      { id: 3, name: "Food" },
-      { id: 4, name: "Toys" },
-    ];
-
-    const categoryOptions = categories
-      .map((cat) => `<option value="${cat.id}">${cat.name}</option>`)
-      .join("");
-
-    const modalHTML = `
-        <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-              <form id="addProductForm" enctype="multipart/form-data">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="addProductModalLabel">Add New product</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="row">
-                    <div class="col-md-5 text-center">
-                      <img id="add-product-image-preview" src="images/default.png" alt="product Cover Preview" class="img-fluid rounded mb-3" style="max-height:200px;" />
-                      <input type="file" class="form-control mt-2" id="add-product-image" name="image" accept="image/*" required />
-                    </div>
-                    <div class="col-md-7">
-                      <div class="mb-3">
-                        <label for="add-product-title" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="add-product-title" name="title" required>
-                      </div>
-                      <div class="mb-3">
-                        <label for="add-product-author" class="form-label">Author</label>
-                        <input type="text" class="form-control" id="add-product-author" name="author" required>
-                      </div>
-                      <div class="mb-3">
-                        <label for="add-product-price" class="form-label">Price</label>
-                        <input type="number" class="form-control" id="add-product-price" name="price" min="0" step="0.01" required>
-                      </div>
-                      <div class="mb-3">
-                        <label for="add-product-description" class="form-label">Description</label>
-                        <textarea class="form-control" id="add-product-description" name="description" rows="4" required></textarea>
-                      </div>
-                      <div class="mb-3">
-                        <label for="add-product-category" class="form-label">Category</label>
-                        <select class="form-select" id="add-product-category" name="category_id" required>
-                          <option value="" disabled selected>Select a category</option>
-                          ${categoryOptions}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary">Add product</button>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      `;
-
-    document.body.insertAdjacentHTML("beforeend", modalHTML);
-
-    // Image preview
-    document
-      .getElementById("add-product-image")
-      .addEventListener("change", function (e) {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function (evt) {
-            document.getElementById("add-product-image-preview").src =
-              evt.target.result;
-          };
-          reader.readAsDataURL(file);
-        }
-      });
-
-    document
-      .getElementById("addProductForm")
-      .addEventListener("submit", function (e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        const userToken = localStorage.getItem("user_token");
-
-        $.ajax({
-          url: Constants.PROJECT_BASE_URL + "admin/product/addproduct",
-          type: "POST",
-          headers: {
-            Authentication: userToken,
-          },
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function (response) {
-            toastr.success("product added successfully!");
-          },
-          error: function (xhr) {
-            toastr.error("Failed to add product.");
-          },
-        });
-
-        const modal = bootstrap.Modal.getInstance(
-          document.getElementById("addProductModal")
-        );
-        modal.hide();
-        document.getElementById("addProductModal").remove();
-      });
-
-    // Show modal
-    const modal = new bootstrap.Modal(
-      document.getElementById("addProductModal")
-    );
-    modal.show();
+    AdminService.addOfferModal();
   },
 
   getProductByName: function (name) {
-    RestClient.get(
-      "/admin/products/" + title,
-      function (result) {
-        console.log(result);
-      },
-      function (error) {
-        console.log(error);
-      }
-    );
-  },
-
-  getUserOrderHistory: function (user_id) {
-    RestClient.get(`/admin/user/orders/${user_id}`, function (orders) {
-      const existingModal = document.getElementById("userOrderHistory");
-      if (existingModal) existingModal.innerHTML = "";
-
-      let modalHTML = `
-          <div class="modal fade" id="userOrderHistoryModal" tabindex="-1" aria-labelledby="userOrderHistoryLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="userOrderHistoryLabel">User Order History</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="table-responsive">
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th>Order ID</th>
-                          <th>Date</th>
-                          <th>Status</th>
-                          <th>Total</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        ${
-                          orders && orders.length > 0
-                            ? orders
-                                .map(
-                                  (order) => `
-                          <tr>
-                            <td>${order.order_ID}</td>
-                            <td>${order.order_date || ""}</td>
-                            <td>${order.status || "Completed"}</td>
-                            <td>$${order.total_amount || ""}</td>
-                          </tr>
-                        `
-                                )
-                                .join("")
-                            : '<tr><td colspan="4" class="text-center">No orders found.</td></tr>'
-                        }
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      document.getElementById("userOrderHistory").innerHTML = modalHTML;
-      const modal = new bootstrap.Modal(
-        document.getElementById("userOrderHistoryModal")
-      );
-      modal.show();
-    });
+    AdminService.getOfferByName(name);
   },
 };
-
-AdminService.init();

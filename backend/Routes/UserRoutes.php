@@ -33,10 +33,7 @@ Flight::route("GET /user/cart/@user_ID", function ($user_ID) {
 
     $cart = Flight::userService()->getUserCart($user_ID);
 
-    Flight::json([
-        'cart' => $cart,
-
-    ]);
+    Flight::json($cart);
 });
 
 
@@ -60,22 +57,16 @@ Flight::route("GET /user/cart/@user_ID", function ($user_ID) {
  *   @OA\Response(response=200, description="Cart offer updated")
  * )
  */
-Flight::route("PUT /cart/@cart_ID/offer", function ($cart_ID) {
-    // Try raw JSON
-    $body = json_decode(file_get_contents('php://input'), true);
+Flight::route("POST /cart/@cart_ID/offer", function ($cart_ID) {
 
-    // Fallback to PHP’s $_POST (works for urlencoded or multipart)
-    if (!$body) {
-        $body = $_POST;
-    }
+    $data = Flight::request()->data->getData();
 
-    if (empty($body['offer_id'])) {
-        Flight::halt(400, json_encode(['error' => 'offer_id is required']));
-    }
+    $offer_id = $data['offer_id'];
 
-    $offer_id = (int)$body['offer_id'];
-    $result   = (new CartService())->updateCartOffer($cart_ID, $offer_id);
-    Flight::json($result);
+    $cartService = Flight::cartService();
+
+
+    Flight::json($cartService->bookOffer($cart_ID, $offer_id));
 });
 
 
@@ -149,6 +140,5 @@ Flight::route('DELETE /user/cart/deletecart/@user_ID', function ($user_ID) {
         Flight::json(['Status' => 'Error', 'Message' => 'You are not that user :) ']);
     };
 
-    Flight::json(Flight::userService()->checkOut($user_ID));
     Flight::json(Flight::cartService()->deleteCartByUserID($user_ID));
 });

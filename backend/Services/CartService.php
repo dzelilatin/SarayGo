@@ -29,8 +29,8 @@ class CartService extends BaseService
         return $this->dao->getPriceTotal($user_ID);
     }
 
-    public function updateCartOffer($cart_ID, $offer_id)
+    public function bookOffer($offer_ID, $user_ID)
     {
-        return $this->dao->updateCartOffer($cart_ID, $offer_id);
+        return $this->dao->bookOffer($offer_ID, $user_ID);
     }
 }

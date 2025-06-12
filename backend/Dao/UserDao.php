@@ -35,9 +35,10 @@ class UserDao extends BaseDao
 
                  FROM carts c
 
-              
 
-                 WHERE c.user_ID = :user_ID 
+                 JOIN offers o ON c.offer_id = o.offer_id
+
+                 WHERE c.user_ID = :user_ID
 
                 ";
 

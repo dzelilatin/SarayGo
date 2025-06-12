@@ -53,34 +53,20 @@ class CartDao extends BaseDao
         return $r;
     }
 
-    public function updateCartOffer($cart_ID, $offer_id)
-    {
-        $sql = 'UPDATE carts
-                   SET offer_id   = :offer_id
-                 WHERE cart_ID    = :cart_ID';
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue(':offer_id', $offer_id);
-        $stmt->bindValue(':cart_ID',   $cart_ID);
-        $stmt->execute();
 
-        return [
-            'success' => true,
-            'message' => "Cart {$cart_ID} updated to offer {$offer_id}"
-        ];
-    }
-    
-    public function addOfferToCart($cartId, $offerId)
+    public function bookOffer($offer_ID, $user_ID)
     {
-        $sql = "INSERT INTO cart_items (cart_id, offer_id) VALUES (:cartId, :offerId)";
+        $sql = 'UPDATE carts SET offer_id = :offer_id WHERE user_ID = :user_ID';
+
         $statement = $this->connection->prepare($sql);
-        $statement->bindParam(':cartId', $cartId);
-        $statement->bindParam(':offerId', $offerId);
+        $statement->bindValue(':offer_id', $offer_ID);
+        $statement->bindValue(':user_ID', $user_ID);
         $statement->execute();
 
-        return [
-            'message' => 'Offer added to cart successfully',
-            'cartId' => $cartId,
-            'offerId' => $offerId
-        ];
+        if (!$statement) {
+            return ['Success: ' => "False", "Message:" => "Error booking offer!"];
+        }
+
+        return ['Success: ' => "True", "Message:" => "Offer booked successfully."];
     }
 }

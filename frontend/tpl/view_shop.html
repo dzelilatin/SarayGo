@@ -1,72 +1,89 @@
-<section id="popular-books" class="bookshelf py-5 my-5" on>
+<!-- Shop Hero Section -->
+<section class="shop-hero">
   <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <div
-          class="section-header d-flex flex-column text-center align-items-center justify-content-center mb-4"
+    <div class="shop-hero-content">
+      <h1 class="shop-title">Discover Sarajevo</h1>
+      <p class="shop-subtitle">Curated experiences across 1500+ locations</p>
+
+      <!-- Search Bar -->
+      <div class="search-input">
+        <svg
+          class="search-icon"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
         >
-          <h1 class="section-title">
-            Search more than 1500+ locations for you.
-          </h1>
-          <input
-            class="form-control text-center w-25 rounded border shadow-md mt-3"
-            type="text"
-            id="offer-searcher"
-            placeholder="Search available offers..."
-            onkeypress="OfferService.getByName(this.value)"
-          />
-        </div>
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input
+          type="text"
+          id="offer-searcher"
+          class="input input-lg"
+          placeholder="Search places, experiences, or destinations..."
+          onkeypress="OfferService.getByName(this.value)"
+        />
+      </div>
+    </div>
+  </div>
+</section>
 
-        <ul class="tabs" id="bookCategoryTabs">
-          <li
-            data-tab-target="#all-genre"
-            onclick="OfferService.getOffers()"
-            class="active tab"
-          >
-            All Genre
-          </li>
-          <li
-            data-tab-target="#all-genre"
-            class="tab"
-            onclick="OfferService.getByCategory('Hotel')"
-          >
-            Hotels
-          </li>
-          <li
-            data-tab-target="#all-genre"
-            onclick="OfferService.getByCategory('Hostel')"
-            class="tab"
-          >
-            Hostels
-          </li>
-          <li
-            data-tab-target="#all-genre"
-            onclick="OfferService.getByCategory('Restaurant')"
-            class="tab"
-          >
-            Restaurants
-          </li>
-          <li
-            data-tab-target="#all-genre"
-            onclick="OfferService.getByCategory('Coffee Shop')"
-            class="tab"
-          >
-            Coffee Shops
-          </li>
-        </ul>
+<!-- Category Navigation -->
+<section class="section">
+  <div class="container">
+    <div class="category-nav" id="bookCategoryTabs">
+      <button
+        data-tab-target="#all-genre"
+        onclick="OfferService.getOffers()"
+        class="category-btn active"
+      >
+        All
+      </button>
+      <button
+        data-tab-target="#all-genre"
+        class="category-btn"
+        onclick="OfferService.getByCategory('Hotel')"
+      >
+        Hotels
+      </button>
+      <button
+        data-tab-target="#all-genre"
+        onclick="OfferService.getByCategory('Hostel')"
+        class="category-btn"
+      >
+        Hostels
+      </button>
+      <button
+        data-tab-target="#all-genre"
+        onclick="OfferService.getByCategory('Restaurant')"
+        class="category-btn"
+      >
+        Restaurants
+      </button>
+      <button
+        data-tab-target="#all-genre"
+        onclick="OfferService.getByCategory('Coffee Shop')"
+        class="category-btn"
+      >
+        Coffee Shops
+      </button>
+    </div>
+  </div>
+</section>
 
-        <div class="tab-content">
-          <div id="all-genre" class="active">
-            <div
-              class="row"
-              id="bookshelf"
-              onload="OfferService.getOffers()"
-            ></div>
-          </div>
-
-          <!-- Additional genre tabs will continue here -->
-        </div>
-        <!--inner-tabs-->
+<!-- Offers Grid -->
+<section class="section">
+  <div class="container">
+    <div class="tab-content">
+      <div id="all-genre" class="active">
+        <div
+          class="offers-grid"
+          id="bookshelf"
+          onload="OfferService.getOffers()"
+        ></div>
       </div>
     </div>
   </div>
@@ -75,7 +92,6 @@
 <script>
   OfferService.getOffers();
 </script>
-
 <script>
   OfferService.updateOffers();
 </script>
