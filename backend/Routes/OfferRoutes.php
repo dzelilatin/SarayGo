@@ -61,3 +61,11 @@ Flight::route('GET /offers/name/@name', function ($category_name) {
 Flight::route('GET /offer/id/@id', function ($offer_id) {
     Flight::json(Flight::offerService()->getOfferById($offer_id));
 });
+
+Flight::route('GET /offers', function() {
+    Flight::json(Flight::offerService()->getAllOffers());
+});
+
+Flight::route('GET /offers/category/@categoryName', function($categoryName) {
+    Flight::json(Flight::offerService()->getByCategoryName($categoryName));
+});

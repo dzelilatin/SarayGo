@@ -1,0 +1,4 @@
+DirectoryIndex index.html
+
+RewriteEngine On
+RewriteRule ^swagger.json$ swagger.php [L]

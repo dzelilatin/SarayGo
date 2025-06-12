@@ -1,7 +1,7 @@
 <?php
 
 require_once 'BaseService.php';
-require_once(__DIR__ . '/../dao/OfferDao.php');
+require_once __DIR__ . '/../Dao/OfferDao.php';
 
 
 class OfferService extends BaseService

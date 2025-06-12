@@ -1,9 +1,9 @@
 <div class="mt-5 container ">
     <div class="mt-5 register-form text-center">
         <h3>Login</h3>
-        <form action="/SarayGo/backend/auth/login" method="post" id="login_form" class="d-flex flex-column gather-email">
-            <input type="text" class="text-center" placeholder="Your email here..." name="email" id="login_email" required />
-            <input type="text" placeholder="Password" min="8" max="31" name='password' id="login_password" required>
+        <form action="/api/auth/login" method="post" id="loginForm" class="d-flex flex-column gather-email">
+            <input type="text" class="text-center" placeholder="Your email here..." name="email"  id = "email-login" required />
+            <input type="password" placeholder="Password"  name='password' id = "password-login" required>
             <button class="button mt-5" style="width: 50% !important;">Continue </button>
             <div class="flex-column">
                 <p class="mt-5">Don't have an account?</p>
@@ -12,9 +12,11 @@
         </form>
     </div>
 </div>
+</div>
 
 <script>
     AuthService.login();
 </script>
+
 
 <script>NavbarService.__init()</script>

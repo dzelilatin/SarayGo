@@ -1,7 +1,7 @@
 let OfferService = {
   getOffers: function () {
     $.ajax({
-      url: "http://saraygo.local/api/offers",
+      url: Constants.PROJECT_BASE_URL + "offers",
       type: "GET",
       contentType: "application/json",
       success: function (res) {
@@ -47,7 +47,7 @@ let OfferService = {
     console.log("Fetching offer by ID:", id);
 
     $.ajax({
-      url: `http://saraygo.local/api/offer/id/${id}`,
+      url: `${Constants.PROJECT_BASE_URL}offer/id/${id}`,
       type: "GET",
       contentType: "application/json",
       success: function (res) {
@@ -96,20 +96,40 @@ let OfferService = {
     });
   },
 
-  getByCategory: function (categoryname) {
-    const title = document.getElementById("offer-searcher").value;
-
-    if (!title) {
-      OfferService.getOffers();
-    }
+  getByCategory: function (categoryName) {
+    console.log("Fetching offers by category:", categoryName);
 
     $.ajax({
-      url: `http://saraygo.local/api/offers/category/${categoryname}`,
+      url: `${Constants.PROJECT_BASE_URL}offers/category/${categoryName}`,
       type: "GET",
       contentType: "application/json",
       success: function (res) {
-        res.forEach((book) => {
-          console.log("Book in category:", book);
+        console.log("Offers fetched successfully for category:", categoryName, res);
+
+        const bookshelf = document.getElementById("bookshelf");
+        bookshelf.innerHTML = ""; // Clear previous results
+
+        res.forEach((offer) => {
+          bookshelf.innerHTML += `
+            <div class="col-md-3 text-center">
+              <div class="product-item w-100 h-100">
+                <figure class="product-style">
+                  <img
+                    src="${offer.offer_image}"
+                    alt="${offer.offer_name}"
+                    class="product-item"
+                  />
+                </figure>
+                <figcaption>
+                  <h3>${offer.offer_name}</h3>
+                  <div class="item-price">$${offer.offer_price}</div>
+                </figcaption>
+                <a href="#view_product" onclick="OfferService.getOfferById(${offer.offer_id})">
+                  View More
+                </a>
+              </div>
+            </div>
+          `;
         });
       },
       error: function (err) {
@@ -123,7 +143,7 @@ let OfferService = {
     console.log("Fetching offers by name:", name);
 
     $.ajax({
-      url: `http://saraygo.local/api/offers/name/${name}`,
+      url: `${Constants.PROJECT_BASE_URL}offers/name/${name}`,
       type: "GET",
       contentType: "application/json",
       success: function (res) {
@@ -165,6 +185,13 @@ let OfferService = {
             `;
         });
       },
+    });
+  },
+
+  updateOffers: function () {
+    $("#bookCategoryTabs li").click(function () {
+      $("#bookCategoryTabs li").removeClass("active");
+      $(this).addClass("active");
     });
   },
 };

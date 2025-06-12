@@ -68,4 +68,19 @@ class CartDao extends BaseDao
             'message' => "Cart {$cart_ID} updated to offer {$offer_id}"
         ];
     }
+    
+    public function addOfferToCart($cartId, $offerId)
+    {
+        $sql = "INSERT INTO cart_items (cart_id, offer_id) VALUES (:cartId, :offerId)";
+        $statement = $this->connection->prepare($sql);
+        $statement->bindParam(':cartId', $cartId);
+        $statement->bindParam(':offerId', $offerId);
+        $statement->execute();
+
+        return [
+            'message' => 'Offer added to cart successfully',
+            'cartId' => $cartId,
+            'offerId' => $offerId
+        ];
+    }
 }

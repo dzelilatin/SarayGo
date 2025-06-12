@@ -20,7 +20,7 @@
         <ul class="tabs" id="bookCategoryTabs">
           <li
             data-tab-target="#all-genre"
-            onclick="BookService.getAllBooks()"
+            onclick="OfferService.getOffers()"
             class="active tab"
           >
             All Genre
@@ -74,4 +74,8 @@
 
 <script>
   OfferService.getOffers();
+</script>
+
+<script>
+  OfferService.updateOffers();
 </script>

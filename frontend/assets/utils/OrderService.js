@@ -5,7 +5,7 @@ let OrderService = {
     console.log(userID);
 
     $.ajax({
-      url: `http://saraygo.local/api/user/cart/deletecart/${userID}`,
+      url: `${Constants.PROJECT_BASE_URL}user/cart/deletecart/${userID}`,
       type: "DELETE",
       headers: {
         Authentication: userToken,

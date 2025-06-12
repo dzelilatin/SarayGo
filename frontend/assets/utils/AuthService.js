@@ -39,7 +39,7 @@ let AuthService = {
         toastr.error("Invalid Email!");
       } else {
         $.ajax({
-          url: "http://saraygo.local/api/auth/register",
+          url: Constants.PROJECT_BASE_URL + "auth/register",
           type: "POST",
           data: JSON.stringify(data),
           contentType: "application/json",
@@ -86,7 +86,7 @@ let AuthService = {
       };
 
       $.ajax({
-        url: "http://saraygo.local/api/auth/login",
+        url: Constants.PROJECT_BASE_URL + "auth/login",
         type: "POST",
         data: JSON.stringify(loginData),
         contentType: "application/json",
