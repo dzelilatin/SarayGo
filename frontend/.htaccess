@@ -1,0 +1,15 @@
+RewriteEngine On
+RewriteBase /
+
+# 🔒 Don't rewrite requests for actual files or folders
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 🔒 Don't rewrite assets or node_modules
+RewriteCond %{REQUEST_URI} ^/assets/ [OR]
+RewriteCond %{REQUEST_URI} ^/node_modules/
+RewriteRule ^ - [L]
+
+# ✅ Send everything else to index.php
+RewriteRule ^ index.html [QSA,L]
