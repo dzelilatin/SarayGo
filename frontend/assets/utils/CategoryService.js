@@ -1,4 +1,9 @@
-let CategoryService = {
+// Placeholder for CategoryService.js
+const CategoryService = {
+  init: function () {
+    console.log('CategoryService initialized');
+  },
+
   getAllSubcategories: function (categoryID) {
     RestClient.get(
       "/subcategory/" + categoryID,
@@ -169,3 +174,5 @@ let CategoryService = {
     });
   },
 };
+
+CategoryService.init();

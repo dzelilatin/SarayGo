@@ -1,3 +1,3 @@
 let Constants = {
-  PROJECT_BASE_URL: "http://saraygo.local/api",
+  PROJECT_BASE_URL: "http://localhost/SarayGo/backend/",
 };

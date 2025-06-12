@@ -47,3 +47,9 @@ Flight::route("GET /cart/item/new-item", function () {
     $cart_ID = $data['cart_ID'];
     $offer_id = $data['offer_id'];
 });
+
+
+Flight::route('POST /user/create-cart/@userId', function($userId) {
+    // Logic to create a cart for the user
+    echo json_encode(['message' => 'Cart created successfully', 'userId' => $userId]);
+});

@@ -9,26 +9,26 @@ class Config
 
     public static function DATABASE_NAME()
     {
-        return 'SarayGo';
+        return getenv('DATABASE_NAME') ?: 'SarayGo';
     }
 
     public static function DATABASE_HOST()
     {
-        return 'localhost';
+        return '127.0.0.1;unix_socket=/tmp/mysql.sock';
     }
 
     public static function DATABASE_USERNAME()
     {
-        return 'root';
+        return getenv('DATABASE_USERNAME') ?: 'root';
     }
 
     public static function DATABASE_PASSWORD()
     {
-        return '';
+        return getenv('DATABASE_PASSWORD') ?: '';
     }
 
     public static function JWT_SECRET()
     {
-        return 'extremelysecurekey';
+        return getenv('JWT_SECRET') ?: 'extremelysecurekey';
     }
 }

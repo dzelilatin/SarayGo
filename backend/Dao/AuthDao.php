@@ -109,7 +109,8 @@ class AuthDao extends BaseDao
         $jwt_payload = [
             'user' => $user,
             'iat' => time(),
-            'exp' => time() + (60 * 60 * 24)
+            'exp' => time() + (60 * 60 * 24),
+         
         ];
 
         $token = JWT::encode(

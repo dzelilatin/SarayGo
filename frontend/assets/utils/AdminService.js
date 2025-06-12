@@ -3,7 +3,10 @@ let AdminService = {
     AdminService.renderAdminDiv();
   },
 
-  
+  renderAdminDiv: function () {
+    console.log("Rendering Admin Div");
+    // Add logic to render the admin div here
+  },
 
   getUsersByName: function (name) {
     console.log("CURRENT NAME:: ", name);
@@ -323,7 +326,7 @@ let AdminService = {
         const userToken = localStorage.getItem("user_token");
 
         $.ajax({
-          url: "http://saraygo.local/api/admin/product/addproduct",
+          url: Constants.PROJECT_BASE_URL + "admin/product/addproduct",
           type: "POST",
           headers: {
             Authentication: userToken,

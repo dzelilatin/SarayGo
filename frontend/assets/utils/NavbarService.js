@@ -4,24 +4,17 @@ let NavbarService = {
     navbar.innerHTML = "";
     const userToken = localStorage.getItem("user_token");
 
-    if (!userToken) {
+    if (userToken) {
+      const decodedToken = jwt_decode(userToken);
+      const isAdmin = decodedToken.user.is_admin;
+
+      if (isAdmin === 1) {
+        this.renderAdminNavbar();
+      } else {
+        this.renderUserNavbar();
+      }
+    } else {
       this.renderNavbar();
-      return;
-    }
-
-    const decodedToken = jwt_decode(userToken);
-
-    const isAdmin = decodedToken.user.is_admin;
-    console.log("IS ADMIN", isAdmin);
-
-    if (isAdmin === 1) {
-      console.log("ADMIN LOGGED IN!");
-
-      this.renderAdminNavbar();
-    } else if (isAdmin === 0) {
-      console.log("USER Logged in!!!");
-
-      this.renderUserNavbar();
     }
   },
 
@@ -44,7 +37,7 @@ let NavbarService = {
       <span>Shop</span>
     </a>
 
-    <a href="/" class="d-flex flex-column align-items-center text-decoration-none text-dark">
+    <a href="/SarayGo/frontend/" class="d-flex flex-column align-items-center text-decoration-none text-dark">
       <span>Home</span>
     </a>
 
@@ -90,7 +83,7 @@ let NavbarService = {
       <span>Shop</span>
     </a>
 
-    <a href="/" class="d-flex flex-column align-items-center text-decoration-none text-dark">
+    <a href="/SarayGo/frontend/" class="d-flex flex-column align-items-center text-decoration-none text-dark">
 
       <span>Home</span>
     </a>
@@ -129,7 +122,7 @@ let NavbarService = {
       <span>Shop</span>
     </a>
 
-    <a href="/" class="d-flex flex-column align-items-center text-decoration-none text-dark">
+    <a href="/SarayGo/frontend/" class="d-flex flex-column align-items-center text-decoration-none text-dark">
 
       <span>Home</span>
     </a>
@@ -156,6 +149,13 @@ let NavbarService = {
 
     if (!shopmenu) {
       console.error("Shop menu element not found");
+    }
+
+    const shopFlyDownMenu = document.getElementById("shopFlyDownMenu");
+
+    if (!shopFlyDownMenu) {
+      console.error("shopFlyDownMenu element not found in the DOM.");
+      return;
     }
 
     console.log("Mouse over shop menu");

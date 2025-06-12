@@ -88,7 +88,30 @@ let CartService = {
     console.log("CartService initial123123132ized");
 
     const userToken = localStorage.getItem("user_token");
-    const decodedToken = jwt_decode(userToken);
+    if (!userToken) {
+      const cartDiv = document.getElementById("cart-div");
+      cartDiv.innerHTML = `
+        <div class="container text-center d-flex flex-column align-items-center mt-5">
+          <h1 style="font-size: 32px;">You must be logged in to use the cart!</h1>
+          <p style="color: #1d1d1f !important">
+            Please <a href="#view_login" style="text-decoration: underline;">log in</a> to access your cart.
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    let decodedToken;
+    try {
+      decodedToken = jwt_decode(userToken);
+    } catch (error) {
+      console.error("Invalid token specified:", error);
+      toastr.error("Invalid session. Please log in again.");
+      localStorage.removeItem("user_token");
+      window.location.href = "#view_login";
+      return;
+    }
+
     const userID = decodedToken.user.user_id;
 
     RestClient.get(`/user/cart/${userID}`, function (data) {
@@ -250,7 +273,7 @@ let CartService = {
     const userID = UserService.getUserId();
 
     $.ajax({
-      url: `http://saraygo.local/api/cart/item/${data}/${userID}`,
+      url: `${Constants.PROJECT_BASE_URL}cart/item/${data}/${userID}`,
       type: "DELETE",
       headers: {
         Authentication: `${userToken}`,
