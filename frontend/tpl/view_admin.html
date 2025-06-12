@@ -1,94 +1,143 @@
-<div class="container">
-  <h1 class="text-center mt-5">Admin Dashboard</h1>
-  <div class="row d-flex justify-content-center align-items-center gap-3">
-    <div class="col-md-3 mt-5 d-flex justify-content-start align-items-start flex-column flex-wrap gap-3">
-      <div class="card text-center p-2 ">
-        <h2>Total Sales</h2>
-        <canvas id="salesChart"></canvas>
+<div class="admin-dashboard">
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="dashboard-title">Admin Dashboard</h1>
+        <p class="dashboard-subtitle">Manage your SarayGo platform</p>
       </div>
-
-      <div class="card text-center p-2 ">
-        <h2>Most Sold Categories</h2>
-        <canvas id="categoriesChart">
-
-        </canvas>
-      </div>
+      <div class="header-actions"></div>
     </div>
-    <div class="col-md-6 mt-5 d-flex justify-content-start align-items-start flex-column flex-nowrap gap-3">
-      <div class="d-flex text-center card w-100 ">
-        <h2>Users</h2>
-        <div class="d-flex justify-content-center align-items-center">
-          <input type="text" name="" id="" placeholder="Search Users by name" class="text-center form-control w-75" 
-            onkeyup="AdminService.getUsersByName(this.value)">
-        </div>
-        <div>
-      
-        </div>
+  </div>
 
-        <div class="card-body overflow-auto text-start px-5" id = "user-card-body">
-          <h5 class="text-center">Enter a name to search for users.</h5>
+  <!-- Dashboard Grid -->
+  <div class="dashboard-grid">
+    <!-- Analytics Cards -->
+    <div class="analytics-section">
+      <div class="card analytics-card">
+        <div class="card-header">
+          <h3>Revenue Analytics</h3>
+          <div class="period-selector">
+            <button class="period-btn active">7D</button>
+            <button class="period-btn">30D</button>
+            <button class="period-btn">90D</button>
+          </div>
         </div>
-     
-      </div>
-
-      <div class="text-center card p-2 w-100 ">
-        <h2>Products</h2>
-
-        <div class="d-flex justify-content-center align-items-center">
-          <input type="text" name="" id="" placeholder="Search Products by name" class=" text-center form-control w-75" 
-            onkeyup="AdminService.getProductByName(this.value)">
-        </div>
-        <div>
-      
-        </div>
-
-        <div class="card-body overflow-auto text-start px-5" id = "product-card-body">
-          <div class="d-flex flex-row justify-content-center align-items-center">
-            
-            <div class = "d-flex p-2 flex-column justify-content-center align-items-center">
-                <img style="width: 24px; height: 24px;" src = "../assets/images/icons/addIcon.png" class="img-fluid rounded-circle mb-3 mt-3">
-                <p class= "border-bottom" onclick="AdminService.addProductModal()"> Add a Product</p>
+        <div class="card-content">
+          <div class="metric-grid">
+            <div class="metric">
+              <span class="metric-label">Total Revenue</span>
+              <span class="metric-value">$47,239</span>
+              <span class="metric-change positive">+12.5%</span>
             </div>
-
+            <div class="metric">
+              <span class="metric-label">Bookings</span>
+              <span class="metric-value">1,247</span>
+              <span class="metric-change positive">+8.2%</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Avg. Order</span>
+              <span class="metric-value">$189</span>
+              <span class="metric-change negative">-3.1%</span>
+            </div>
+          </div>
         </div>
-        </div>
-
       </div>
     </div>
 
-    
+    <!-- Management Section -->
+    <div class="management-section">
+      <!-- Customer Management -->
+      <div class="card management-card">
+        <div class="card-header">
+          <h3>Customer Management</h3>
+          <div class="search-container">
+            <div class="search-wrapper">
+              <svg
+                class="search-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
+              <input
+                type="text"
+                placeholder="Search customers..."
+                class="search-input"
+                onkeyup="AdminService.getUsersByName(this.value)"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="customer-list" id="user-card-body">
+            <div class="empty-state">
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              <p>Search for customers by name</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Offer Management -->
+      <div class="card management-card">
+        <div class="card-header">
+          <h3>Offer Management</h3>
+          <div class="search-container">
+            <div class="search-wrapper">
+              <svg
+                class="search-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
+              <input
+                type="text"
+                placeholder="Search offers..."
+                class="search-input"
+                onkeyup="AdminService.getOfferByName(this.value)"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="offer-grid" id="offer-management-grid">
+            <!-- Sample offers will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+<!-- Modals Container -->
+<div id="modalContainer">
+  <div id="userDetailsModal"></div>
+  <div id="userCartModal"></div>
+  <div id="userOrderHistory"></div>
+  <div id="addOfferModal"></div>
+  <div id="editOfferModal"></div>
 </div>
-
-
-
-<div id="bookDataModal">
-  
-</div>
-
-<div id="addProductModal">
-
-</div>
-
-<div id="editBookModal">
-  
-</div>
-
-
-<div id="userCartModal">
-
-</div>
-
-<div id="userOrderHistory">
-  
-</div>
-
-
-<div id="moreUserInfo">
-
-</div>
-
-<script>
-  AdminService.init();
-</script>

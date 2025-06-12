@@ -1,0 +1,334 @@
+/* Modern Navbar - Apple & Notion Inspired */
+
+/* CSS Variables for Navbar */
+:root {
+  --nav-bg: rgba(255, 255, 255, 0.8);
+  --nav-border: rgba(0, 0, 0, 0.1);
+  --nav-text: #374151;
+  --nav-text-hover: #111827;
+  --nav-brand: #1f2937;
+  --nav-accent: #3b82f6;
+  --nav-accent-hover: #2563eb;
+  --nav-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --nav-backdrop: blur(20px);
+  --nav-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --nav-height: 72px;
+}
+
+/* Modern Navbar */
+.modern-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--nav-bg);
+  backdrop-filter: var(--nav-backdrop);
+  -webkit-backdrop-filter: var(--nav-backdrop);
+  border-bottom: 1px solid var(--nav-border);
+  box-shadow: var(--nav-shadow);
+  transition: var(--nav-transition);
+  height: var(--nav-height);
+}
+
+/* Navbar Container */
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Brand Section */
+.nav-brand {
+  display: flex;
+  align-items: center;
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: var(--nav-transition);
+}
+
+.brand-link:hover {
+  transform: translateY(-1px);
+}
+
+.brand-text {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--nav-brand);
+  letter-spacing: -0.025em;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
+}
+
+.brand-badge {
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.brand-badge.admin {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: white;
+}
+
+/* Navigation Links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 42px;
+}
+
+.nav-link {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: var(--nav-text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--nav-transition);
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
+}
+
+.nav-link:hover {
+  color: var(--nav-text-hover);
+  background: rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+.nav-link:active {
+  transform: translateY(0);
+}
+
+.nav-icon {
+  color: currentColor;
+  opacity: 0.7;
+  transition: var(--nav-transition);
+}
+
+.nav-link:hover .nav-icon {
+  opacity: 1;
+}
+
+/* Navigation Actions */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: var(--nav-transition);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
+}
+
+.nav-action.login {
+  background: var(--nav-accent);
+  color: white;
+}
+
+.nav-action.login:hover {
+  background: var(--nav-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  color: white;
+}
+
+.nav-action.admin {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: white;
+}
+
+.nav-action.admin:hover {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  color: white;
+}
+
+.nav-action.logout {
+  color: var(--nav-text);
+  border: 1px solid var(--nav-border);
+  background: white;
+}
+
+.nav-action.logout:hover {
+  color: #dc2626;
+  border-color: #fecaca;
+  background: #fef2f2;
+  transform: translateY(-1px);
+}
+
+.action-icon {
+  color: currentColor;
+  opacity: 0.8;
+  transition: var(--nav-transition);
+}
+
+.nav-action:hover .action-icon {
+  opacity: 1;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  :root {
+    --nav-height: 64px;
+  }
+
+  .nav-container {
+    padding: 0 16px;
+  }
+
+  .brand-text {
+    font-size: 20px;
+  }
+
+  .nav-links {
+    gap: 4px;
+  }
+
+  .nav-link,
+  .nav-action {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .nav-link span,
+  .nav-action span {
+    display: none;
+  }
+
+  .nav-icon,
+  .action-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .brand-badge {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-container {
+    padding: 0 12px;
+  }
+
+  .nav-links {
+    gap: 2px;
+  }
+
+  .nav-link,
+  .nav-action {
+    padding: 6px 8px;
+  }
+
+  .brand-text {
+    font-size: 18px;
+  }
+}
+
+/* Active States */
+.nav-link.active {
+  color: var(--nav-accent);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.nav-link.active .nav-icon {
+  opacity: 1;
+}
+
+/* Focus States for Accessibility */
+.nav-link:focus-visible,
+.nav-action:focus-visible,
+.brand-link:focus-visible {
+  outline: 2px solid var(--nav-accent);
+  outline-offset: 2px;
+}
+
+/* Scroll State */
+.modern-navbar.scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Animations */
+.nav-link,
+.nav-action,
+.brand-link {
+  transform-origin: center;
+}
+
+/* Loading Animation */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modern-navbar {
+  animation: fadeInDown 0.3s ease-out;
+}
+
+/* Body Padding for Fixed Navbar */
+body {
+  padding-top: var(--nav-height);
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  :root {
+    --nav-bg: #ffffff;
+    --nav-border: #000000;
+    --nav-text: #000000;
+  }
+
+  .modern-navbar {
+    backdrop-filter: none;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .nav-link,
+  .nav-action,
+  .brand-link,
+  .modern-navbar {
+    transition: none;
+    animation: none;
+  }
+}

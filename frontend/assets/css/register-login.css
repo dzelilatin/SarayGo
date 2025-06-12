@@ -1,52 +1,287 @@
-.gather-email input {
-  margin-top: 3rem;
-  outline: none;
-  border: none;
-  border-bottom: 1px solid #333;
-  width: 80%;
-  text-align: center;
-  align-self: center;
+/* Notion-Inspired Auth Styles */
+
+/* CSS Variables */
+:root {
+  --auth-primary: #2563eb;
+  --auth-primary-hover: #1d4ed8;
+  --auth-text-primary: #111827;
+  --auth-text-secondary: #6b7280;
+  --auth-text-muted: #9ca3af;
+  --auth-border: #e5e7eb;
+  --auth-border-focus: #3b82f6;
+  --auth-background: #ffffff;
+  --auth-background-alt: #f9fafb;
+  --auth-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --auth-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --auth-radius: 8px;
+  --auth-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.register-form input {
-  font-family: "SF Pro Text";
-  background-color: transparent;
-  background: none;
-}
-
-.register-form {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.register-form h3 {
-  font-family: SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial,
-    sans-serif;
-  letter-spacing: 0;
-  line-height: 1.1;
-  padding-bottom: 2px;
-}
-
-.register-form p {
-  font-family: SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial,
-    sans-serif;
-  letter-spacing: 0;
-  padding-bottom: 2px;
-}
-
+/* Reset previous styles */
+.gather-email input,
+.register-form input,
+.register-form,
+.register-form h3,
+.register-form p,
 .register-form button {
-  padding: 5px 10px;
-  width: 25%;
-  background-color: #0077ed;
-  border: none;
+  all: unset;
+}
+
+/* Auth Container */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Auth Card */
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--auth-background);
+  border-radius: 12px;
+  box-shadow: var(--auth-shadow-lg);
+  border: 1px solid var(--auth-border);
+  overflow: hidden;
+}
+
+.auth-card.register {
+  max-width: 480px;
+}
+
+/* Auth Header */
+.auth-header {
+  padding: 32px 32px 24px;
+  text-align: center;
+  border-bottom: 1px solid var(--auth-border);
+  background: var(--auth-background-alt);
+}
+
+.auth-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--auth-text-primary);
+  margin: 0 0 8px 0;
+  letter-spacing: -0.025em;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
+}
+
+.auth-header p {
+  font-size: 14px;
+  color: var(--auth-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
+}
+
+/* Auth Form */
+.auth-form {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Form Groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group.half {
+  flex: 1;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+/* Labels */
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--auth-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
+  margin-bottom: 2px;
+}
+
+/* Form Inputs */
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--auth-border);
+  border-radius: var(--auth-radius);
+  font-size: 14px;
+  color: var(--auth-text-primary);
+  background: var(--auth-background);
+  transition: var(--auth-transition);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
+  box-sizing: border-box;
   outline: none;
-  border-radius: 32px;
+}
+
+.form-input:focus {
+  border-color: var(--auth-border-focus);
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+}
+
+.form-input:hover:not(:focus) {
+  border-color: #d1d5db;
+}
+
+.form-input::placeholder {
+  color: var(--auth-text-muted);
+}
+
+/* Auth Button */
+.auth-button {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: var(--auth-radius);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--auth-transition);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.auth-button.primary {
+  background: var(--auth-primary);
   color: white;
-  box-shadow: 0px 2px 4px #eee, 8px 16px 32px #eee;
-  transition: all 0.15s ease-in-out;
-  align-self: center;
+}
+
+.auth-button.primary:hover {
+  background: var(--auth-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--auth-shadow);
+}
+
+.auth-button.primary:active {
+  transform: translateY(0);
+}
+
+/* Auth Footer */
+.auth-footer {
+  text-align: center;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--auth-border);
+}
+
+.auth-footer p {
+  font-size: 13px;
+  color: var(--auth-text-secondary);
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
+}
+
+.auth-link {
+  color: var(--auth-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--auth-transition);
+}
+
+.auth-link:hover {
+  color: var(--auth-primary-hover);
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 16px;
+  }
+
+  .auth-card {
+    max-width: 100%;
+  }
+
+  .auth-header {
+    padding: 24px 24px 20px;
+  }
+
+  .auth-form {
+    padding: 24px;
+    gap: 18px;
+  }
+
+  .auth-header h1 {
+    font-size: 22px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .form-group.half {
+    flex: none;
+  }
+}
+
+/* Focus Styles for Accessibility */
+.auth-button:focus-visible,
+.form-input:focus-visible,
+.auth-link:focus-visible {
+  outline: 2px solid var(--auth-primary);
+  outline-offset: 2px;
+}
+
+/* Loading State */
+.auth-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auth-button:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Animation for form appearance */
+.auth-card {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Error states (for future use) */
+.form-input.error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgb(239 68 68 / 0.1);
+}
+
+.error-message {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 4px;
 }
 
 .register-form a {

@@ -1,22 +1,56 @@
-<div class="mt-5 container ">
-    <div class="mt-5 register-form text-center">
-        <h3>Login</h3>
-        <form action="/api/auth/login" method="post" id="loginForm" class="d-flex flex-column gather-email">
-            <input type="text" class="text-center" placeholder="Your email here..." name="email"  id = "email-login" required />
-            <input type="password" placeholder="Password"  name='password' id = "password-login" required>
-            <button class="button mt-5" style="width: 50% !important;">Continue </button>
-            <div class="flex-column">
-                <p class="mt-5">Don't have an account?</p>
-                <a href="#view_register">Register</a>
-            </div>
-        </form>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Welcome back</h1>
+      <p>Sign in to your SarayGo account</p>
     </div>
-</div>
+
+    <form
+      action="/api/auth/login"
+      method="post"
+      id="loginForm"
+      class="auth-form"
+    >
+      <div class="form-group">
+        <label for="email-login">Email</label>
+        <input
+          type="text"
+          placeholder="Enter your email"
+          name="email"
+          id="email-login"
+          required
+          class="form-input"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password-login">Password</label>
+        <input
+          type="password"
+          placeholder="Enter your password"
+          name="password"
+          id="password-login"
+          required
+          class="form-input"
+        />
+      </div>
+
+      <button type="submit" class="auth-button primary">Sign in</button>
+
+      <div class="auth-footer">
+        <p>
+          Don't have an account?
+          <a href="#view_register" class="auth-link">Sign up</a>
+        </p>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script>
-    AuthService.login();
+  AuthService.login();
 </script>
 
-
-<script>NavbarService.__init()</script>
+<script>
+  NavbarService.__init();
+</script>

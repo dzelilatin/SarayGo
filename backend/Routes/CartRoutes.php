@@ -41,15 +41,41 @@ Flight::route("GET /cart/@user_ID", function ($user_ID) {
  *     @OA\Response(response=500, description="Internal server error.")
  * )
  */
-Flight::route("GET /cart/item/new-item", function () {
+Flight::route("POST /cart/item/new-item", function () {
     $data = Flight::request()->data->getData();
 
-    $cart_ID = $data['cart_ID'];
+    $user = Flight::get('user');
+
+    $user_ID = $data['user_ID'];
     $offer_id = $data['offer_id'];
+
+
+
+    if ($user->user_id != $user_ID) {
+        Flight::json(['error' => 'Unauthorized user'], 403);
+        return;
+    }
+
+    if (!$user_ID || !$offer_id) {
+        Flight::json(['error' => 'Invalid input data'], 400);
+        return;
+    }
+
+
+    $service = new CartService();
+    Flight::json($service->bookOffer($offer_id, $user_ID));
 });
 
 
-Flight::route('POST /user/create-cart/@userId', function($userId) {
-    // Logic to create a cart for the user
-    echo json_encode(['message' => 'Cart created successfully', 'userId' => $userId]);
+Flight::route('POST /user/create-cart/@userId', function ($userId) {
+
+
+    $USER_TOKEN = Flight::get('user');
+
+    if ($USER_TOKEN->user_id != $userId) {
+        Flight::json(['Status' => 'Error', 'Message' => 'You are not that user :) ']);
+    };
+
+
+    Flight::json(Flight::userService()->createCart($userId));
 });

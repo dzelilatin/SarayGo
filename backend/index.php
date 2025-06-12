@@ -40,6 +40,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 //ROUTE MIDDLEWARE START
+
+
+
+Flight::route('/*', function () {
+    if (
+        strpos(Flight::request()->url, '/auth/login') === 0 ||
+        strpos(Flight::request()->url, '/auth/register') === 0 ||
+        strpos(Flight::request()->url, '/offers/') === 0 ||
+        strpos(Flight::request()->url, '/offer') === 0
+    ) {
+        return TRUE;
+    }
+    if (strpos(Flight::request()->url, '/admin') === 0) {
+
+        try {
+            $token = Flight::request()->getHeader('Authentication');
+
+            if (Flight::authMiddleware()->verifyToken($token) && Flight::authMiddleware()->verifyIsAdmin()) {
+
+
+                return TRUE;
+            } else {
+                echo "USER NOT ADMIN";
+            }
+        } catch (Exception $e) {
+            Flight::halt(401, $e->getMessage());
+        }
+    } else {
+        try {
+            $token = Flight::request()->getHeader("Authentication");
+            if (Flight::authMiddleware()->verifyToken($token)) {
+                return TRUE;
+            }
+        } catch (\Exception $e) {
+            Flight::halt(401, $e->getMessage());
+        }
+    }
+});
+
+
+
+
 //ROUTE MIDDLEWARE END
 
 
